@@ -6,8 +6,8 @@ import sys
 sys.path.insert(0, os.path.join(os.path. dirname(__file__), "model_heritage_backend"))
 
 # Imposta la tua API key Groq (USA UNA NUOVA API KEY!)
-# os.environ["RAG_API_KEY"] = ""
-GROQ_API_KEY = os.environ["GROQ_API_KEY"]
+os.environ["RAG_API_KEY"] = ""
+#GROQ_API_KEY = os.environ["GROQ_API_KEY"]
 
 
 from model_heritage_backend.src.services.nl_to_cypher import nl_to_cypher_service

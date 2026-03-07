@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Leaf, GitBranch, Search, Upload, TrendingUp } from 'lucide-react';
+import { Leaf, GitBranch, Search, Upload, TrendingUp, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 

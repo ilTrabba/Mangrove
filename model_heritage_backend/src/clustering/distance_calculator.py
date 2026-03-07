@@ -217,8 +217,7 @@ class ModelDistanceCalculator:
             raise logHandler.error_handler(f"Invalid metric_type '{metric_type}'. Must be one of {valid_metrics}","calculate_distance")
 
         # Use default excluded patterns if none provided
-        if excluded_patterns is None:
-            excluded_patterns = FilteringPatterns.ATTENTION_ONLY
+        excluded_patterns = FilteringPatterns.ATTENTION_ONLY
         
         try:
             # Get common parameters (intersection)

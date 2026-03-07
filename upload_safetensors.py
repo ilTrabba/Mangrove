@@ -26,7 +26,7 @@ from pathlib import Path
 POLICY = "breadth_first_per_albero" # Modifica con la policy desiderata
 
 # Path della directory contenente i file safetensors
-DATASET_PATH = "/mnt/c/Users/hp/dataset_model_heritage"  # Modifica con il path corretto del tuo dataset
+DATASET_PATH = "/home/trabbo/Documents/Universita/BigData/Models_for_Project/MoTHer/Tree_0"  # Modifica con il path corretto del tuo dataset
 
 # Path del repository Model_Graph
 REPO_PATH = os.path.expanduser("/home/trabbo/Documents/GitHub/Model_Graph")
