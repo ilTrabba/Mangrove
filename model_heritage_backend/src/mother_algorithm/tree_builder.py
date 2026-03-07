@@ -195,50 +195,6 @@ class MoTHerTreeBuilder:
             logHandler.error_handler(e, "build_mother_tree")
             return nx.DiGraph(), {}
     
-
-
-    def save_debug_graph(self,G, spanning_tree):
-        # Nome file fisso
-        filename = "DEBUG_GRAFO_LOOKMAN.txt"
-        
-        # Percorso assoluto basato su dove sta girando lo script ORA
-        cwd = os.getcwd()
-        full_path = os.path.join(cwd, filename)
-
-        print(f"\n{'='*50}", flush=True)
-        print(f" >>> TENTO SALVATAGGIO SU: {full_path}", flush=True)
-
-        try:
-            with open(full_path, "w", encoding="utf-8") as f:
-                # HEADER
-                f.write("DEBUG GRAFO E SPANNING TREE\n")
-                f.write("===========================\n\n")
-
-                # 1. GRAFO G
-                if G:
-                    f.write(f"--- GRAFO G ({G.number_of_nodes()} nodi) ---\n")
-                    for u, v, data in G.edges(data=True):
-                        f.write(f"{u} -> {v} : {data}\n")
-                else:
-                    f.write("IL GRAFO G È NONE o VUOTO!\n")
-
-                f.write("\n" + "-"*30 + "\n\n")
-
-                # 2. ALBERO
-                if spanning_tree:
-                    f.write(f"--- SPANNING TREE ({spanning_tree.number_of_nodes()} nodi) ---\n")
-                    for u, v, data in spanning_tree.edges(data=True):
-                        f.write(f"{u} -> {v} : {data}\n")
-                else:
-                    f.write("SPANNING TREE È NONE (FALLITO)\n")
-
-            print(f" ✅ FILE CREATO CON SUCCESSO!", flush=True)
-            print(f" {'='*50}\n", flush=True)
-
-        except Exception as e:
-            print(f" ❌ ERRORE SCRITTURA FILE: {e}", flush=True)
-            print(f" {'='*50}\n", flush=True)
-    
     def build_tree(self, ku_values: List[float], 
                distance_matrix: np.ndarray, 
                lambda_param: float) -> Tuple[nx.DiGraph, Dict[int, float]]:
@@ -315,10 +271,6 @@ class MoTHerTreeBuilder:
             logger.warning(f"Chu-Liu-Edmonds failed ({e}), using fallback")
             spanning_tree = fallback_directed_mst(G)
 
-        # --- AGGIUNTA FONDAMENTALE ---
-        # Salva il file e dimmi dove l'hai messo
-        self.save_debug_graph(G, spanning_tree)
-        # -----------------------------
         
         # Calculate confidence scores
         confidence_scores = calculate_confidence_scores(spanning_tree, G, ku_values)
