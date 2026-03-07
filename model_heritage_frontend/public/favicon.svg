@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <clipPath id="rounded">
+      <rect width="512" height="512" rx="110" ry="110"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#rounded)">
+    <!-- Sky background -->
+    <rect width="512" height="512" fill="#b8dff0"/>
+
+    <!-- Water area -->
+    <rect x="0" y="308" width="512" height="204" fill="#3db9c5"/>
+
+    <!-- Water surface highlight -->
+    <path d="M0 308 Q64 290 128 308 Q192 326 256 308 Q320 290 384 308 Q448 326 512 308 L512 332 Q448 314 384 332 Q320 350 256 332 Q192 314 128 332 Q64 350 0 332 Z" fill="#5ecfd8" opacity="0.55"/>
+
+    <!-- Submerged roots -->
+    <path d="M200 318 Q160 358 138 398 Q122 428 116 468" stroke="#7a5c3e" stroke-width="13" fill="none" stroke-linecap="round"/>
+    <path d="M222 326 Q200 368 187 404 Q176 432 174 470" stroke="#8a6b4a" stroke-width="11" fill="none" stroke-linecap="round"/>
+    <path d="M256 332 Q256 372 256 412 Q256 442 256 480" stroke="#7a5c3e" stroke-width="15" fill="none" stroke-linecap="round"/>
+    <path d="M290 326 Q312 368 325 404 Q336 432 338 470" stroke="#8a6b4a" stroke-width="11" fill="none" stroke-linecap="round"/>
+    <path d="M312 318 Q352 358 374 398 Q390 428 396 468" stroke="#7a5c3e" stroke-width="13" fill="none" stroke-linecap="round"/>
+
+    <!-- Bubbles -->
+    <circle cx="150" cy="388" r="11" fill="none" stroke="#a0dce8" stroke-width="3.5" opacity="0.85"/>
+    <circle cx="170" cy="422" r="8"  fill="none" stroke="#a0dce8" stroke-width="3"   opacity="0.8"/>
+    <circle cx="314" cy="402" r="14" fill="none" stroke="#a0dce8" stroke-width="3.5" opacity="0.85"/>
+    <circle cx="372" cy="374" r="9"  fill="none" stroke="#a0dce8" stroke-width="3"   opacity="0.8"/>
+    <circle cx="222" cy="444" r="6"  fill="none" stroke="#a0dce8" stroke-width="2.5" opacity="0.7"/>
+    <circle cx="392" cy="434" r="10" fill="none" stroke="#a0dce8" stroke-width="3"   opacity="0.75"/>
+    <circle cx="132" cy="456" r="6"  fill="none" stroke="#a0dce8" stroke-width="2"   opacity="0.65"/>
+    <circle cx="284" cy="458" r="7"  fill="none" stroke="#a0dce8" stroke-width="2.5" opacity="0.7"/>
+
+    <!-- Trunk base -->
+    <path d="M256 318 Q252 272 249 228 Q246 186 250 152" stroke="#7a5c3e" stroke-width="30" fill="none" stroke-linecap="round"/>
+
+    <!-- Left main branch -->
+    <path d="M248 222 Q206 178 166 144 Q140 122 114 102" stroke="#7a5c3e" stroke-width="22" fill="none" stroke-linecap="round"/>
+    <!-- Left-centre branch -->
+    <path d="M250 190 Q228 152 212 120 Q197 92 193 66" stroke="#8a6b4a" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <!-- Centre branch -->
+    <path d="M256 168 Q255 138 255 108 Q255 82 257 56" stroke="#7a5c3e" stroke-width="18" fill="none" stroke-linecap="round"/>
+    <!-- Right-centre branch -->
+    <path d="M262 190 Q284 152 300 120 Q315 92 319 66" stroke="#8a6b4a" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <!-- Right main branch -->
+    <path d="M264 222 Q306 178 346 144 Q372 122 398 102" stroke="#7a5c3e" stroke-width="22" fill="none" stroke-linecap="round"/>
+
+    <!-- ── Leaf clusters ── -->
+    <!-- Far left -->
+    <ellipse cx="104" cy="98"  rx="54" ry="40" fill="#3e9e45"/>
+    <ellipse cx="86"  cy="85"  rx="37" ry="27" fill="#52b358"/>
+    <ellipse cx="120" cy="87"  rx="35" ry="25" fill="#4aaa50"/>
+    <ellipse cx="105" cy="92"  rx="22" ry="15" fill="#6dc970" opacity="0.75"/>
+    <!-- Left -->
+    <ellipse cx="168" cy="70"  rx="57" ry="42" fill="#3e9e45"/>
+    <ellipse cx="148" cy="55"  rx="40" ry="28" fill="#52b358"/>
+    <ellipse cx="186" cy="60"  rx="37" ry="27" fill="#4aaa50"/>
+    <ellipse cx="170" cy="63"  rx="23" ry="16" fill="#6dc970" opacity="0.75"/>
+    <!-- Left-centre -->
+    <ellipse cx="210" cy="46"  rx="52" ry="38" fill="#3e9e45"/>
+    <ellipse cx="192" cy="33"  rx="35" ry="25" fill="#52b358"/>
+    <ellipse cx="228" cy="38"  rx="33" ry="24" fill="#4aaa50"/>
+    <ellipse cx="212" cy="40"  rx="21" ry="15" fill="#6dc970" opacity="0.75"/>
+    <!-- Centre -->
+    <ellipse cx="256" cy="36"  rx="56" ry="42" fill="#3e9e45"/>
+    <ellipse cx="236" cy="22"  rx="38" ry="27" fill="#52b358"/>
+    <ellipse cx="276" cy="24"  rx="38" ry="27" fill="#4aaa50"/>
+    <ellipse cx="257" cy="30"  rx="24" ry="17" fill="#6dc970" opacity="0.75"/>
+    <!-- Right-centre -->
+    <ellipse cx="302" cy="46"  rx="52" ry="38" fill="#3e9e45"/>
+    <ellipse cx="284" cy="33"  rx="35" ry="25" fill="#52b358"/>
+    <ellipse cx="320" cy="38"  rx="33" ry="24" fill="#4aaa50"/>
+    <ellipse cx="300" cy="40"  rx="21" ry="15" fill="#6dc970" opacity="0.75"/>
+    <!-- Right -->
+    <ellipse cx="344" cy="70"  rx="57" ry="42" fill="#3e9e45"/>
+    <ellipse cx="324" cy="55"  rx="40" ry="28" fill="#52b358"/>
+    <ellipse cx="362" cy="60"  rx="37" ry="27" fill="#4aaa50"/>
+    <ellipse cx="342" cy="63"  rx="23" ry="16" fill="#6dc970" opacity="0.75"/>
+    <!-- Far right -->
+    <ellipse cx="408" cy="98"  rx="54" ry="40" fill="#3e9e45"/>
+    <ellipse cx="390" cy="85"  rx="37" ry="27" fill="#52b358"/>
+    <ellipse cx="424" cy="87"  rx="35" ry="25" fill="#4aaa50"/>
+    <ellipse cx="407" cy="92"  rx="22" ry="15" fill="#6dc970" opacity="0.75"/>
+  </g>
+</svg>

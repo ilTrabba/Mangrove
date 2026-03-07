@@ -10,12 +10,12 @@ export default function HomePage() {
       <div className="text-center mb-16">
         <div className="flex justify-center mb-6">
           <div className="p-3 bg-emerald-100 rounded-full">
-            <Leaf className="h-12 w-12 text-emerald-600" />
+            <Leaf className="h-12 w-12 text-emerald-500" />
           </div>
         </div>
         <h1
-          className="text-4xl font-bold text-emerald-700 mb-4"
-          style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '0.08em' }}
+          className="text-4xl font-bold text-emerald-600 mb-4"
+          style={{ fontFamily: "'Quicksand', sans-serif", letterSpacing: '0.08em' }}
         >
           MANGROVE
         </h1>
@@ -95,8 +95,8 @@ export default function HomePage() {
         <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">How It Works</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="text-center">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-blue-600 font-bold">1</span>
+            <div className="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-sky-600 font-bold">1</span>
             </div>
             <h3 className="font-semibold mb-2">Upload Model</h3>
             <p className="text-sm text-gray-600">
@@ -105,8 +105,8 @@ export default function HomePage() {
           </div>
           
           <div className="text-center">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-blue-600 font-bold">2</span>
+            <div className="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-sky-600 font-bold">2</span>
             </div>
             <h3 className="font-semibold mb-2">Extract Signature</h3>
             <p className="text-sm text-gray-600">
@@ -115,8 +115,8 @@ export default function HomePage() {
           </div>
           
           <div className="text-center">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-blue-600 font-bold">3</span>
+            <div className="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-sky-600 font-bold">3</span>
             </div>
             <h3 className="font-semibold mb-2">Find Family</h3>
             <p className="text-sm text-gray-600">
@@ -125,8 +125,8 @@ export default function HomePage() {
           </div>
           
           <div className="text-center">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-blue-600 font-bold">4</span>
+            <div className="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-sky-600 font-bold">4</span>
             </div>
             <h3 className="font-semibold mb-2">Discover Lineage</h3>
             <p className="text-sm text-gray-600">
