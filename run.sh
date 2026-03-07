@@ -145,7 +145,7 @@ cleanup() {
     echo ""
     print_success "All services stopped successfully"
     echo ""
-    echo -e "${PURPLE}Thanks for using Model Heritage Project!${NC}"
+    echo -e "${PURPLE}Thanks for using MANGROVE! 🌿${NC}"
     exit 0
 }
 

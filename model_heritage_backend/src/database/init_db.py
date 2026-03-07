@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Database initialization script for Model Heritage backend.
+Database initialization script for MANGROVE backend.
 Neo4j-only architecture - initializes Neo4j constraints and indexes.
 """
 import os

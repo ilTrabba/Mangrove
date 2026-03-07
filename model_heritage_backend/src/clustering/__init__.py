@@ -1,5 +1,5 @@
 """
-Model Heritage Clustering System
+MANGROVE Clustering System
 
 This module provides comprehensive clustering capabilities for AI model heritage detection,
 including distance calculation, family clustering, genealogical tree building, and

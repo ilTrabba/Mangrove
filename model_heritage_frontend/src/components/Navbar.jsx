@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Plus, Database, Sparkles } from 'lucide-react';
+import { Plus, Leaf, Sparkles } from 'lucide-react';
 
 export default function Navbar() {
   const location = useLocation();
@@ -11,8 +11,13 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <Database className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">Model Heritage</span>
+              <Leaf className="h-8 w-8 text-emerald-600" />
+              <span
+                className="text-xl font-bold text-emerald-700"
+                style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '0.08em' }}
+              >
+                MANGROVE
+              </span>
             </Link>
           </div>
           

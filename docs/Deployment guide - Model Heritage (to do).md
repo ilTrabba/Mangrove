@@ -1,4 +1,4 @@
-# Guida Deployment - Model Heritage MVP
+# Guida Deployment - MANGROVE MVP
 
 ## 🚀 Deployment Locale
 

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Database, GitBranch, Search, Upload, TrendingUp } from 'lucide-react';
+import { Leaf, GitBranch, Search, Upload, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -9,12 +9,15 @@ export default function HomePage() {
       {/* Hero Section */}
       <div className="text-center mb-16">
         <div className="flex justify-center mb-6">
-          <div className="p-3 bg-blue-100 rounded-full">
-            <Database className="h-12 w-12 text-blue-600" />
+          <div className="p-3 bg-emerald-100 rounded-full">
+            <Leaf className="h-12 w-12 text-emerald-600" />
           </div>
         </div>
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Model Heritage
+        <h1
+          className="text-4xl font-bold text-emerald-700 mb-4"
+          style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '0.08em' }}
+        >
+          MANGROVE
         </h1>
         <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
           Automatically discover the lineage and relationships between your machine learning models 

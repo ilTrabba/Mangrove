@@ -1,10 +1,10 @@
-# Model Graph - Model Lake Versioning System
+# MANGROVE - Model Lake Versioning System
 
 Un sistema completo per il versioning e la gestione di modelli di machine learning, sviluppato con un'architettura full-stack che combina Python per il backend e JavaScript per il frontend.
 
 ## 🎯 Panoramica
 
-Model Graph è una piattaforma per la gestione del ciclo di vita dei modelli di machine learning, che fornisce funzionalità di versioning, tracciabilità e heritage dei modelli non basandosi sui metadatati ma sui pesi di un modello, seguendo come base l'approccio delineato nel paper "Unsupervised Model Tree Heritage Recovery" di Eliahu Horwitz, Asaf Shul, Yedid Hoshen. Il sistema permette di mantenere una cronologia completa delle modifiche ai modelli e delle loro relazioni.
+MANGROVE è una piattaforma per la gestione del ciclo di vita dei modelli di machine learning, che fornisce funzionalità di versioning, tracciabilità e heritage dei modelli non basandosi sui metadatati ma sui pesi di un modello, seguendo come base l'approccio delineato nel paper "Unsupervised Model Tree Heritage Recovery" di Eliahu Horwitz, Asaf Shul, Yedid Hoshen. Il sistema permette di mantenere una cronologia completa delle modifiche ai modelli e delle loro relazioni.
 
 ## 🏗️ Architettura
 
@@ -119,4 +119,4 @@ Il progetto è strutturato per supportare contributi sia sul frontend che sul ba
 
 ---
 
-*Model Graph rappresenta una soluzione completa per il model lifecycle management, fornendo gli strumenti necessari per una gestione professionale dei modelli di machine learning in ambiente di produzione.*
+*MANGROVE rappresenta una soluzione completa per il model lifecycle management, fornendo gli strumenti necessari per una gestione professionale dei modelli di machine learning in ambiente di produzione.*
