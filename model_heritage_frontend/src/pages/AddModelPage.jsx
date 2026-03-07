@@ -563,9 +563,10 @@ export default function AddModelPage() {
                       const input = document.getElementById('readme-file');
                       if (input) input.value = '';
                     }}
-                    className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
+                    className="h-10 w-10 p-0 hover:bg-red-50 hover:text-red-600"
+                    title="Remove file"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-7 w-7" />
                   </Button>
                 </div>
               )}

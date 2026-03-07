@@ -11,10 +11,10 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <Leaf className="h-8 w-8 text-emerald-600" />
+              <Leaf className="h-8 w-8 text-emerald-500" />
               <span
-                className="text-xl font-bold text-emerald-700"
-                style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '0.08em' }}
+                className="text-xl font-bold text-emerald-600"
+                style={{ fontFamily: "'Quicksand', sans-serif", letterSpacing: '0.08em' }}
               >
                 MANGROVE
               </span>
@@ -26,7 +26,7 @@ export default function Navbar() {
               to="/models"
               className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                 location.pathname === '/models'
-                  ? 'bg-blue-100 text-blue-700'
+                  ? 'bg-sky-100 text-sky-700'
                   : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
               }`}
             >
@@ -37,8 +37,8 @@ export default function Navbar() {
               to="/explore"
               className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-1 ${
                 location.pathname === '/explore'
-                  ?  'bg-indigo-100 text-indigo-700'
-                  :  'text-gray-500 hover: text-gray-700 hover:bg-gray-100'
+                  ?  'bg-sky-100 text-sky-700'
+                  :  'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
               }`}
             >
               <Sparkles className="h-4 w-4" />
