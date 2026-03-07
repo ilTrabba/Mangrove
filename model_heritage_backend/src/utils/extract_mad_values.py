@@ -25,7 +25,7 @@ def extract_mad_values(best_family_id: str, centroid_data: Dict[str,Any], distan
 
         if not family_models:
             logHandler.warning_handler(f"Nessun modello trovato per la famiglia {best_family_id}", "extract_mad_values")
-            return 0.0, 0.0
+            return 0.0, 0.0, 0.0, 0
         
         for model in family_models:
             
@@ -36,7 +36,7 @@ def extract_mad_values(best_family_id: str, centroid_data: Dict[str,Any], distan
                     logHandler.warning_handler(f"Model found ({model.id}) but weights file missing.", "extract_mad_values")
                 else:
                     distance = distance_calculator.calculate_distance(
-                        model_weights, centroid_data, DistanceMetric.L2_DISTANCE
+                        model_weights, centroid_data, distance_calculator.default_metric
                     )
                     distances_from_centroid.append(distance)
             else:
@@ -50,4 +50,4 @@ def extract_mad_values(best_family_id: str, centroid_data: Dict[str,Any], distan
 
     except Exception as e:
         logHandler.error_handler(f"Errore nell'estrazione dei valori MAD per la famiglia {best_family_id}: {e}", "extract_mad_values")
-        return 0.0, 0.0
+        return 0.0, 0.0, 0.0, 0

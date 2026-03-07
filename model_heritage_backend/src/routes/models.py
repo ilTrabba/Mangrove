@@ -13,7 +13,7 @@ import torch
 
 from pathlib import Path  
 from safetensors import safe_open
-from datetime import datetime, timezone
+from datetime import datetime, time, timezone
 from src.log_handler import logHandler
 from collections import Counter
 from src.services.neo4j_service import neo4j_service
@@ -315,6 +315,7 @@ def upload_model():
         JSON response with model data and processing status
     """
     # Track resources for cleanup
+    t_start_clustering_preprocessing = datetime.now()
     tmp_path = None
     extract_tmp_dir = None
     file_path = None
@@ -482,7 +483,9 @@ def upload_model():
             first_file.filename
         )
         logger.info(f"[UPLOAD] Fingerprint saved: {num_layers} structural layers")
-
+        
+        t_end_clustering_preprocessing = datetime.now()
+        t_start_mother_preprocessing = datetime.now()
         # ========================================================================
         # 10. CALCULATING KURTOSIS 
         # ========================================================================
@@ -490,6 +493,8 @@ def upload_model():
         kurtosis = calc_ku(tensors_dict)
         logger.info(f"[UPLOAD] Kurtosis: {kurtosis}")
 
+        t_end_mother_preprocessing = datetime.now()
+        t_start_clustering = datetime.now()
         # ========================================================================
         # 11. SAVING FINAL NORMALIZED SAFETENSORS FILE
         # ========================================================================
@@ -551,7 +556,10 @@ def upload_model():
         
         logger.info(f"[UPLOAD] Model saved to Neo4j: {model_id}")
         
-        result = mgmt_system.process_new_model(model_data)
+        delta_clustering_preprocessing = t_end_clustering_preprocessing - t_start_clustering_preprocessing
+        delta_mother_preprocessing = t_end_mother_preprocessing - t_start_mother_preprocessing
+        result = mgmt_system.process_new_model(model_data, t_start_clustering, delta_clustering_preprocessing, delta_mother_preprocessing)
+
         if result.get('status') != 'success':
             raise Exception(f"ModelManagementSystem failed: {result.get('error', 'Unknown error')}")
         

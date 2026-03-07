@@ -11,6 +11,7 @@ from src.routes.models import models_bp
 from src.routes.graph import graph_bp
 from src.services.neo4j_service import neo4j_service
 from src.services.url_verification_service import URLVerificationService
+from src.routes.nl_query import nl_query_bp
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
@@ -31,6 +32,7 @@ CORS(app)
 app.register_blueprint(user_bp, url_prefix='/api')
 app.register_blueprint(models_bp, url_prefix='/api')
 app.register_blueprint(graph_bp, url_prefix='/api')
+app.register_blueprint(nl_query_bp, url_prefix='/api')
 
 # Initialize URL verification service
 url_verification_service = None

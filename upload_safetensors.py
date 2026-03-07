@@ -1,5 +1,6 @@
 import os
 import re
+import re
 import sys
 import time
 import random
@@ -22,10 +23,10 @@ from pathlib import Path
 # - "round_robin": un file da ogni albero a depth 0, poi un file da ogni albero a depth 1, ecc. 
 # - "worst_case": figli prima dei genitori (massimizza conflitti di dipendenza)
 
-POLICY = "breadth_first_per_albero"
+POLICY = "breadth_first_per_albero" # Modifica con la policy desiderata
 
 # Path della directory contenente i file safetensors
-DATASET_PATH = "/home/trabbo/Documents/Universita/BigData/Models_for_Project/MoTHer"
+DATASET_PATH = "/mnt/c/Users/hp/dataset_model_heritage"  # Modifica con il path corretto del tuo dataset
 
 # Path del repository Model_Graph
 REPO_PATH = os.path.expanduser("/home/trabbo/Documents/GitHub/Model_Graph")
@@ -40,6 +41,7 @@ BACKEND_TIMEOUT = 200
 POLL_INTERVAL = 2
 
 # Tempo massimo di attesa per un singolo upload (secondi)
+UPLOAD_TIMEOUT = 500
 UPLOAD_TIMEOUT = 500
 
 # ============================================
@@ -97,10 +99,10 @@ def explore_dataset(dataset_path):
         log(f"ERRORE: Directory non trovata: {dataset_path}")
         sys.exit(1)
     
-    # Verifica se il path è già un albero (contiene file . safetensors o cartelle depth_N)
+    # Verifica se il path è già un albero (contiene file .safetensors o cartelle depth_N)
     is_single_tree = False
     for item in dataset.iterdir():
-        if (item.is_file() and item.suffix == ". safetensors") or \
+        if (item.is_file() and item.suffix == ".safetensors") or \
            (item.is_dir() and item.name.startswith("depth_")):
             is_single_tree = True
             break
@@ -123,7 +125,7 @@ def explore_dataset(dataset_path):
                 if 0 not in catalog[tree_name]:
                     catalog[tree_name][0] = []
                 catalog[tree_name][0].append({
-                    "filename": item. name,
+                    "filename": item.name,
                     "path": str(item)
                 })
         
@@ -131,7 +133,7 @@ def explore_dataset(dataset_path):
         for item in tree_dir.iterdir():
             if item.is_dir() and item.name.startswith("depth_"):
                 try:
-                    depth = int(item.name. split("_")[1])
+                    depth = int(item.name.split("_")[1])
                 except (IndexError, ValueError):
                     continue
                 
@@ -151,7 +153,7 @@ def get_max_depth(catalog):
     """Ritorna la profondità massima presente nel catalogo."""
     max_depth = 0
     for tree_name, depths in catalog.items():
-        for depth in depths. keys():
+        for depth in depths.keys():
             max_depth = max(max_depth, depth)
     return max_depth
 
@@ -162,7 +164,7 @@ def get_all_files_at_depth(catalog, depth):
     for tree_name in sorted(catalog.keys()):
         if depth in catalog[tree_name]: 
             for file_info in catalog[tree_name][depth]:
-                files. append({
+                files.append({
                     **file_info,
                     "tree": tree_name,
                     "depth": depth
@@ -209,10 +211,14 @@ def apply_policy(catalog, policy):
         
         while low <= high:
             if turn_high:
-                ordered_files.extend(get_all_files_at_depth(catalog, high))
+                current_files = get_all_files_at_depth(catalog, high)
+                random.shuffle(current_files)  # Mescola i file a questa profondità
+                ordered_files.extend(current_files)
                 high -= 1
             else:
-                ordered_files.extend(get_all_files_at_depth(catalog, low))
+                current_files = get_all_files_at_depth(catalog, low)
+                random.shuffle(current_files)  # Mescola i file a questa profondità
+                ordered_files.extend(current_files)
                 low += 1
             turn_high = not turn_high
     
@@ -306,7 +312,7 @@ def wait_for_backend(timeout=BACKEND_TIMEOUT):
                 return True
         except requests.exceptions.ConnectionError:
             pass
-        except requests.exceptions. Timeout:
+        except requests.exceptions.Timeout:
             pass
         
         time.sleep(POLL_INTERVAL)

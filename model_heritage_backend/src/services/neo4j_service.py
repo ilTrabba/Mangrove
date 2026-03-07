@@ -540,7 +540,7 @@ class Neo4jService:
                     session.run(query, {'family_id': family_id})
                     return True
             except Exception as e:
-                logHandler. error_handler(f"Failed to clear relationships: {e}", "rebuild_family_tree_ultra")
+                logHandler.error_handler(f"Failed to clear relationships: {e}", "rebuild_family_tree_ultra")
                 return False
         
         # Extract edges WITH distance in ONE iteration

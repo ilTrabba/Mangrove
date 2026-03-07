@@ -21,10 +21,9 @@ logger = logging.getLogger(__name__)
 class DistanceMetric(Enum):
     """Available distance metrics for model comparison"""
     L2_DISTANCE = "l2_distance"
-    COSINE_SIMILARITY = "cosine_similarity"
-    HYBRID_DISTANCE = "hybrid_distance"
-    RMS_L2_DISTANCE = "RMS_L2"
-    MAE = "MAE"
+    COSINE_DISTANCE = "cosine_distance"
+    REL_FRO_DISTANCE = "rel_fro_distance"
+    SPECTRAL_DISTANCE = "spectral_distance"
 
 class ModelType(Enum):
     """Model types for optimized distance calculation"""
@@ -114,66 +113,84 @@ class ModelDistanceCalculator:
         
         return cosine_dist
 
-    def calculate_rms_l2_layer_distance(self, tensor1: torch.Tensor, tensor2: torch.Tensor) -> float:
-        """
-        Calculate RMS-L2 distance between two tensors (single layer).
-        
-        RMS (Root Mean Square) normalizes by the number of elements.
-        
-        Args:
-            tensor1: First tensor
-            tensor2: Second tensor
-            
-        Returns:
-            RMS-L2 distance as float
-        """
+    def calculate_relative_frobenius_layer_distance(self, tensor1: torch.Tensor, tensor2: torch.Tensor, eps: float = 1e-12) -> Optional[float]:
+        try:
+            t1 = tensor1.detach().cpu()
+            t2 = tensor2.detach().cpu()
 
-        tensor1 = tensor1.detach().cpu()
-        tensor2 = tensor2.detach().cpu()
+            if t1.dtype == torch.bfloat16:
+                t1 = t1.float()
+            if t2.dtype == torch.bfloat16:
+                t2 = t2.float()
 
-        if tensor1.dtype == torch.bfloat16:
-            tensor1 = tensor1.float()
-        if tensor2.dtype == torch.bfloat16:
-            tensor2 = tensor2.float()
+            if t1.shape != t2.shape:
+                return None
 
-        diff = tensor1.numpy() - tensor2.numpy()
-        diff_flat = diff.flatten()
-        rms_dist = np.sqrt(np.mean(diff_flat ** 2))
-        return rms_dist
+            diff_norm = torch.linalg.norm((t1 - t2).reshape(-1), ord=2).item()
+            n1 = torch.linalg.norm(t1.reshape(-1), ord=2).item()
+            n2 = torch.linalg.norm(t2.reshape(-1), ord=2).item()
 
-    def calculate_hybrid_layer_distance(self, 
-                                   tensor1: torch.Tensor, 
-                                   tensor2: torch.Tensor) -> float:
-        """
-        Calculate Hybrid distance (α·L2 + (1-α)·Cosine) between two tensors (single layer).
-        
-        Args:
-            tensor1: First tensor
-            tensor2: Second tensor
-            alpha: Weight for L2 distance (0.0 to 1.0)
-            
-        Returns:
-            Hybrid distance as float, or None if calculation fails
-        """
-        # Variabile per assegnare il giusto "peso" alle 2 metriche (alpha weighting)
-        alpha = 0.3
+            denom = n1 + n2 + eps
+            return float(diff_norm / denom)
 
-        # Calculate L2 component
-        l2_dist = self.calculate_l2_layer_distance(tensor1, tensor2)
-        
-        # Calculate Cosine component
-        cosine_dist = self.calculate_cosine_layer_distance(tensor1, tensor2)
-        
-        # If cosine calculation failed (zero norm), return None
-        if cosine_dist is None:
+        except Exception:
             return None
-        
-        # Combine with alpha weighting
-        hybrid_dist = alpha * l2_dist + (1 - alpha) * cosine_dist
-        
-        return hybrid_dist
-    
-    # excluded_patterns: Optional[frozenset] = None, se si vuole passare i pattern da escludere come argomento
+
+    def to_2d(self, t: torch.Tensor) -> torch.Tensor:
+        if t.ndim == 2:
+            return t
+        if t.ndim == 4:
+            # Conv: (out, in, kH, kW) -> (out, in*kH*kW)
+            return t.reshape(t.shape[0], -1)
+        if t.ndim == 1:
+            return t.reshape(1, -1)
+        # Generic fallback: keep first dim as "rows"
+        return t.reshape(t.shape[0], -1)
+
+    def calculate_spectral_layer_distance(self, tensor1: torch.Tensor, tensor2: torch.Tensor, eps: float = 1e-12, topk: Optional[int] = None, relative: bool = True) -> Optional[float]:
+        try:
+            t1 = tensor1.detach().cpu()
+            t2 = tensor2.detach().cpu()
+
+            if t1.dtype == torch.bfloat16:
+                t1 = t1.float()
+            if t2.dtype == torch.bfloat16:
+                t2 = t2.float()
+
+            if t1.shape != t2.shape:
+                return None
+
+            m1 = self.to_2d(t1)
+            m2 = self.to_2d(t2)
+
+            # Compute singular values
+            s1 = torch.linalg.svdvals(m1)
+            s2 = torch.linalg.svdvals(m2)
+
+            # Ensure same length (should be, given same shape -> same min(m,n))
+            if s1.shape != s2.shape:
+                return None
+
+            # Optionally keep only top-k singular values (largest)
+            if topk is not None:
+                k = min(topk, s1.numel())
+                s1 = s1[:k]
+                s2 = s2[:k]
+
+            diff = s1 - s2
+            dist = torch.linalg.norm(diff, ord=2).item()
+
+            if not relative:
+                return float(dist)
+
+            n1 = torch.linalg.norm(s1, ord=2).item()
+            n2 = torch.linalg.norm(s2, ord=2).item()
+            denom = n1 + n2 + eps
+            return float(dist / denom)
+
+        except Exception:
+            return None
+
     def calculate_distance(self, 
                       weights1: Dict[str, Any], 
                       weights2: Dict[str, Any], 
@@ -185,9 +202,8 @@ class ModelDistanceCalculator:
         Args:
             weights1: First model's normalized weights
             weights2: Second model's normalized weights
-            metric_type: Type of distance metric to use. Options: "l2", "cosine", "rms_l2", "hybrid"
+            metric_type: Type of distance metric to use. Options: "l2", "cosine", "rel_fro", "spectral"
             excluded_patterns: Set of patterns for layers to exclude. If None, uses EXCLUDED_LAYER_PATTERNS
-            alpha: Weight for L2 in hybrid metric (only used when metric_type="hybrid")
             
         Returns:
             Average distance across common parameters, or inf if no valid layers
@@ -196,13 +212,13 @@ class ModelDistanceCalculator:
             ValueError: If metric_type is not one of the supported metrics
         """
         # Validate metric type
-        valid_metrics = [DistanceMetric.L2_DISTANCE, DistanceMetric.COSINE_SIMILARITY, DistanceMetric.RMS_L2_DISTANCE, DistanceMetric.HYBRID_DISTANCE]
+        valid_metrics = [DistanceMetric.L2_DISTANCE, DistanceMetric.COSINE_DISTANCE, DistanceMetric.REL_FRO_DISTANCE, DistanceMetric.SPECTRAL_DISTANCE]
         if metric_type not in valid_metrics:
             raise logHandler.error_handler(f"Invalid metric_type '{metric_type}'. Must be one of {valid_metrics}","calculate_distance")
-        
+
         # Use default excluded patterns if none provided
-        
-        excluded_patterns = FilteringPatterns.FULL_MODEL
+        if excluded_patterns is None:
+            excluded_patterns = FilteringPatterns.ATTENTION_ONLY
         
         try:
             # Get common parameters (intersection)
@@ -260,12 +276,12 @@ class ModelDistanceCalculator:
                 # Calculate layer distance using appropriate metric
                 if metric_type == DistanceMetric.L2_DISTANCE:
                     layer_distance = self.calculate_l2_layer_distance(tensor1, tensor2)
-                elif metric_type == DistanceMetric.COSINE_SIMILARITY:
+                elif metric_type == DistanceMetric.COSINE_DISTANCE:
                     layer_distance = self.calculate_cosine_layer_distance(tensor1, tensor2)
-                elif metric_type == DistanceMetric.RMS_L2_DISTANCE:
-                    layer_distance = self.calculate_rms_l2_layer_distance(tensor1, tensor2)
-                elif metric_type == DistanceMetric.HYBRID_DISTANCE:
-                    layer_distance = self.calculate_hybrid_layer_distance(tensor1, tensor2)
+                elif metric_type == DistanceMetric.REL_FRO_DISTANCE:
+                    layer_distance = self.calculate_relative_frobenius_layer_distance(tensor1, tensor2)
+                elif metric_type == DistanceMetric.SPECTRAL_DISTANCE:
+                    layer_distance = self.calculate_spectral_layer_distance(tensor1, tensor2)
                 
                 # Skip layer if distance calculation failed (e.g., zero norm for cosine)
                 if layer_distance is None:

@@ -154,7 +154,8 @@ class FamilyGuardian:
                           median: Optional[float] = None,
                           mad_val: Optional[float] = None,
                           max_dist_from_centroid: Optional[float] = None,
-                          num_of_nodes: int = 0) -> Tuple[bool, float, float, str]:
+                          num_of_nodes: int = 0,
+                          metric: Optional[str] = None) -> Tuple[bool, float, float, str]:
         """
         Valuta se accettare il modello nella famiglia.
         
@@ -166,11 +167,36 @@ class FamilyGuardian:
         Returns:
             Tuple(is_accepted, confidence_score, final_threshold, reason_string)
         """
+        if(metric == "l2_distance"):
+            safe_harbor_1 = 2.5
+            safe_harbor_2 = 2.75
+            cold_start_factor = 5
+            scaling_factor = 1.018
+        elif(metric == "cosine_distance"):
+            safe_harbor_1 = 0.0009
+            safe_harbor_2 = 0.0015
+            cold_start_factor = 0.003
+            scaling_factor = 1.018
+        elif(metric == "rel_fro_distance"):
+            safe_harbor_1 = 0.06
+            safe_harbor_2 = 0.08
+            cold_start_factor = 0.12
+            scaling_factor = 1.018
+        elif(metric == "spectral_distance"):
+            safe_harbor_1 = 2.5
+            safe_harbor_2 = 2.75
+            cold_start_factor = 5
+            scaling_factor = 1.018
+
+
+        if cosine_sim < 0:
+            safe_harbor_1 *= 0.85  # Se direzione opposta, rendiamo il safe harbor più stringente
+            safe_harbor_2 *= 0.95  # Se direzione opposta, rendiamo il safe harbor più stringente
         # 1. Safe Harbor: Se il modello è molto vicino alla radice, entra sempre.
         #    Questo gestisce la forma a "Stella" (figli ortogonali diretti).
         if dist_to_root is not None:
             # Safe harbor definito come il max tra un valore hard coded e la distanza massima registrata tra i figli diretti della radice
-            safe_harbor_limit = max(self.min_threshold * 2.5, 2.75)
+            safe_harbor_limit = max(self.min_threshold * safe_harbor_1, safe_harbor_2)
             if dist_to_root < safe_harbor_limit:
                 return True, 1.0, safe_harbor_limit, "Accepted (Safe Harbor: Near Root)"
 
@@ -180,29 +206,16 @@ class FamilyGuardian:
         #    La penalty potrebbe dover dipendere dalla anzianità della famiglia, troppo penalizzante all'inizio.
 
         growth_factor = None
-        alpha = 1.0
-        if cosine_sim >= 0.5:   # 0.4 ?
+        if cosine_sim >= 0.5:   
             growth_factor = 0.85
             penalty_factor = 0.85
         elif cosine_sim >= 0.2:
             growth_factor = 0.6          
-            penalty_factor = 1.05
+            penalty_factor = 1
         elif cosine_sim >= 0:             
-            penalty_factor = 1 + (alpha * 0.2 * (1 - cosine_sim))      #da 0.2 a 0.1?   
+            penalty_factor = 1 + (0.2 * (1 - cosine_sim))        
         else:             
-            penalty_factor = 1 + alpha * (1 - cosine_sim)
-
-        '''
-        if nun_of_nodes < 4:
-            alpha = 0.1  
-        elif nun_of_nodes < 7:
-            alpha = 0.2
-        elif nun_of_nodes < 10:
-            alpha = 0.3
-        else:
-            alpha = 0.5
-        penalty_factor = 1 + alpha * (1 - cosine_sim)
-        '''
+            penalty_factor = 1 + (1 - cosine_sim)
         
         dist_penalized = dist_to_centroid * penalty_factor
         
@@ -211,10 +224,10 @@ class FamilyGuardian:
         #    Cerchiamo il raggio massimo storico della famiglia
         #    Il cap è il massimo tra il raggio storico e la distanza attuale dalla radice (con margine)
         #    Usiamo dist_to_root come riferimento per "quanto lontano può andare"
-        if num_of_nodes <= 3: #minore uguale invece che minore
+        if num_of_nodes <= 3: # minore uguale invece che minore
             # Cold Start: Se abbiamo <= 3 distanze, la statistica è inaffidabile.
             # Usiamo un'euristica basata sul max storico o sul min_threshold.
-            stats_threshold = max(self.min_threshold * 5, max_dist_from_centroid * 1.5) 
+            stats_threshold = max(self.min_threshold * cold_start_factor, max_dist_from_centroid * 1.5) 
             evolutionary_cap = stats_threshold
         else:
             if max_family_radius is not None:
@@ -233,7 +246,7 @@ class FamilyGuardian:
         # 5. Soglia Finale Bounded
         #    La soglia è statistica, ma "clippata" dal tetto evolutivo.
         #    Mai inferiore al min_threshold globale.
-        final_threshold = max(self.min_threshold, min(stats_threshold, evolutionary_cap)) * 1.018 # arrotondamento dell'1%
+        final_threshold = max(self.min_threshold, min(stats_threshold, evolutionary_cap)) * scaling_factor # arrotondamento dell'1%
         
         # Decisione
         is_accepted = dist_penalized <= final_threshold
@@ -404,7 +417,7 @@ class FamilyClusteringSystem:
                     continue
                 
                 distance = self.distance_calculator.calculate_distance(
-                    root_weights, model_weights, DistanceMetric.L2_DISTANCE
+                    root_weights, model_weights, self.distance_calculator.default_metric
                 )
                 
                 if distance > max_distance:
@@ -486,7 +499,7 @@ class FamilyClusteringSystem:
                     max_family_radius = self.max_distance_root_leaves(root_weights, best_family_id)
                     
                     dist_to_root = self.distance_calculator.calculate_distance(
-                        root_weights, model_weights, DistanceMetric.L2_DISTANCE
+                        root_weights, model_weights, self.distance_calculator.default_metric
                     )
                     
                     # Directional Metric
@@ -507,7 +520,8 @@ class FamilyClusteringSystem:
                     median=median,
                     mad_val=mad_val,
                     max_dist_from_centroid=max_dist_from_centroid,
-                    num_of_nodes=num_of_nodes
+                    num_of_nodes=num_of_nodes,
+                    metric=self.distance_calculator.default_metric.value
                 )
                 
                 logger.info(f"Family {best_family_id} check: {reason} | Decision: {'ACCEPTED' if is_accepted else 'REJECTED'}")
@@ -529,7 +543,6 @@ class FamilyClusteringSystem:
                     'updated_at': datetime.now(timezone.utc)
                 }
                 neo4j_service.update_family(family_id, updates)
-
             return family_id, confidence
 
         except Exception as e:
@@ -591,7 +604,7 @@ class FamilyClusteringSystem:
             Tuple of (best_family_id, confidence_score)
         """
         try:
-            distance_metric = DistanceMetric.L2_DISTANCE
+            distance_metric = self.distance_calculator.default_metric
             best_family_id = None
             best_distance = float('inf')
             

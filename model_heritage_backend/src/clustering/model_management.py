@@ -10,7 +10,7 @@ import logging
 import numpy as np
 
 from typing import Dict, Any
-from datetime import datetime, timezone
+from datetime import datetime, time, timezone
 from src.log_handler import logHandler
 from src.db_entities.entity import Model
 from src.services.neo4j_service import neo4j_service
@@ -59,7 +59,14 @@ class ModelManagementSystem:
         
         logger.info("Initialized ModelManagementSystem with components")
     
-    def process_new_model(self, model_data:  Dict[str, Any]) -> Dict[str, Any]:
+    def salva_tempo(self, nome_modello, delta_clustering_preprocessing, delta_clustering, delta_mother, delta_mother_preprocessing):
+        total_clustering_time = delta_clustering_preprocessing + delta_clustering
+        total_mother_time = delta_mother + delta_mother_preprocessing
+
+        with open("tempi.txt", "a") as f:
+            f.write(f"{nome_modello}: {total_clustering_time}, {total_mother_time}\n")
+
+    def process_new_model(self, model_data:  Dict[str, Any], t_start_clustering, delta_clustering_preprocessing, delta_mother_preprocessing) -> Dict[str, Any]:
         """
         Complete processing pipeline for a new model.
         
@@ -71,7 +78,7 @@ class ModelManagementSystem:
         
         Args: 
             model_data: Dictionary with model attributes
-            
+            start_time: Timestamp when processing started
         Returns:
             Dictionary with processing results
         """
@@ -91,6 +98,9 @@ class ModelManagementSystem:
             family_id, family_confidence = self.family_clustering.assign_model_to_family(model_proxy)
             logger.info(f"[SEARCHING FAMILY] Assigned model {model_id} to family {family_id} (confidence: {family_confidence:.3f})")
             
+
+            delta_clustering = datetime.now() - t_start_clustering
+            t_start_mother = datetime.now()
             # =====================================================================
             # Step 2: Build complete family tree
             # =====================================================================
@@ -125,6 +135,7 @@ class ModelManagementSystem:
                     tree_confidence
                 )
                 
+                delta_mother = datetime.now()- t_start_mother
                 elapsed_ms = (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
                 
                 if not success:
@@ -141,7 +152,9 @@ class ModelManagementSystem:
                     logger.info(f"✅ Model {model_id} is a root node")
             else:
                 logger.info(f"✅ Model {model_id} assigned as first root in family {family_id}")
+                delta_mother = t_start_mother - t_start_mother
             
+            self.salva_tempo(model_proxy.name, delta_clustering_preprocessing, delta_clustering, delta_mother, delta_mother_preprocessing)
             # =====================================================================
             # Step 4: Update centroid statistics 
             # =====================================================================
