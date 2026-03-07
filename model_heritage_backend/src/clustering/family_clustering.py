@@ -170,7 +170,7 @@ class FamilyGuardian:
         #    Questo gestisce la forma a "Stella" (figli ortogonali diretti).
         if dist_to_root is not None:
             # Safe harbor definito come il max tra un valore hard coded e la distanza massima registrata tra i figli diretti della radice
-            safe_harbor_limit = max(self.min_threshold * 2.5, 2.5)
+            safe_harbor_limit = max(self.min_threshold * 2.5, 2.75)
             if dist_to_root < safe_harbor_limit:
                 return True, 1.0, safe_harbor_limit, "Accepted (Safe Harbor: Near Root)"
 
@@ -183,7 +183,7 @@ class FamilyGuardian:
         alpha = 1.0
         if cosine_sim >= 0.5:   # 0.4 ?
             growth_factor = 0.85
-            penalty_factor = 1.0
+            penalty_factor = 0.85
         elif cosine_sim >= 0.2:
             growth_factor = 0.6          
             penalty_factor = 1.05
@@ -233,7 +233,7 @@ class FamilyGuardian:
         # 5. Soglia Finale Bounded
         #    La soglia è statistica, ma "clippata" dal tetto evolutivo.
         #    Mai inferiore al min_threshold globale.
-        final_threshold = max(self.min_threshold, min(stats_threshold, evolutionary_cap)) * 1.017 # arrotondamento dell'1%
+        final_threshold = max(self.min_threshold, min(stats_threshold, evolutionary_cap)) * 1.018 # arrotondamento dell'1%
         
         # Decisione
         is_accepted = dist_penalized <= final_threshold
@@ -404,7 +404,7 @@ class FamilyClusteringSystem:
                     continue
                 
                 distance = self.distance_calculator.calculate_distance(
-                    root_weights, model_weights, DistanceMetric.L2_DISTANCE, FilteringPatterns.FULL_MODEL
+                    root_weights, model_weights, DistanceMetric.L2_DISTANCE
                 )
                 
                 if distance > max_distance:
@@ -486,7 +486,7 @@ class FamilyClusteringSystem:
                     max_family_radius = self.max_distance_root_leaves(root_weights, best_family_id)
                     
                     dist_to_root = self.distance_calculator.calculate_distance(
-                        root_weights, model_weights, DistanceMetric.L2_DISTANCE, FilteringPatterns.FULL_MODEL
+                        root_weights, model_weights, DistanceMetric.L2_DISTANCE
                     )
                     
                     # Directional Metric
@@ -626,7 +626,7 @@ class FamilyClusteringSystem:
                     continue
                 
                 distance = self.distance_calculator.calculate_distance(
-                    model_weights, centroid_weights, distance_metric, FilteringPatterns.FULL_MODEL
+                    model_weights, centroid_weights, distance_metric
                 )
                 
                 if distance < best_distance:

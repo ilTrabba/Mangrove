@@ -21,6 +21,7 @@ model_heritage_backend/uploads/*.bin
 model_heritage_backend/uploads/*.safetensors
 model_heritage_backend/weights
 model_heritage_backend/readmes
+z_idee
 weights/
 readmes/
 node_modules/

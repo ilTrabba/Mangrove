@@ -258,7 +258,7 @@ export default function AddModelPage() {
         <CardHeader>
           <CardTitle>Model Upload</CardTitle>
           <CardDescription>
-            Supported formats: .safetensors, .pt, .bin, .pth, .zip
+            Supported formats: .safetensors, .pt, .bin, .pth, .zip, .ckpt
           </CardDescription>
         </CardHeader>
         
@@ -272,7 +272,7 @@ export default function AddModelPage() {
                   id="file"
                   type="file"
                   multiple
-                  accept=".safetensors,.pt,.bin,.pth,.zip"
+                  accept=".safetensors,.pt,.bin,.pth,.zip,.ckpt"
                   onChange={handleFilesChange}
                   className="hidden"
                 />

@@ -94,7 +94,7 @@ def calc_ku(weights: Dict[str, Any]) -> float:
             param_lower = param_name.lower()
 
             # Exclude normalization, embedding, and head layers (your existing filter)
-            if any(pattern in param_lower for pattern in FilteringPatterns.FULL_MODEL):
+            if any(pattern in param_lower for pattern in FilteringPatterns.BACKBONE_ONLY):
                 excluded_count += 1
                 continue
 
@@ -161,91 +161,13 @@ def calc_ku(weights: Dict[str, Any]) -> float:
         logger.error(f"Error calculating kurtosis: {e}", exc_info=True)
         return 0.0
 
-'''
-def calc_ku(weights: Dict[str, Any]) -> float:
-    """
-    Calculate kurtosis of model weights (only 2D square tensors).
-    
-    Computes the kurtosis (excess kurtosis using Fisher definition) of weight
-    distributions, excluding normalization, embedding, and head layers.
-    Only considers square 2D matrices (e.g., attention projection matrices).
-    
-    Args:
-        weights: Dictionary of layer names to tensors (already normalized names)
-        
-    Returns:
-        Kurtosis value (float), or 0.0 if no valid weights found or error occurs
-        
-    Note:
-        - Excludes layers matching EXCLUDED_LAYER_PATTERNS (case-insensitive)
-        - Only includes 2D square matrices (shape[0] == shape[1])
-        - Uses Fisher definition (excess kurtosis, normal distribution = 0)
-    """
-    try:
-        all_weights = []
-        excluded_count = 0
-        shape_filtered_count = 0
-        
-        for param_name, param_tensor in weights.items():
-
-            # Convert to lowercase for case-insensitive matching
-            param_lower = param_name.lower()
-            
-            # Exclude normalization, embedding, and head layers
-            if any(pattern in param_lower for pattern in FilteringPatterns.BACKBONE_ONLY):
-                excluded_count += 1
-                continue
-            
-            # Verify it's a tensor
-            if not isinstance(param_tensor, torch.Tensor):
-                continue
-            
-            # Only include 2D square matrices
-            if not (param_tensor.ndim == 2 and param_tensor.shape[0] == param_tensor.shape[1]):
-                shape_filtered_count += 1
-                continue
-            
-            # Flatten and add to collection
-            param_weights = param_tensor.detach().cpu().numpy().flatten()
-            all_weights.extend(param_weights)
-        
-        if not all_weights:
-            logger.warning(
-                f"No valid weights found for kurtosis calculation. "
-                f"Excluded: {excluded_count}, Shape filtered: {shape_filtered_count}"
-            )
-            return 0.0
-        
-        # Convert to numpy array
-        all_weights = np.array(all_weights)
-        
-        # Calculate kurtosis (using Fisher definition, excess kurtosis)
-        kurt = stats.kurtosis(all_weights, fisher=True)
-        
-        # Handle NaN/inf cases
-        if np.isnan(kurt) or np.isinf(kurt):
-            logger.warning("Kurtosis calculation resulted in NaN or Inf")
-            return 0.0
-        
-        logger.debug(
-            f"Kurtosis calculated: {kurt:.4f} "
-            f"({len(all_weights)} weights from square matrices, "
-            f"{excluded_count} layers excluded, {shape_filtered_count} shape filtered)"
-        )
-        
-        return float(kurt)
-        
-    except Exception as e:
-        logger.error(f"Error calculating kurtosis: {e}", exc_info=True)
-        return 0.0
-''' 
 def compute_lambda(distance_matrix: np.ndarray, c: float = 0.3) -> float:
     """
     Compute lambda as defined in the MoTHer paper:
     
         λ = c * (1/n^2) * Σ_{i,j} D_ij
     
-    Parameters
+    Parameters 
     ----------
     distance_matrix : np.ndarray
         Matrix of pairwise distances between models (n x n).

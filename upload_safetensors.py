@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 import time
 import random
@@ -21,25 +22,25 @@ from pathlib import Path
 # - "round_robin": un file da ogni albero a depth 0, poi un file da ogni albero a depth 1, ecc. 
 # - "worst_case": figli prima dei genitori (massimizza conflitti di dipendenza)
 
-POLICY = "casuale"
+POLICY = "breadth_first_per_albero"
 
 # Path della directory contenente i file safetensors
-DATASET_PATH = "/mnt/c/Users/hp/dataset_model_heritage/Tree-0-MoTher"
+DATASET_PATH = "/home/trabbo/Documents/Universita/BigData/Models_for_Project/MoTHer"
 
 # Path del repository Model_Graph
-REPO_PATH = os.path.expanduser("~/projects/Model_Graph")
+REPO_PATH = os.path.expanduser("/home/trabbo/Documents/GitHub/Model_Graph")
 
 # Endpoint API
 API_URL = "http://localhost:5001/api/models"
 
 # Timeout per l'attesa del backend (secondi)
-BACKEND_TIMEOUT = 120
+BACKEND_TIMEOUT = 200
 
 # Intervallo di polling per verificare se il backend è pronto (secondi)
 POLL_INTERVAL = 2
 
 # Tempo massimo di attesa per un singolo upload (secondi)
-UPLOAD_TIMEOUT = 120
+UPLOAD_TIMEOUT = 500
 
 # ============================================
 # CONFIGURAZIONE SINCRONIZZAZIONE
@@ -168,7 +169,6 @@ def get_all_files_at_depth(catalog, depth):
                 })
     return files
 
-
 # ============================================
 # POLICY DI ORDINAMENTO
 # ============================================
@@ -279,7 +279,8 @@ def start_tool(repo_path):
     
     os.chdir(repo_path)
     
-    # Avvia run. sh in background
+    # Avvia run.
+    # sh in background
     process = subprocess.Popen(
         ["./run.sh"],
         stdout=subprocess.PIPE,
@@ -398,7 +399,8 @@ def upload_file(file_info):
             files = {"file": (filename, f, "application/octet-stream")}
             data = {
                 "name": model_name,
-                "description": f"Uploaded from tree:  {file_info['tree']}, depth: {file_info['depth']}"
+                "description": f"Uploaded from tree:  {file_info['tree']}, depth: {file_info['depth']}",
+                "is_foundation_model": bool(re.search(r"D0", model_name))
             }
             
             response = requests.post(
@@ -419,7 +421,7 @@ def upload_file(file_info):
             return False, f"ERRORE ({response.status_code}): {error_msg}", duration, None
     
     except requests.exceptions. Timeout:
-        duration = time. time() - start_time
+        duration = time.time() - start_time
         return False, "ERRORE: Timeout durante l'upload", duration, None
     
     except Exception as e:

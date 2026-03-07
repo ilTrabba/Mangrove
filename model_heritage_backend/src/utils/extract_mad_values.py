@@ -36,7 +36,7 @@ def extract_mad_values(best_family_id: str, centroid_data: Dict[str,Any], distan
                     logHandler.warning_handler(f"Model found ({model.id}) but weights file missing.", "extract_mad_values")
                 else:
                     distance = distance_calculator.calculate_distance(
-                        model_weights, centroid_data, DistanceMetric.L2_DISTANCE, FilteringPatterns.FULL_MODEL
+                        model_weights, centroid_data, DistanceMetric.L2_DISTANCE
                     )
                     distances_from_centroid.append(distance)
             else:

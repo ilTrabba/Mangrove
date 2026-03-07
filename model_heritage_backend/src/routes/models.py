@@ -622,58 +622,120 @@ def _process_zip_file(file, extract_tmp_dir:  str, tmp_path: str) -> tuple:
     
     return loaded_object, metadata
 
+import torch
+import numpy as np
+
 def _process_binary_file(file, filename: str, extract_tmp_dir: str, tmp_path: str):
-    """Processa un file binario (. bin, .pt, etc.)."""
     logger.info(f"[UPLOAD] Processing binary file: {filename}")
     bin_path = os.path.join(extract_tmp_dir, filename)
     file.save(bin_path)
     
-    success, loaded_object = sharded_file_error.smart_load_bin(bin_path, extract_tmp_dir)
-    
-    if not success:
-        raise ValueError(f'Unable to load {filename}:  not a valid PyTorch binary')
-    
-    if loaded_object is None:
-        # File was extracted as archive
-        found_models = sharded_file_error.scan_for_model_files(extract_tmp_dir, include_no_extension=True)
-        
-        if not found_models: 
-            raise FileNotFoundError('No valid model files found in binary archive')
-        
-        if len(found_models) > 1:
-            merge_and_convert_shards(extract_tmp_dir, tmp_path)
-            return None
-        else:
-            loaded_object = torch.load(found_models[0], map_location="cpu", weights_only=True)
-    
-    return loaded_object
+    loaded_object = None
 
-def _convert_to_safetensors(loaded_object, tmp_path:  str):
-    """Converte un oggetto PyTorch in safetensors."""
-    logger. info("[UPLOAD] Converting PyTorch object to safetensors...")
+    # TENTATIVO 1: Caricamento standard (weights_only=True)
+    try:
+        loaded_object = torch.load(bin_path, map_location="cpu", weights_only=True)
+        return loaded_object
+    except Exception:
+        pass # Se fallisce, passiamo al piano B (Whitelist)
+
+    # PIANO B: Whitelist Aggressiva
+    logger.warning(f"⚠️ [UPLOAD] Standard load failed for {filename}. Retrying with Extended Whitelist.")
     
-    if isinstance(loaded_object, torch. nn.Module):
-        state_dict = loaded_object.state_dict()
-    elif isinstance(loaded_object, dict):
-        if "state_dict" in loaded_object:
+    safe_list = []
+    
+    # 1. Aggiungiamo NumPy Scalar (Cruciale per il tuo errore)
+    # TRUCCO: Recuperiamo il riferimento esatto usato internamente
+    try:
+        safe_list.append(np.core.multiarray.scalar)
+    except AttributeError:
+        # Per NumPy 2.0+ o altre versioni dove il percorso è cambiato
+        try:
+            safe_list.append(np.scalar) 
+        except:
+            pass
+
+    # Aggiungiamo anche i tipi base di numpy che spesso causano problemi
+    safe_list.append(np.dtype)
+    
+    # 2. Aggiungiamo Lightning (Cruciale per .ckpt)
+    try:
+        from pytorch_lightning.callbacks.model_checkpoint import ModelCheckpoint
+        safe_list.append(ModelCheckpoint)
+    except ImportError:
+        pass
+
+    # 3. Altri colpevoli comuni nei .ckpt vecchi
+    try:
+        import collections
+        safe_list.append(collections.OrderedDict)
+    except:
+        pass
+
+    try:
+        with torch.serialization.safe_globals(safe_list):
+            loaded_object = torch.load(bin_path, map_location="cpu", weights_only=True)
+        logger.info("✅ [UPLOAD] Loaded safely with Extended Whitelist.")
+        return loaded_object
+
+    except Exception as e:
+        # PIANO C: Ultima spiaggia (SOLO se ti fidi dei file e vuoi sbloccare la situazione)
+        # Se sei in un ambiente controllato, puoi decommentare queste righe per forzare il caricamento.
+        # Altrimenti, rilancia l'errore.
+        
+        logger.error(f"❌ [UPLOAD] Whitelist failed: {e}")
+        
+        # SCOMMENTA QUI SOTTO SOLO SE VUOI FORZARE IL CARICAMENTO (RISCHIO SICUREZZA)
+        logger.warning("⚠️⚠️ [UPLOAD] FALLBACK: Loading with weights_only=False (UNSAFE MODE)")
+        loaded_object = torch.load(bin_path, map_location="cpu", weights_only=False)
+        return loaded_object
+        
+        raise ValueError(f"Unable to load safe checkpoint: {str(e)}")
+
+
+
+
+def _convert_to_safetensors(loaded_object, tmp_path: str):
+    """
+    Converte un oggetto PyTorch in safetensors.
+    Gestisce la priorità EMA e il disaccoppiamento della memoria (clone).
+    """
+    logger.info("[UPLOAD] Converting PyTorch object to safetensors...")
+    
+    state_dict = None
+
+    # 1. Logica di estrazione (Priorità EMA senza creare oggetti nuovi)
+    if isinstance(loaded_object, dict):
+        if "state_dict_ema" in loaded_object:
+            logger.info("ℹ️ [CONVERT] Using EMA weights.")
+            state_dict = loaded_object["state_dict_ema"]
+        elif "state_dict" in loaded_object:
             state_dict = loaded_object["state_dict"]
         elif "model" in loaded_object:
             state_dict = loaded_object["model"]
         else:
             state_dict = loaded_object
+            
+    elif isinstance(loaded_object, torch.nn.Module):
+        state_dict = loaded_object.state_dict()
     else:
         raise ValueError(f'Unexpected model format: {type(loaded_object)}')
     
-    # ✅ Filtra solo tensori (senza clone - safetensors gestisce internamente)
+    # 2. Pulizia: usiamo dict comprehension per evitare loop complessi
+    # .detach().clone() è essenziale per evitare errori di shared memory
     clean_state_dict = {
-        k: v. detach() if isinstance(v, torch. Tensor) else None
-        for k, v in state_dict.items()
+        k: v.detach().clone().contiguous() 
+        for k, v in state_dict.items() 
+        if isinstance(v, torch.Tensor)
     }
-    clean_state_dict = {k:  v for k, v in clean_state_dict.items() if v is not None}
     
-    save_file(clean_state_dict, tmp_path)
-    logger.info(f"✅ [UPLOAD] Conversion completed:  {len(clean_state_dict)} tensors")
+    if not clean_state_dict:
+        raise ValueError("No valid tensors found to convert.")
 
+    # 3. Salvataggio diretto
+    save_file(clean_state_dict, tmp_path, metadata={"format": "pt"})
+    logger.info(f"✅ [UPLOAD] Conversion completed: {len(clean_state_dict)} tensors")
+    
 def _cleanup_resources(tmp_path, extract_tmp_dir, file_path, readme_path):
     """Pulisce tutte le risorse temporanee."""
     # File temporaneo safetensors

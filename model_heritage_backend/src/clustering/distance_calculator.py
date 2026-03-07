@@ -173,11 +173,12 @@ class ModelDistanceCalculator:
         
         return hybrid_dist
     
+    # excluded_patterns: Optional[frozenset] = None, se si vuole passare i pattern da escludere come argomento
     def calculate_distance(self, 
                       weights1: Dict[str, Any], 
                       weights2: Dict[str, Any], 
                       metric_type: DistanceMetric = None,
-                      excluded_patterns: Optional[frozenset] = None) -> float:
+                      ) -> float:
         """
         Calculate distance between two sets of model weights using specified metric.
         
@@ -200,8 +201,8 @@ class ModelDistanceCalculator:
             raise logHandler.error_handler(f"Invalid metric_type '{metric_type}'. Must be one of {valid_metrics}","calculate_distance")
         
         # Use default excluded patterns if none provided
-        if excluded_patterns is None:
-            excluded_patterns = FilteringPatterns.BACKBONE_ONLY
+        
+        excluded_patterns = FilteringPatterns.FULL_MODEL
         
         try:
             # Get common parameters (intersection)
