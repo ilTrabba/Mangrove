@@ -113,7 +113,7 @@ If you use MANGROVE in academic work, please cite this repository.
 ```bibtex
 @software{mangrove_2026,
   title  = {MANGROVE: Model Lake Versioning Models},
-  author = {ilTrabba},
+  author = {ilTrabba, gabrulele},
   year   = {2026},
   url    = {[https://github.com/ilTrabba/Mangrove](https://github.com/ilTrabba/Mangrove)}
 }
