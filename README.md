@@ -1,122 +1,143 @@
-# MANGROVE — Model Lake Versioning System
+# MANGROVE🌿 — Model Lake Versioning Models
 
-MANGROVE is a full-stack system for **versioning and managing machine learning models**.  
-Unlike traditional model registries that rely mainly on metadata, MANGROVE focuses on **inferring and tracking model lineage (“heritage”) from model weights**, inspired by the approach introduced in *“Unsupervised Model Tree Heritage Recovery”* (Horwitz, Shul, Hoshen).
+<div align="center">
 
-## Overview
+<a href="#link-to-the-demo-paper">⚙️Demo paper</a>   |  
+<a href="#link-to-the-technical-report">📄Technical report</a>   |  
+<a href="#link-to-the-video">🎬Video demonstration</a>
 
-MANGROVE supports the management of the ML model lifecycle by providing:
+</div>
 
-- **Model version tracking**
-- **Model lineage / heritage management** (relationships between models)
-- **Reproducibility and traceability** of model evolution over time
-- A web-based interface and REST APIs for interacting with the system
+MANGROVE is a full‑stack system for curating, versioning, and auditing a “model lake” of machine-learning checkpoints, **specifically designed for environments dominated by iterative fine-tuning operations**. 
 
-## Architecture
+Unlike traditional model registries that rely primarily on human-provided metadata, MANGROVE emphasizes weight-based fingerprinting and lineage reconstruction. The system helps organize collections of checkpoints into families and recovers plausible parent–child relations. The resulting evolutionary structure is stored as a graph in Neo4j.
 
-The project is organized into three main components.
+By reworking and optimizing these methods within an incremental setting, this work challenges the model‑lake paradigm and addresses the additional complexities introduced by big‑data environments where thousands of fine-tuned derivatives stem from a few foundation models. The proposed and implemented approach is based on the incremental ingestion of models which, under a weight‑only assumption, are processed and assigned to the appropriate lineage. This is followed by a more complex genealogy recovery stage aimed at reconstructing parent–child relationships and broader evolutionary dependencies. The system, built on a Neo4j‑based infrastructure, is supported by two main methodological components: (i) a centroid‑based family assignment strategy for adaptive clustering in a model lake, and (ii) an unsupervised, optimized algorithm for model genealogy recovery.
 
-### Backend (`model_heritage_backend/`)
-- **Language**: Python
-- **API**: REST services (Flask/FastAPI-based)
-- **Database**: SQLite (`app.db`)
-- **Responsibilities**: model management, versioning logic, statistical computations
+<img width="1895" height="908" alt="image" src="https://github.com/user-attachments/assets/a846021c-6994-4991-9c26-cd001bc50524" />
 
-### Frontend (`model_heritage_frontend/`)
-- **Language**: JavaScript
-- **Package manager**: `pnpm`
-- **Responsibilities**: web UI for system interaction
-
-### Utilities & Scripts
-- Shell scripts for setup and run automation
-- Additional documentation in `docs/`
-
-## Key Features
-
-### Model Versioning
-- Track multiple versions of ML models
-- Maintain model heritage and dependencies between versions/models
-- Store relevant information for each version
-
-### Statistical Analysis
-- Compute advanced metrics (e.g., kurtosis) via `calculate_kurtosi_2_model`
-- Enable comparative analyses across model versions
-
-### RESTful APIs
-- CRUD endpoints for model management
-- Authentication/authorization support (where configured)
-- JSON serialization for interoperability
-
-## Installation & Setup
-
-### Automatic Setup
-```bash
-# Full environment setup
-./setup_and_run.sh
-```
-
-### Manual Setup
-
-#### Backend
-```bash
-cd model_heritage_backend
-pip install -r requirements.txt
-python run_server.py
-```
-
-#### Frontend
-```bash
-cd model_heritage_frontend
-pnpm install
-pnpm start
-```
-
-## Running
-
-```bash
-# Standard startup
-./run.sh
-
-# Startup with debugging
-python run_with_debug.py
-```
-
-## Project Structure
-
-```text
-Model_Graph/
-├── model_heritage_backend/      # Python API server
-│   ├── src/                     # Backend source code
-│   ├── requirements.txt         # Python dependencies
-│   └── run_server.py            # Server entry point
-├── model_heritage_frontend/     # Web interface
-├── docs/                        # Technical documentation
-├── app.db                       # SQLite database
-├── run.sh                       # Startup script
-├── setup_and_run.sh             # Automated setup
-└── run_with_debug.py            # Debug mode
-```
-
-## Technologies Used
-
-- **Backend**: Python, Flask/FastAPI, SQLAlchemy
-- **Frontend**: JavaScript, Node.js, pnpm
-- **Database**: SQLite
-- **DevOps/Automation**: Shell scripts, Git
-- **Packaging**: `requirements.txt`, `package.json`
-
-## Usage (Typical Workflow)
-
-1. Start the system: `./setup_and_run.sh`
-2. Open the web UI in your browser
-3. Upload/register models via API or UI
-4. Manage versions and track model heritage
-5. Compare versions through computed metrics
-
-## Contributing
-
-Contributions are welcome on both backend and frontend. The separation of concerns between components supports parallel development and easier maintenance.
+All the technical details about the methodology and the implementations are discussed in the technical report and the demo paper. 
 
 ---
 
-*MANGROVE aims to provide a practical, end-to-end solution for model lifecycle management with an emphasis on weight-based lineage tracking.*
+## Table of contents
+
+- [System overview](#system-overview)
+- [Architecture](#architecture)
+- [Graph data model (Neo4j)](#graph-data-model-neo4j)
+- [Repository structure](#repository-structure)
+- [Quickstart (recommended)](#quickstart-recommended)
+- [Reproducibility notes](#reproducibility-notes)
+- [Limitations](#limitations)
+- [Citation](#citation)
+- [Acknowledgments](#acknowledgments)
+- [License](#license)
+
+---
+
+## System overview
+
+<img width="1280" height="322" alt="image" src="https://github.com/user-attachments/assets/8d5134e8-39bf-4f99-89fe-6536a611f9a2" />
+
+---
+
+## Architecture
+
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/8e7a6b79-edd2-406f-9000-3bef24c57cd6" />
+
+
+### Backend (`model_heritage_backend/`)
+- **Framework**: Flask
+- **Graph DB**: Neo4j (Bolt)
+- **Responsibilities**:
+  - file ingestion (binary / sharded / zip)
+  - conversion to `.safetensors`
+  - normalization of layer names and mapping persistence
+  - checksum + structural signature + kurtosis computation
+  - centroid-based clustering
+  - genealogy recovery
+  - REST API for model management
+  - NL → Cypher endpoint (optional; requires API key)
+
+
+### Frontend (`model_heritage_frontend/`)
+- **Framework**: React + Vite
+- **Visualization**: `vis-network`
+- **Markdown rendering**: `react-markdown` (+ `remark-gfm`)
+- **Routing**: `react-router-dom`
+
+---
+
+## Graph data model (Neo4j)
+
+The backend uses Neo4j as the authoritative persistence layer.
+
+### Node labels
+- `Model`
+- `Family`
+- `Centroid`
+
+### Relationship types
+- `IS_CHILD_OF` (child model → parent model)
+- `BELONGS_TO` (model → family)
+- `HAS_CENTROID` (family → centroid)
+
+---
+
+## Repository structure
+
+```text
+.
+├── model_heritage_backend/       # Flask backend (API + ingestion + Neo4j integration)
+├── model_heritage_frontend/      # React + Vite frontend
+├── docs/                         # Documentation folder
+├── requirements.txt              # Python dependencies (global)
+├── setup_and_run.sh              # One-shot setup + run script
+├── run.sh                        # Run script (expects venv already created)
+└── README.md 
+```
+## Quickstart (recommended)
+work in progress
+
+## Reproducibility notes
+
+Dependencies: All packages are strictly pinned in requirements.txt and model_heritage_frontend/package.json to ensure reproducible builds.
+
+Hardware Requirements: Checkpoint ingestion and conversion (especially for PyTorch .bin to .safetensors) is memory-intensive. We recommend at least 16GB of system RAM for processing models up to 1B parameters.
+For intensive usage we recommend greater computational power and increased storage capacity.
+
+Testing: To evaluate the system locally without downloading massive checkpoints, we recommend using small toy models or lightweight derivatives (e.g., TinyLlama or BERT fine-tunes).
+
+## Limitations
+Scope of Ancestry: The system is strictly bounded to fine-tuning scenarios. It cannot reliably trace lineage across distinct architectural changes, architectural pruning, or distillation processes that fundamentally alter the tensor topology.
+
+Genealogy Reconstructions: The lineage reconstruction is heuristic and weight-based; it should be interpreted as a statistically plausible reconstruction rather than a cryptographic proof of ancestry.
+
+NL → Cypher: The natural language querying module is intended for intuitive graph exploration, not heavy analytical or aggregative workloads.
+
+Ingestion: While highly flexible, the ingestion of arbitrary and legacy checkpoint formats may fail for uncommon serialization layouts.
+
+## Citation
+If you use MANGROVE in academic work, please cite this repository.
+
+```bibtex
+@software{mangrove_2026,
+  title  = {MANGROVE: Model Lake Versioning Models},
+  author = {ilTrabba},
+  year   = {2026},
+  url    = {[https://github.com/ilTrabba/Mangrove](https://github.com/ilTrabba/Mangrove)}
+}
+```
+## Acknowledgments
+This project relies heavily on the open-source ecosystem, including:
+
+Neo4j for graph persistence
+
+Flask & React + Vite for the application layer
+
+PyTorch & safetensors tooling for checkpoint handling
+
+LangChain & Groq for LLM-powered NL → Cypher capabilities
+
+## License
+See the repository license (if provided). If no license file is present, all rights are reserved by default.
