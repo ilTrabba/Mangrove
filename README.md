@@ -1,55 +1,61 @@
-# MANGROVE - Model Lake Versioning System
+# MANGROVE — Model Lake Versioning System
 
-Un sistema completo per il versioning e la gestione di modelli di machine learning, sviluppato con un'architettura full-stack che combina Python per il backend e JavaScript per il frontend.
+MANGROVE is a full-stack system for **versioning and managing machine learning models**.  
+Unlike traditional model registries that rely mainly on metadata, MANGROVE focuses on **inferring and tracking model lineage (“heritage”) from model weights**, inspired by the approach introduced in *“Unsupervised Model Tree Heritage Recovery”* (Horwitz, Shul, Hoshen).
 
-## 🎯 Panoramica
+## Overview
 
-MANGROVE è una piattaforma per la gestione del ciclo di vita dei modelli di machine learning, che fornisce funzionalità di versioning, tracciabilità e heritage dei modelli non basandosi sui metadatati ma sui pesi di un modello, seguendo come base l'approccio delineato nel paper "Unsupervised Model Tree Heritage Recovery" di Eliahu Horwitz, Asaf Shul, Yedid Hoshen. Il sistema permette di mantenere una cronologia completa delle modifiche ai modelli e delle loro relazioni.
+MANGROVE supports the management of the ML model lifecycle by providing:
 
-## 🏗️ Architettura
+- **Model version tracking**
+- **Model lineage / heritage management** (relationships between models)
+- **Reproducibility and traceability** of model evolution over time
+- A web-based interface and REST APIs for interacting with the system
 
-Il progetto è strutturato in tre componenti principali:
+## Architecture
+
+The project is organized into three main components.
 
 ### Backend (`model_heritage_backend/`)
-- **Linguaggio**: Python (78.2% del codebase)
-- **Framework**: Flask/FastAPI per le API REST
-- **Database**: SQLite (`app.db`) per la persistenza dei dati
-- **Funzionalità**: Gestione modelli, versioning, calcoli statistici
+- **Language**: Python
+- **API**: REST services (Flask/FastAPI-based)
+- **Database**: SQLite (`app.db`)
+- **Responsibilities**: model management, versioning logic, statistical computations
 
 ### Frontend (`model_heritage_frontend/`)
-- **Linguaggio**: JavaScript (18.9% del codebase)
-- **Gestione dipendenze**: pnpm
-- **Interfaccia**: Web UI per l'interazione con il sistema
+- **Language**: JavaScript
+- **Package manager**: `pnpm`
+- **Responsibilities**: web UI for system interaction
 
-### Utility e Scripts
-- **Shell scripts** (2.4%): Automazione setup e deployment
-- **Documentazione**: Directory `docs/` per la documentazione tecnica
+### Utilities & Scripts
+- Shell scripts for setup and run automation
+- Additional documentation in `docs/`
 
-## 🚀 Funzionalità Principali
+## Key Features
 
-### Versioning dei Modelli
-- Tracciamento delle versioni dei modelli ML
-- Gestione dell'heritage e delle dipendenze tra modelli
-- Metadati completi per ogni versione
+### Model Versioning
+- Track multiple versions of ML models
+- Maintain model heritage and dependencies between versions/models
+- Store relevant information for each version
 
-### Analisi Statistiche
-- Calcolo di metriche avanzate (es. curtosi) tramite `calculate_kurtosi_2_model`
-- Supporto per analisi comparative tra versioni
+### Statistical Analysis
+- Compute advanced metrics (e.g., kurtosis) via `calculate_kurtosi_2_model`
+- Enable comparative analyses across model versions
 
-### API RESTful
-- Endpoint per CRUD operations sui modelli
-- Sistema di autenticazione e autorizzazione
-- Serializzazione JSON per l'interoperabilità
+### RESTful APIs
+- CRUD endpoints for model management
+- Authentication/authorization support (where configured)
+- JSON serialization for interoperability
 
-## 🛠️ Setup e Installazione
+## Installation & Setup
 
-### Installazione Automatica
+### Automatic Setup
 ```bash
-# Setup completo dell'ambiente
+# Full environment setup
 ./setup_and_run.sh
 ```
 
-### Installazione Manuale
+### Manual Setup
 
 #### Backend
 ```bash
@@ -65,58 +71,52 @@ pnpm install
 pnpm start
 ```
 
-### Esecuzione
+## Running
+
 ```bash
-# Avvio standard
+# Standard startup
 ./run.sh
 
-# Avvio con debug
+# Startup with debugging
 python run_with_debug.py
 ```
 
-## 📁 Struttura del Progetto
+## Project Structure
 
-```
+```text
 Model_Graph/
-├── model_heritage_backend/     # Server API Python
-│   ├── src/                   # Codice sorgente backend
-│   ├── requirements.txt       # Dipendenze Python
-│   └── run_server.py         # Entry point server
-├── model_heritage_frontend/    # Interfaccia web
-├── docs/                      # Documentazione
-├── app.db                     # Database SQLite
-├── run.sh                     # Script di avvio
-├── setup_and_run.sh          # Setup automatico
-└── run_with_debug.py         # Modalità debug
+├── model_heritage_backend/      # Python API server
+│   ├── src/                     # Backend source code
+│   ├── requirements.txt         # Python dependencies
+│   └── run_server.py            # Server entry point
+├── model_heritage_frontend/     # Web interface
+├── docs/                        # Technical documentation
+├── app.db                       # SQLite database
+├── run.sh                       # Startup script
+├── setup_and_run.sh             # Automated setup
+└── run_with_debug.py            # Debug mode
 ```
 
-## 🔧 Tecnologie Utilizzate
+## Technologies Used
 
 - **Backend**: Python, Flask/FastAPI, SQLAlchemy
 - **Frontend**: JavaScript, Node.js, pnpm
 - **Database**: SQLite
-- **DevOps**: Shell scripting, Git versioning
-- **Packaging**: Requirements.txt, package.json
+- **DevOps/Automation**: Shell scripts, Git
+- **Packaging**: `requirements.txt`, `package.json`
 
-## 🎮 Utilizzo
+## Usage (Typical Workflow)
 
-1. **Avvia il sistema**: `./setup_and_run.sh`
-2. **Accedi all'interfaccia web** tramite il browser
-3. **Carica modelli** attraverso l'API o l'interfaccia
-4. **Gestisci versioni** e traccia l'heritage dei modelli
-5. **Analizza metriche** e confronta performance
+1. Start the system: `./setup_and_run.sh`
+2. Open the web UI in your browser
+3. Upload/register models via API or UI
+4. Manage versions and track model heritage
+5. Compare versions through computed metrics
 
-## 🤝 Contribuire
+## Contributing
 
-Il progetto è strutturato per supportare contributi sia sul frontend che sul backend. La separazione netta delle responsabilità facilita lo sviluppo parallelo e la manutenzione.
-
-## 📊 Metriche del Progetto
-
-- **Python**: 78.2% (Backend, API, ML utilities)
-- **JavaScript**: 18.9% (Frontend, UI components)
-- **Shell**: 2.4% (Automation, deployment)
-- **Altri**: 0.5% (Configurazione, documentazione)
+Contributions are welcome on both backend and frontend. The separation of concerns between components supports parallel development and easier maintenance.
 
 ---
 
-*MANGROVE rappresenta una soluzione completa per il model lifecycle management, fornendo gli strumenti necessari per una gestione professionale dei modelli di machine learning in ambiente di produzione.*
+*MANGROVE aims to provide a practical, end-to-end solution for model lifecycle management with an emphasis on weight-based lineage tracking.*
