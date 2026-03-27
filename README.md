@@ -108,15 +108,6 @@ For intensive usage we recommend greater computational power and increased stora
 
 Testing: To evaluate the system locally without downloading massive checkpoints, we recommend using small toy models or lightweight derivatives (e.g., TinyLlama or BERT fine-tunes).
 
-## Limitations
-Scope of Ancestry: The system is strictly bounded to fine-tuning scenarios. It cannot reliably trace lineage across distinct architectural changes, architectural pruning, or distillation processes that fundamentally alter the tensor topology.
-
-Genealogy Reconstructions: The lineage reconstruction is heuristic and weight-based; it should be interpreted as a statistically plausible reconstruction rather than a cryptographic proof of ancestry.
-
-NL → Cypher: The natural language querying module is intended for intuitive graph exploration, not heavy analytical or aggregative workloads.
-
-Ingestion: While highly flexible, the ingestion of arbitrary and legacy checkpoint formats may fail for uncommon serialization layouts.
-
 ## Citation
 If you use MANGROVE in academic work, please cite this repository.
 
