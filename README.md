@@ -28,7 +28,6 @@ All the technical details about the methodology and the implementations are disc
 - [Repository structure](#repository-structure)
 - [Quickstart (recommended)](#quickstart-recommended)
 - [Reproducibility notes](#reproducibility-notes)
-- [Limitations](#limitations)
 - [Citation](#citation)
 - [Acknowledgments](#acknowledgments)
 - [License](#license)
