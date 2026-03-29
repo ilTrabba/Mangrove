@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<a href="#link-to-the-demo-paper">⚙️Demo paper</a>   |  
+<a href="https://drive.google.com/file/d/1mKoamKlKGlB5tD7g0KHqs4zUPDSwraLM/view?usp=sharing">⚙️Demo paper</a>   |  
 <a href="https://drive.google.com/file/d/1KbIEPc_2NOEQdW_NgahNujKA38GQ_aWA/view?usp=sharing">📄Technical report</a>   |  
 <a href="https://drive.google.com/file/d/1Qn8AC4mlbaqPNsoEQE9w6iWXBJ3eGWwI/view?usp=sharing">🎬Video demonstration</a>
 
