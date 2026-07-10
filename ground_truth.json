@@ -1,0 +1,209 @@
+{
+  "0": {
+    "root": "roberta-base.safetensors",
+    "d1": {
+      "roberta-base.safetensors": [
+        "nli-roberta-base.safetensors",
+        "twitter-roberta-base.bin"
+      ]
+    },
+    "d2": {
+      "nli-roberta-base.safetensors": [
+        "stsb-roberta-base.safetensors"
+      ],
+      "twitter-roberta-base.bin": [
+        "twitter-roberta-base-irony.bin",
+        "twitter-roberta-base-emotion.bin",
+        "twitter-roberta-base-sentiment.bin"
+      ]
+    },
+    "d3": {
+      "twitter-roberta-base-sentiment.bin": [
+        "tw-roberta-base-sentiment-FT.safetensors",
+        "ft-roberta-toxicity.safetensors",
+        "tw-roberta-base-sentiment-FT-v2.safetensors"
+      ]
+    }
+  },
+  
+  "1": {
+    "root": "Qwen2-VL-2B",
+    "d1": {
+      "Qwen2-VL-2B": [
+        "Qwen2-VL-2B-Instruct"
+      ]
+    },
+    "d2": {
+      "Qwen2-VL-2B-Instruct": [
+        "qwen2-vl-2b-catmus-40000.safetensors",
+        "Qwen2-VL-2B-Instruct-abliterated.safetensors",
+        "Vikhr-2-VL-2b-Instruct-experimental.safetensors"
+      ]
+    }
+  },
+  "2": {
+    "root": "wav2vec2-base-960h_d0.safetensors",
+    "d1": {
+      "wav2vec2-base-960h_d0.safetensors": [
+        "wav2vec2-base-960h-speech-emotion-classification-E02_SER_d1.safetensors",
+        "Musical-Instrument-Classification_d1.safetensors",
+        "wav2vec2-base-960h-finetuned-ks_d1.safetensors",
+        "wav2vec2-base-960h-finetuned-gtzan_d1.safetensors",
+        "wav2vec2-base-960h-finetuned-gtzan2_d1.safetensors"
+      ]
+    }
+  },
+  "3": {
+    "root": "sd-v1-2.safetensors",
+    "d1": {
+      "sd-v1-2.safetensors": [
+        "sd-v1-1.safetensors"
+      ]
+    },
+    "d2": {
+      "sd-v1-1.safetensors": [
+        "sd-v1-3.safetensors",
+        "sd-v1-4.safetensors"
+      ]
+    }
+  },
+  "4": {
+    "root": "TinyLlama-1.1B-intermediate-step-1431k-3T_d0.safetensors",
+    "d1": {
+      "TinyLlama-1.1B-intermediate-step-1431k-3T_d0.safetensors": [
+        "TinyLlama-1.1B-Chat-v1.0_d1.safetensors"
+      ]
+    },
+    "d2": {
+      "TinyLlama-1.1B-Chat-v1.0_d1.safetensors": [
+        "Finetuned_TinyLlama_d2.safetensors",
+        "TinyLlama-1.1B-Chat-v1.0-reasoning-v2_d2.safetensors",
+        "Tukan-1.1B-Chat-reasoning-sft-COLA_d2.safetensors"
+      ]
+    },
+    "d3": {
+      "TinyLlama-1.1B-Chat-v1.0-reasoning-v2_d2.safetensors": [
+        "TinyLlama-1.1B-Chat-v1.0-reasoning-v2-dpo_d3.safetensors"
+      ]
+    }
+  },
+  "5": {
+    "root": "gemma-3-1b-pt.safetensors",
+    "d1": {
+      "gemma-3-1b-pt.safetensors": [
+        "gemma-3-1b-it.safetensors"
+       ]
+    },
+    "d2": {
+      "gemma-3-1b-it.safetensors": [
+        "gemma-3-1b-it-qat-int4-unquantized.safetensors",
+        "gemma-molit-finetuned.safetensors",
+        "gemma-3b-chat-support.safetensors",
+        "gemma-3-1b-it-DPO.safetensors"
+      ]
+   }
+  },
+
+
+  "6": {
+    "root": "stablelm-2-1_6b.safetensors",
+    "d1": {
+      "stablelm-2-1_6b.safetensors": [
+        "bengali-cuisine-helper-stablelm-1.6b.safetensors",
+        "stablelm-2-1_6b-orpo-full-v1.safetensors",
+        "stablelm-2-1_6b-orpo-full-v2.safetensors",
+        "stablelm-2-1_6b-orpo-full-v3.safetensors"
+      ]
+    }
+  },
+  "7": {
+    "root": "ade-512-512.bin",
+    "d1": {
+      "ade-512-512.bin": [
+        "cityscapes-1024-1024.bin",
+        "segformer-b0-finetuned-cityscapes-512-1024.bin"
+      ]
+    }
+  },
+  "8": {
+    "root": "Qwen2.5-3B",
+    "d1": {
+      "Qwen2.5-3B": [
+        "Qwen2.5-3B-instruct"
+      ]
+    },
+    "d2": {
+      "Qwen2.5-3B-instruct": [
+        "SmallThinker-3B-Preview"
+      ]
+    },
+    "d3": {
+      "SmallThinker-3B-Preview": [
+        "smartmind-cyberone-20250401-test"
+      ]
+    }
+  },
+  "9": {
+    "root": "pythia-1.4b.safetensors",
+    "d1": {
+      "pythia-1.4b.safetensors": [
+        "pythia-1.4b-AGnews-roya",
+        "statichh-pythia-1.4b-sft-bf16"
+      ]
+    },
+    "d2": {
+      "statichh-pythia-1.4b-sft-bf16": [
+        "batchga-bias-pure_ekfac-100-statichh-pythia-1.4b-sft-bf16",
+        "statichh-pythia-1.4b-dpo-bf16",
+        "truthDPO-statichh-pythia-1.4b-dpo-bf16"
+      ]
+    }
+  },
+  "10": {
+    "root": "detr-resnet-50.safetensors",
+    "d1": {
+      "detr-resnet-50.safetensors": [
+        "detr-resnet-50_fine_tuned_loc-2023.safetensors",
+        "detr-resnet-50_finetuned_wi.bin",
+        "detr-resnet-50_finetuned-weed-detection.bin"
+      ]
+    }
+  },
+  "11": {
+    "root": "whisper-small.safetensors",
+    "d1": {
+      "whisper-small.safetensors": [
+        "fa-ir-stt-whisper-small-v1.safetensors",
+        "FPG-whisper-small.safetensors",
+        "open-ai-small-1.safetensors",
+        "special2.bin",
+        "whisper-small-belarusian.safetensors",
+        "whisper-small-cantonese.safetensors",
+        "whisper-small-cs-cv11.bin",
+        "whisper-small-final-v3.safetensors",
+        "whisper-small-keyword-spotting.safetensors",
+        "whisper-small-nepali.safetensors",
+        "Whisper-small-sr-yodas-v2.safetensors"
+      ]
+    },
+    "d2": {
+      "FPG-whisper-small.safetensors": [
+        "FPG-whisper-small-v2.safetensors"
+      ],
+      "open-ai-small-1.safetensors": [
+        "open-ai-small-2.safetensors"
+      ]
+    },
+    "d3": {
+      "open-ai-small-2.safetensors": [
+        "open-ai-small-3.safetensors"
+      ],
+      "FPG-whisper-small-v2.safetensors": [
+        "whisper-small-ftl.safetensors"
+      ]
+    }
+  }
+
+
+
+}

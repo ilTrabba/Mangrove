@@ -12,8 +12,9 @@ sys.path.insert(0, os.path.dirname(__file__))
 logging.getLogger('werkzeug').setLevel(logging.ERROR)  # Silenzia werkzeug
 logging.basicConfig(
     level=logging.INFO,
-    format='🔍 [DEBUG] %(message)s'
+    format='%(levelname)s [%(asctime)s] %(name)s: %(message)s',
+    datefmt='%H:%M:%S'
 )
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    app.run(host='0.0.0.0', port=5002, debug=True)

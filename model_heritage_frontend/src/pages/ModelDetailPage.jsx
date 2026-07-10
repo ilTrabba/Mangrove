@@ -47,7 +47,7 @@ export default function ModelDetailPage() {
 
   const fetchModel = async () => {
     try {
-      const response = await fetch(`http://localhost:5001/api/models/${id}`);
+      const response = await fetch(`http://localhost:5002/api/models/${id}`);
       if (!response.ok) throw new Error('Model not found');
       const data = await response.json();
       setModel(data);
@@ -63,7 +63,7 @@ export default function ModelDetailPage() {
     
     setReadmeLoading(true);
     try {
-      const response = await fetch(`http://localhost:5001/api/models/${id}/readme`);
+      const response = await fetch(`http://localhost:5002/api/models/${id}/readme`);
       if (response.ok) {
         const data = await response.json();
         setReadmeContent(data.content);
@@ -78,7 +78,7 @@ export default function ModelDetailPage() {
   const handleDownload = async () => {
     setDownloading(true);
     try {
-      const response = await fetch(`http://localhost:5001/api/models/${id}/download`);
+      const response = await fetch(`http://localhost:5002/api/models/${id}/download`);
       
       if (!response.ok) {
         const errorData = await response.json();

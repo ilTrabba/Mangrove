@@ -166,6 +166,10 @@ class Family:
     @property
     def has_foundation_model(self):
         return self.data.get('has_foundation_model',False)
+
+    @property
+    def get_max_distance_root_nodes(self):
+        return self.data.get('max_distance_root_nodes')
     
     def to_dict(self):
         """Convert to dictionary format"""

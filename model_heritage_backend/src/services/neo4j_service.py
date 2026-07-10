@@ -339,6 +339,7 @@ class Neo4jService:
                     member_count: $member_count,
                     avg_intra_distance: $avg_intra_distance,
                     has_foundation_model: $has_foundation_model,
+                    max_distance_root_nodes: $max_distance_root_nodes,
                     display_name: $id
                 })
                 RETURN f
@@ -351,6 +352,7 @@ class Neo4jService:
                     'member_count': family_data.get('member_count', 0),
                     'avg_intra_distance': family_data.get('avg_intra_distance', 0.0), 
                     'has_foundation_model': family_data.get('has_foundation_model', False),
+                    'max_distance_root_nodes': family_data.get('max_distance_root_nodes',0.0),
                     'display_name': family_data['id']
                 })
                 
@@ -522,9 +524,11 @@ class Neo4jService:
             logHandler.error_handler(f"Failed to delete family relationships: {e}", "delete_family_relationships")
             return False
 
-    def atomic_rebuild_genealogy(self, family_id: str, family_tree, tree_confidence: Dict[str, float]) -> bool:
+   
+
+    def atomic_rebuild_genealogy(self, family_id: str, family_tree, tree_confidence: Dict[str, float], max_distance_root_nodes: float) -> bool:
         """
-        Ultra-optimized single-query tree rebuild + distance update. 
+        Ultra-optimized single-query tree rebuild + distance update + Family node update.
         """
         if not self.driver:
             return False
@@ -533,11 +537,21 @@ class Neo4jService:
         if family_tree.number_of_edges() == 0:
             try:
                 with self.driver.session(database=Config.NEO4J_DATABASE) as session:
+                    # Modifica: Aggiorniamo la Family ed eliminiamo le relazioni in un solo colpo
                     query = """
-                    MATCH (m:Model {family_id: $family_id})-[r:IS_CHILD_OF]->()
+                    // Step 0: Aggiorna il nodo Family
+                    OPTIONAL MATCH (f:Family {id: $family_id})
+                    SET f.max_distance_root_nodes = $max_distance_root_nodes
+                    WITH count(f) as dummy // Passaggio cruciale per non bloccare la query
+                    
+                    // Step 1: Elimina le relazioni
+                    OPTIONAL MATCH (m:Model {family_id: $family_id})-[r:IS_CHILD_OF]->()
                     DELETE r
                     """
-                    session.run(query, {'family_id': family_id})
+                    session.run(query, {
+                        'family_id': family_id,
+                        'max_distance_root_nodes': max_distance_root_nodes
+                    })
                     return True
             except Exception as e:
                 logHandler.error_handler(f"Failed to clear relationships: {e}", "rebuild_family_tree_ultra")
@@ -549,32 +563,34 @@ class Neo4jService:
                     'parent': parent_id,
                     'child': child_id,
                     'confidence': tree_confidence.get(parent_id, 0.0),
-                    'distance': family_tree[parent_id][child_id].get('distance', 0.0)  # ← AGGIUNTO
+                    'distance': family_tree[parent_id][child_id].get('distance', 0.0)
                 }
                 for parent_id, child_id in family_tree.edges()
             ]
 
         logger.info(f"🔄 Processing family_id: {family_id}")
         logger.info(f"📊 Total edges to process: {len(edges_data)}")
-        for i, edge in enumerate(edges_data):
-            logger.debug(f"  Edge {i}: parent={edge['parent']}, child={edge['child']}, "
-                        f"confidence={edge['confidence']}, distance={edge['distance']}")  # ← LOG distanza
 
         try:
             with self.driver.session(database=Config.NEO4J_DATABASE) as session:
                 
-                # Main atomic query WITH distance update
+                # Main atomic query WITH distance AND Family update
                 query = """
-                // Step 1: Delete all existing IS_CHILD_OF relationships
-                MATCH (m:Model {family_id: $family_id})-[r:IS_CHILD_OF]->()
-                DELETE r
+                // Step 0: Aggiorna la metrica globale sul nodo Family
+                OPTIONAL MATCH (f:Family {id: $family_id})
+                SET f.max_distance_root_nodes = $max_distance_root_nodes
+                WITH count(f) as family_updated // Riporta a 1 la cardinalità
                 
+                // Step 1: Delete all existing IS_CHILD_OF relationships for this family
+                OPTIONAL MATCH (m:Model {family_id: $family_id})-[r:IS_CHILD_OF]->()
+                DELETE r
                 WITH count(r) as deleted_count
                 
                 // Step 2: Create relationships AND update distances
                 UNWIND $edges AS edge
-                MATCH (child:Model {id: edge.child, family_id: $family_id})
-                MATCH (parent:Model {id: edge.parent, family_id: $family_id})
+                
+                MATCH (child:Model {id: edge.child})
+                MATCH (parent:Model {id: edge.parent})
                 
                 // Create relationship
                 CREATE (child)-[:IS_CHILD_OF {
@@ -582,15 +598,18 @@ class Neo4jService:
                     updated_at: datetime()
                 }]->(parent)
                 
-                // Update child node with distance from parent
-                SET child.distance_from_parent = edge.distance
+                // Update child node with distance from parent AND ensure family_id is set
+                SET child.distance_from_parent = edge.distance,
+                    child.family_id = $family_id,
+                    parent.family_id = $family_id
                 
                 RETURN deleted_count, count(*) as created_count
                 """
                 
                 result = session.run(query, {
                     'family_id': family_id,
-                    'edges': edges_data
+                    'edges': edges_data,
+                    'max_distance_root_nodes': max_distance_root_nodes  # <--- Nuovo parametro iniettato qui
                 })
                 
                 record = result.single()
@@ -599,7 +618,7 @@ class Neo4jService:
                     created = record['created_count']
                     
                     logger.info(f"✅ Family {family_id}: {deleted} relationships deleted, "
-                            f"{created} relationships created in ONE atomic query")
+                            f"{created} relationships created in ONE atomic query. Max dist updated.")
                     
                     if created != len(edges_data):
                         logger.error(f"🚨 MISMATCH: Expected to create {len(edges_data)} relationships, but only {created} were created!")
@@ -622,7 +641,7 @@ class Neo4jService:
         except Exception as e:
             logHandler.error_handler(f"Ultra rebuild failed for family {family_id}: {e}", "rebuild_family_tree_ultra")
             return False
-    
+   
     # funzione potenzialmente utile per la gestione dei centroidi
     def create_or_update_family_centroid(self, family_id: str, centroid_embedding: Optional[List[float]] = None) -> bool:
         """Create or update a FamilyCentroid node with actual centroid data"""
@@ -1091,7 +1110,7 @@ class Neo4jService:
             logger.error(f"Failed to get family subgraph: {e}")
             return {'nodes': [], 'edges': [], 'error': str(e)}
         
-    def get_family_leaves(self, family_id: str) -> List[Dict[str, Any]]:
+    def get_max_distance_root_nodes(self, family_id: str) -> float:
         """Get all leaf models in a family (models without children)"""
         if not neo4j_service.driver:
             return []
@@ -1099,17 +1118,22 @@ class Neo4jService:
         try:
             with neo4j_service.driver.session(database=Config.NEO4J_DATABASE) as session:
                 query = """
-                MATCH (m:Model)-[:BELONGS_TO]->(f:Family {id: $family_id})
-                WHERE ((m)-[:IS_CHILD_OF]->(:Model)) AND NOT ((:Model)-[:IS_CHILD_OF]->(m))
-                RETURN m
+                MATCH (f:Family {id: $family_id})
+                RETURN f.max_distance_root_nodes AS max_distance_root_nodes
                 """
                 result = session.run(query, {'family_id': family_id})
-                leaves = [dict(record['m']) for record in result]
-                return leaves
+                
+                record = result.single()
+                
+                # Verifichiamo che il record esista e che la proprietà non sia null nel DB
+                if record and record['max_distance_root_nodes'] is not None:
+                    return float(record['max_distance_root_nodes'])
+                
+                return 0.0
                 
         except Exception as e:
-            logHandler.error_handler(f"Failed to get leaf models for family {family_id}: {e}", "get_family_leaves")
-            return []
+            logHandler.error_handler(f"Failed to retrive max distance from the root in {family_id}: {e}", "get_max_distance_root_nodes")
+            return 0.0
 
 # Global instance
 neo4j_service = Neo4jService()

@@ -2,6 +2,7 @@ import os
 import sys
 import logging
 import atexit
+import debugpy
 
 from flask import Flask, send_from_directory
 from flask_cors import CORS
@@ -11,12 +12,15 @@ from src.routes.models import models_bp
 from src.routes.graph import graph_bp
 from src.services.neo4j_service import neo4j_service
 from src.services.url_verification_service import URLVerificationService
-from src.routes.nl_query import nl_query_bp
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 # Mostra INFO e superiori (INFO, WARNING, ERROR, CRITICAL)
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    stream=sys.stdout,  # <--- FORZA la scrittura su Standard Output
+    level=logging.INFO,
+    format='[%(asctime)s] %(levelname)s in %(module)s: %(message)s' # Formato utile per capire da dove arriva il log
+)
 
 # Imposta il livello di logging per il driver Neo4j a WARNING per ridurre il rumore nei log
 logging.getLogger("neo4j").setLevel(logging.WARNING)
@@ -32,7 +36,6 @@ CORS(app)
 app.register_blueprint(user_bp, url_prefix='/api')
 app.register_blueprint(models_bp, url_prefix='/api')
 app.register_blueprint(graph_bp, url_prefix='/api')
-app.register_blueprint(nl_query_bp, url_prefix='/api')
 
 # Initialize URL verification service
 url_verification_service = None
@@ -83,4 +86,4 @@ def serve(path):
 if __name__ == '__main__':
     print("🔍 DEBUG: Avvio del server") 
     # Per il debug, usa threaded=True e debug=False
-    app.run(host='0.0.0.0', port=5001, debug=False, threaded=True, use_reloader=False)
+    app.run(host='0.0.0.0', port=5002, debug=False, threaded=True, use_reloader=False)

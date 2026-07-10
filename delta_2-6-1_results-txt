@@ -1,0 +1,848 @@
+[⚔️] GEOMETRIC LINEAGE V2.6.1 FINAL: QWEN
+
+--- Tree 1 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+Qwen2-VL-2B          (With V) | Qwen2-VL-2B-Instru->Qwen2-VL-2B          |   9%  | ❌ [Votes: A=76 | B=64] LayersUsed(268)
+Qwen2-VL-2B          (No V)   | Qwen2-VL-2B-Instru->Qwen2-VL-2B          |  23%  | ❌ [Votes: A=69 | B=43] LayersUsed(240)
+----------------------------------------------------------------------------------------------------------------------------------
+Qwen2-VL-2B-Instruct (With V) | Qwen2-VL-2B-Instru->qwen2-vl-2b-catmus   |  16%  | ✅ [Votes: A=112 | B=156] LayersUsed(268)
+Qwen2-VL-2B-Instruct (No V)   | Qwen2-VL-2B-Instru->qwen2-vl-2b-catmus   |  13%  | ✅ [Votes: A=104 | B=136] LayersUsed(240)
+----------------------------------------------------------------------------------------------------------------------------------
+Qwen2-VL-2B-Instruct (With V) | Qwen2-VL-2B-Instru->Qwen2-VL-2B-Instru   | 100%  | ❌ [Votes: A=56 | B=0] LayersUsed(268)
+Qwen2-VL-2B-Instruct (No V)   | Qwen2-VL-2B-Instru->Qwen2-VL-2B-Instru   | 100%  | ❌ [Votes: A=56 | B=0] LayersUsed(240)
+----------------------------------------------------------------------------------------------------------------------------------
+Qwen2-VL-2B-Instruct (With V) | Qwen2-VL-2B-Instru->Vikhr-2-VL-2b-Inst   |  18%  | ✅ [Votes: A=40 | B=57] LayersUsed(268)
+Qwen2-VL-2B-Instruct (No V)   | Vikhr-2-VL-2b-Inst->Qwen2-VL-2B-Instru   |  16%  | ❌ [Votes: A=40 | B=29] LayersUsed(240)
+----------------------------------------------------------------------------------------------------------------------------------
+
+[⚔️] GEOMETRIC LINEAGE V2.6.1 FINAL: TINY-LLAMA
+
+--- Tree 4 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+TinyLlama-1.1B-inter (With V) | TinyLlama-1.1B-int->TinyLlama-1.1B-Cha   |  86%  | ✅ [Votes: A=8 | B=103] LayersUsed(111)
+TinyLlama-1.1B-inter (No V)   | TinyLlama-1.1B-int->TinyLlama-1.1B-Cha   |  84%  | ✅ [Votes: A=7 | B=82] LayersUsed(89)
+----------------------------------------------------------------------------------------------------------------------------------
+TinyLlama-1.1B-Chat- (With V) | Finetuned_TinyLlam->TinyLlama-1.1B-Cha   |   6%  | ❌ [Votes: A=59 | B=52] LayersUsed(111)
+TinyLlama-1.1B-Chat- (No V)   | Finetuned_TinyLlam->TinyLlama-1.1B-Cha   |   8%  | ❌ [Votes: A=48 | B=41] LayersUsed(89)
+----------------------------------------------------------------------------------------------------------------------------------
+TinyLlama-1.1B-Chat- (With V) | TinyLlama-1.1B-Cha->TinyLlama-1.1B-Cha   |  71%  | ✅ [Votes: A=16 | B=95] LayersUsed(111)
+TinyLlama-1.1B-Chat- (No V)   | TinyLlama-1.1B-Cha->TinyLlama-1.1B-Cha   |  69%  | ✅ [Votes: A=14 | B=75] LayersUsed(89)
+----------------------------------------------------------------------------------------------------------------------------------
+TinyLlama-1.1B-Chat- (With V) | TinyLlama-1.1B-Cha->Tukan-1.1B-Chat-re   |  77%  | ✅ [Votes: A=13 | B=98] LayersUsed(111)
+TinyLlama-1.1B-Chat- (No V)   | TinyLlama-1.1B-Cha->Tukan-1.1B-Chat-re   |  75%  | ✅ [Votes: A=11 | B=78] LayersUsed(89)
+----------------------------------------------------------------------------------------------------------------------------------
+TinyLlama-1.1B-Chat- (With V) | TinyLlama-1.1B-Cha->TinyLlama-1.1B-Cha   |  14%  | ✅ [Votes: A=48 | B=63] LayersUsed(111)
+TinyLlama-1.1B-Chat- (No V)   | TinyLlama-1.1B-Cha->TinyLlama-1.1B-Cha   |   8%  | ✅ [Votes: A=41 | B=48] LayersUsed(89)
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+[⚔️] GEOMETRIC LINEAGE V2.6.1 FINAL: STABLELM
+
+--- Tree 6 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+stablelm-2-1_6b.safe (With V) | stablelm-2-1_6b.sa->bengali-cuisine-he   |  15%  | ✅ [Votes: A=51 | B=69] LayersUsed(121)
+stablelm-2-1_6b.safe (No V)   | stablelm-2-1_6b.sa->bengali-cuisine-he   |  25%  | ✅ [Votes: A=36 | B=60] LayersUsed(97)
+----------------------------------------------------------------------------------------------------------------------------------
+stablelm-2-1_6b.safe (With V) | stablelm-2-1_6b.sa->stablelm-2-1_6b-or   |  22%  | ✅ [Votes: A=47 | B=74] LayersUsed(121)
+stablelm-2-1_6b.safe (No V)   | stablelm-2-1_6b.sa->stablelm-2-1_6b-or   |  11%  | ✅ [Votes: A=43 | B=54] LayersUsed(97)
+----------------------------------------------------------------------------------------------------------------------------------
+stablelm-2-1_6b.safe (With V) | stablelm-2-1_6b.sa->stablelm-2-1_6b-or   |  29%  | ✅ [Votes: A=43 | B=78] LayersUsed(121)
+stablelm-2-1_6b.safe (No V)   | stablelm-2-1_6b.sa->stablelm-2-1_6b-or   |  22%  | ✅ [Votes: A=38 | B=59] LayersUsed(97)
+----------------------------------------------------------------------------------------------------------------------------------
+stablelm-2-1_6b.safe (With V) | stablelm-2-1_6b.sa->stablelm-2-1_6b-or   |  29%  | ✅ [Votes: A=43 | B=78] LayersUsed(121)
+stablelm-2-1_6b.safe (No V)   | stablelm-2-1_6b.sa->stablelm-2-1_6b-or   |  20%  | ✅ [Votes: A=39 | B=58] LayersUsed(97)
+----------------------------------------------------------------------------------------------------------------------------------
+
+[⚔️] GEOMETRIC LINEAGE V2.6.1 FINAL: Qwen2.5-3B-family
+
+--- Tree 8 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+Qwen2.5-3B           (With V) | Qwen2.5-3B-instruc->Qwen2.5-3B           |  54%  | ❌ [Votes: A=139 | B=41] LayersUsed(180)
+Qwen2.5-3B           (No V)   | Qwen2.5-3B-instruc->Qwen2.5-3B           |  65%  | ❌ [Votes: A=119 | B=25] LayersUsed(144)
+----------------------------------------------------------------------------------------------------------------------------------
+Qwen2.5-3B-instruct  (With V) | Qwen2.5-3B-instruc->SmallThinker-3B-Pr   |  97%  | ✅ [Votes: A=3 | B=177] LayersUsed(180)
+Qwen2.5-3B-instruct  (No V)   | Qwen2.5-3B-instruc->SmallThinker-3B-Pr   |  96%  | ✅ [Votes: A=3 | B=141] LayersUsed(144)
+----------------------------------------------------------------------------------------------------------------------------------
+SmallThinker-3B-Prev (With V) | SmallThinker-3B-Pr->smartmind-cyberone   |  36%  | ✅ [Votes: A=58 | B=122] LayersUsed(180)
+SmallThinker-3B-Prev (No V)   | SmallThinker-3B-Pr->smartmind-cyberone   |  33%  | ✅ [Votes: A=48 | B=96] LayersUsed(144)
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+[⚔️] GEOMETRIC LINEAGE V2.6.1 FINAL: PYTHIA
+
+--- Tree 9 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+pythia-1.4b.safetens (With V) | pythia-1.4b.safete->pythia-1.4b-AGnews   |  97%  | ✅ [Votes: A=1 | B=71] LayersUsed(72)
+pythia-1.4b.safetens (No V)   | pythia-1.4b.safete->pythia-1.4b-AGnews   |  97%  | ✅ [Votes: A=1 | B=71] LayersUsed(72)
+----------------------------------------------------------------------------------------------------------------------------------
+pythia-1.4b.safetens (With V) | pythia-1.4b.safete->statichh-pythia-1.   |  14%  | ✅ [Votes: A=31 | B=41] LayersUsed(72)
+pythia-1.4b.safetens (No V)   | pythia-1.4b.safete->statichh-pythia-1.   |  14%  | ✅ [Votes: A=31 | B=41] LayersUsed(72)
+----------------------------------------------------------------------------------------------------------------------------------
+statichh-pythia-1.4b (With V) | statichh-pythia-1.->batchga-bias-pure_   | 100%  | ✅ [Votes: A=0 | B=3] LayersUsed(72)
+statichh-pythia-1.4b (No V)   | statichh-pythia-1.->batchga-bias-pure_   | 100%  | ✅ [Votes: A=0 | B=3] LayersUsed(72)
+----------------------------------------------------------------------------------------------------------------------------------
+statichh-pythia-1.4b (With V) | statichh-pythia-1.->statichh-pythia-1.   |  17%  | ✅ [Votes: A=30 | B=42] LayersUsed(72)
+statichh-pythia-1.4b (No V)   | statichh-pythia-1.->statichh-pythia-1.   |  17%  | ✅ [Votes: A=30 | B=42] LayersUsed(72)
+----------------------------------------------------------------------------------------------------------------------------------
+statichh-pythia-1.4b (With V) | truthDPO-statichh-->statichh-pythia-1.   |  17%  | ❌ [Votes: A=42 | B=30] LayersUsed(72)
+statichh-pythia-1.4b (No V)   | truthDPO-statichh-->statichh-pythia-1.   |  17%  | ❌ [Votes: A=42 | B=30] LayersUsed(72)
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+[⚔️] GEOMETRIC LINEAGE V2.6.1 FINAL: DETR-RESNET
+
+--- Tree 10 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+detr-resnet-50.safet (With V) | detr-resnet-50.saf->detr-resnet-50_fin   |  93%  | ✅ [Votes: A=3 | B=79] LayersUsed(93)
+detr-resnet-50.safet (No V)   | detr-resnet-50.saf->detr-resnet-50_fin   |  91%  | ✅ [Votes: A=3 | B=67] LayersUsed(81)
+----------------------------------------------------------------------------------------------------------------------------------
+detr-resnet-50.safet (With V) | detr-resnet-50_fin->detr-resnet-50.saf   |  67%  | ❌ [Votes: A=20 | B=4] LayersUsed(93)
+detr-resnet-50.safet (No V)   | detr-resnet-50_fin->detr-resnet-50.saf   |  56%  | ❌ [Votes: A=14 | B=4] LayersUsed(81)
+----------------------------------------------------------------------------------------------------------------------------------
+detr-resnet-50.safet (With V) | detr-resnet-50.saf->detr-resnet-50_fin   |  10%  | ✅ [Votes: A=37 | B=45] LayersUsed(93)
+detr-resnet-50.safet (No V)   | detr-resnet-50.saf->detr-resnet-50_fin   |  11%  | ✅ [Votes: A=31 | B=39] LayersUsed(81)
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+[⚔️] GEOMETRIC LINEAGE V2.6.1 FINAL: GEMMA
+
+--- Tree 5 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+gemma-3-1b-pt.safete (With V) | gemma-3-1b-pt.safe->gemma-3-1b-it.safe   |  14%  | ✅ [Votes: A=56 | B=74] LayersUsed(130)
+gemma-3-1b-pt.safete (No V)   | gemma-3-1b-pt.safe->gemma-3-1b-it.safe   |  15%  | ✅ [Votes: A=44 | B=60] LayersUsed(104)
+----------------------------------------------------------------------------------------------------------------------------------
+gemma-3-1b-it.safete (With V) | gemma-3-1b-it-qat-->gemma-3-1b-it.safe   | 100%  | ❌ [Votes: A=130 | B=0] LayersUsed(130)
+gemma-3-1b-it.safete (No V)   | gemma-3-1b-it-qat-->gemma-3-1b-it.safe   | 100%  | ❌ [Votes: A=104 | B=0] LayersUsed(104)
+----------------------------------------------------------------------------------------------------------------------------------
+gemma-3-1b-it.safete (With V) | gemma-3-1b-it.safe->gemma-molit-finetu   |  58%  | ✅ [Votes: A=27 | B=103] LayersUsed(130)
+gemma-3-1b-it.safete (No V)   | gemma-3-1b-it.safe->gemma-molit-finetu   |  65%  | ✅ [Votes: A=18 | B=86] LayersUsed(104)
+----------------------------------------------------------------------------------------------------------------------------------
+gemma-3-1b-it.safete (With V) | gemma-3-1b-it.safe->gemma-3b-chat-supp   | 100%  | ✅ [Votes: A=0 | B=130] LayersUsed(130)
+gemma-3-1b-it.safete (No V)   | gemma-3-1b-it.safe->gemma-3b-chat-supp   | 100%  | ✅ [Votes: A=0 | B=104] LayersUsed(104)
+----------------------------------------------------------------------------------------------------------------------------------
+gemma-3-1b-it.safete (With V) | gemma-3-1b-it-DPO.->gemma-3-1b-it.safe   |  -0%  | ❌ [Votes: A=60 | B=60] LayersUsed(130)
+gemma-3-1b-it.safete (No V)   | gemma-3-1b-it-DPO.->gemma-3-1b-it.safe   |   2%  | ❌ [Votes: A=49 | B=47] LayersUsed(104)
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+
+[⚔️] GEOMETRIC LINEAGE V2.6.1 FINAL: roBERTa
+
+--- Tree 0 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+roberta-base.safeten (With V) | roberta-base.safet->nli-roberta-base.s   |  37%  | ✅ [Votes: A=15 | B=33 | 4] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 20.80s
+roberta-base.safeten (No V)   | roberta-base.safet->nli-roberta-base.s   |  39%  | ✅ [Votes: A=11 | B=25 | 3] LayersUsed(36)
+                              | ⏱️  Tempo calcolo SVD: 14.25s
+----------------------------------------------------------------------------------------------------------------------------------
+roberta-base.safeten (With V) | roberta-base.safet->twitter-roberta-ba   |  39%  | ✅ [Votes: A=15 | B=34 | 2] LayersUsed(49)
+                              | ⏱️  Tempo calcolo SVD: 16.99s
+roberta-base.safeten (No V)   | roberta-base.safet->twitter-roberta-ba   |  57%  | ✅ [Votes: A=8 | B=29 | 0] LayersUsed(37)
+                              | ⏱️  Tempo calcolo SVD: 14.66s
+----------------------------------------------------------------------------------------------------------------------------------
+nli-roberta-base.saf (With V) | nli-roberta-base.s->stsb-roberta-base.   |  79%  | ✅ [Votes: A=5 | B=43 | 12] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 17.53s
+nli-roberta-base.saf (No V)   | nli-roberta-base.s->stsb-roberta-base.   |  83%  | ✅ [Votes: A=3 | B=33 | 9] LayersUsed(36)
+                              | ⏱️  Tempo calcolo SVD: 14.45s
+----------------------------------------------------------------------------------------------------------------------------------
+twitter-roberta-base (With V) | twitter-roberta-ba->twitter-roberta-ba   |  62%  | ✅ [Votes: A=9 | B=39 | 18] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 16.60s
+twitter-roberta-base (No V)   | twitter-roberta-ba->twitter-roberta-ba   |  61%  | ✅ [Votes: A=7 | B=29 | 15] LayersUsed(36)
+                              | ⏱️  Tempo calcolo SVD: 14.53s
+----------------------------------------------------------------------------------------------------------------------------------
+twitter-roberta-base (With V) | twitter-roberta-ba->twitter-roberta-ba   |  58%  | ✅ [Votes: A=10 | B=38 | 12] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 18.83s
+twitter-roberta-base (No V)   | twitter-roberta-ba->twitter-roberta-ba   |  50%  | ✅ [Votes: A=9 | B=27 | 10] LayersUsed(36)
+                              | ⏱️  Tempo calcolo SVD: 14.37s
+----------------------------------------------------------------------------------------------------------------------------------
+twitter-roberta-base (With V) | twitter-roberta-ba->twitter-roberta-ba   |  75%  | ✅ [Votes: A=6 | B=42 | 12] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 16.77s
+twitter-roberta-base (No V)   | twitter-roberta-ba->twitter-roberta-ba   |  78%  | ✅ [Votes: A=4 | B=32 | 10] LayersUsed(36)
+                              | ⏱️  Tempo calcolo SVD: 15.19s
+----------------------------------------------------------------------------------------------------------------------------------
+twitter-roberta-base (With V) | twitter-roberta-ba->tw-roberta-base-se   |   4%  | ✅ [Votes: A=23 | B=25 | 2] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 17.94s
+twitter-roberta-base (No V)   | twitter-roberta-ba->tw-roberta-base-se   |  11%  | ✅ [Votes: A=16 | B=20 | 2] LayersUsed(36)
+                              | ⏱️  Tempo calcolo SVD: 16.09s
+----------------------------------------------------------------------------------------------------------------------------------
+twitter-roberta-base (With V) | twitter-roberta-ba->ft-roberta-toxicit   |  87%  | ✅ [Votes: A=3 | B=45 | 3] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 17.70s
+twitter-roberta-base (No V)   | twitter-roberta-ba->ft-roberta-toxicit   |  89%  | ✅ [Votes: A=2 | B=34 | 3] LayersUsed(36)
+                              | ⏱️  Tempo calcolo SVD: 14.53s
+----------------------------------------------------------------------------------------------------------------------------------
+twitter-roberta-base (With V) | twitter-roberta-ba->tw-roberta-base-se   |  46%  | ✅ [Votes: A=13 | B=35 | 13] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 17.60s
+twitter-roberta-base (No V)   | twitter-roberta-ba->tw-roberta-base-se   |  50%  | ✅ [Votes: A=9 | B=27 | 10] LayersUsed(36)
+                              | ⏱️  Tempo calcolo SVD: 14.44s
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+[⚔️] GEOMETRIC LINEAGE V2.6.1 FINAL: WAV2VEC2
+
+--- Tree 2 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+wav2vec2-base-960h_d (With V) | wav2vec2-base-960h->wav2vec2-base-960h   |  88%  | ✅ [Votes: A=3 | B=46 | 4] LayersUsed(49)
+                              | ⏱️  Tempo calcolo SVD: 17.58s
+wav2vec2-base-960h_d (No V)   | wav2vec2-base-960h->wav2vec2-base-960h   |  89%  | ✅ [Votes: A=2 | B=35 | 3] LayersUsed(37)
+                              | ⏱️  Tempo calcolo SVD: 13.76s
+----------------------------------------------------------------------------------------------------------------------------------
+wav2vec2-base-960h_d (With V) | wav2vec2-base-960h->Musical-Instrument   |  63%  | ✅ [Votes: A=9 | B=40 | 8] LayersUsed(49)
+                              | ⏱️  Tempo calcolo SVD: 16.85s
+wav2vec2-base-960h_d (No V)   | wav2vec2-base-960h->Musical-Instrument   |  57%  | ✅ [Votes: A=8 | B=29 | 4] LayersUsed(37)
+                              | ⏱️  Tempo calcolo SVD: 13.68s
+----------------------------------------------------------------------------------------------------------------------------------
+wav2vec2-base-960h_d (With V) | wav2vec2-base-960h->wav2vec2-base-960h   |  84%  | ✅ [Votes: A=4 | B=45 | 0] LayersUsed(49)
+                              | ⏱️  Tempo calcolo SVD: 17.33s
+wav2vec2-base-960h_d (No V)   | wav2vec2-base-960h->wav2vec2-base-960h   |  84%  | ✅ [Votes: A=3 | B=34 | 0] LayersUsed(37)
+                              | ⏱️  Tempo calcolo SVD: 13.90s
+----------------------------------------------------------------------------------------------------------------------------------
+wav2vec2-base-960h_d (With V) | wav2vec2-base-960h->wav2vec2-base-960h   |  80%  | ✅ [Votes: A=5 | B=44 | 2] LayersUsed(49)
+                              | ⏱️  Tempo calcolo SVD: 17.28s
+wav2vec2-base-960h_d (No V)   | wav2vec2-base-960h->wav2vec2-base-960h   |  78%  | ✅ [Votes: A=4 | B=33 | 1] LayersUsed(37)
+                              | ⏱️  Tempo calcolo SVD: 13.79s
+----------------------------------------------------------------------------------------------------------------------------------
+wav2vec2-base-960h_d (With V) | wav2vec2-base-960h->wav2vec2-base-960h   |  88%  | ✅ [Votes: A=3 | B=46 | 1] LayersUsed(49)
+                              | ⏱️  Tempo calcolo SVD: 17.07s
+wav2vec2-base-960h_d (No V)   | wav2vec2-base-960h->wav2vec2-base-960h   |  84%  | ✅ [Votes: A=3 | B=34 | 1] LayersUsed(37)
+                              | ⏱️  Tempo calcolo SVD: 13.54s
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+[⚔️] GEOMETRIC LINEAGE V2.6.1 FINAL: SEGFORMER
+
+--- Tree 7 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+ade-512-512.bin      (With V) | ade-512-512.bin->cityscapes-1024-10      |  49%  | ✅ [Votes: A=13 | B=38 | 0] LayersUsed(51)
+                              | ⏱️  Tempo calcolo SVD: 0.87s
+ade-512-512.bin      (No V)   | ade-512-512.bin->cityscapes-1024-10      |  58%  | ✅ [Votes: A=9 | B=34 | 0] LayersUsed(43)
+                              | ⏱️  Tempo calcolo SVD: 1.47s
+----------------------------------------------------------------------------------------------------------------------------------
+ade-512-512.bin      (With V) | ade-512-512.bin->segformer-b0-finet      |  45%  | ✅ [Votes: A=14 | B=37 | 0] LayersUsed(51)
+                              | ⏱️  Tempo calcolo SVD: 1.38s
+ade-512-512.bin      (No V)   | ade-512-512.bin->segformer-b0-finet      |  49%  | ✅ [Votes: A=11 | B=32 | 0] LayersUsed(43)
+                              | ⏱️  Tempo calcolo SVD: 0.88s
+----------------------------------------------------------------------------------------------------------------------------------
+
+[⚔️] GEOMETRIC LINEAGE V2.6.1 FINAL: WHISPER-SMALL
+
+--- Tree 11 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small.safe->fa-ir-stt-whisper-   | 100%  | ✅ [Votes: A=0 | B=72 | 0] LayersUsed(72)
+                              | ⏱️  Tempo calcolo SVD: 24.14s
+whisper-small.safete (No V)   | whisper-small.safe->fa-ir-stt-whisper-   | 100%  | ✅ [Votes: A=0 | B=48 | 0] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 17.52s
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small.safe->FPG-whisper-small.   |  81%  | ✅ [Votes: A=7 | B=65 | 11] LayersUsed(72)
+                              | ⏱️  Tempo calcolo SVD: 22.85s
+whisper-small.safete (No V)   | whisper-small.safe->FPG-whisper-small.   |  87%  | ✅ [Votes: A=3 | B=45 | 6] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 18.11s
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small.safe->open-ai-small-1.sa   |  83%  | ✅ [Votes: A=6 | B=66 | 16] LayersUsed(72)
+                              | ⏱️  Tempo calcolo SVD: 22.72s
+whisper-small.safete (No V)   | whisper-small.safe->open-ai-small-1.sa   |  87%  | ✅ [Votes: A=3 | B=45 | 8] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 16.37s
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | special2.bin->whisper-small.safe         |  28%  | ❌ [Votes: A=46 | B=26 | 3] LayersUsed(72)
+                              | ⏱️  Tempo calcolo SVD: 21.87s
+whisper-small.safete (No V)   | special2.bin->whisper-small.safe         |  37%  | ❌ [Votes: A=33 | B=15 | 0] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 16.64s
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small.safe->whisper-small-bela   | 100%  | ✅ [Votes: A=0 | B=72 | 0] LayersUsed(72)
+                              | ⏱️  Tempo calcolo SVD: 23.55s
+whisper-small.safete (No V)   | whisper-small.safe->whisper-small-bela   | 100%  | ✅ [Votes: A=0 | B=48 | 0] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 16.76s
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small.safe->whisper-small-cant   | 100%  | ✅ [Votes: A=0 | B=72 | 0] LayersUsed(72)
+                              | ⏱️  Tempo calcolo SVD: 22.57s
+whisper-small.safete (No V)   | whisper-small.safe->whisper-small-cant   | 100%  | ✅ [Votes: A=0 | B=48 | 0] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 16.27s
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small-cs-c->whisper-small.safe   |  25%  | ❌ [Votes: A=45 | B=27 | 1] LayersUsed(72)
+                              | ⏱️  Tempo calcolo SVD: 22.08s
+whisper-small.safete (No V)   | whisper-small-cs-c->whisper-small.safe   |  37%  | ❌ [Votes: A=33 | B=15 | 0] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 17.11s
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small.safe->whisper-small-fina   |  81%  | ✅ [Votes: A=7 | B=65 | 5] LayersUsed(72)
+                              | ⏱️  Tempo calcolo SVD: 23.67s
+whisper-small.safete (No V)   | whisper-small.safe->whisper-small-fina   |  83%  | ✅ [Votes: A=4 | B=44 | 2] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 16.58s
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | ERROR | 0 Layers Analizzati
+whisper-small.safete (No V)   | ERROR | 0 Layers Analizzati
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small.safe->whisper-small-nepa   |  72%  | ✅ [Votes: A=10 | B=62 | 17] LayersUsed(72)
+                              | ⏱️  Tempo calcolo SVD: 23.15s
+whisper-small.safete (No V)   | whisper-small.safe->whisper-small-nepa   |  75%  | ✅ [Votes: A=6 | B=42 | 9] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 16.16s
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small.safe->Whisper-small-sr-y   |  92%  | ✅ [Votes: A=3 | B=69 | 9] LayersUsed(72)
+                              | ⏱️  Tempo calcolo SVD: 22.41s
+whisper-small.safete (No V)   | whisper-small.safe->Whisper-small-sr-y   |  96%  | ✅ [Votes: A=1 | B=47 | 6] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 16.39s
+----------------------------------------------------------------------------------------------------------------------------------
+FPG-whisper-small.sa (With V) | FPG-whisper-small.->FPG-whisper-small-   |  97%  | ✅ [Votes: A=1 | B=71 | 4] LayersUsed(72)
+                              | ⏱️  Tempo calcolo SVD: 23.93s
+FPG-whisper-small.sa (No V)   | FPG-whisper-small.->FPG-whisper-small-   | 100%  | ✅ [Votes: A=0 | B=48 | 1] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 16.27s
+----------------------------------------------------------------------------------------------------------------------------------
+open-ai-small-1.safe (With V) | open-ai-small-1.sa->open-ai-small-2.sa   |  53%  | ✅ [Votes: A=17 | B=55 | 27] LayersUsed(72)
+                              | ⏱️  Tempo calcolo SVD: 24.73s
+open-ai-small-1.safe (No V)   | open-ai-small-1.sa->open-ai-small-2.sa   |  71%  | ✅ [Votes: A=7 | B=41 | 16] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 16.50s
+----------------------------------------------------------------------------------------------------------------------------------
+open-ai-small-2.safe (With V) | open-ai-small-2.sa->open-ai-small-3.sa   |  47%  | ✅ [Votes: A=19 | B=53 | 44] LayersUsed(72)
+                              | ⏱️  Tempo calcolo SVD: 23.35s
+open-ai-small-2.safe (No V)   | open-ai-small-2.sa->open-ai-small-3.sa   |  54%  | ✅ [Votes: A=11 | B=37 | 29] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 16.87s
+----------------------------------------------------------------------------------------------------------------------------------
+FPG-whisper-small-v2 (With V) | FPG-whisper-small-->whisper-small-ftl.   |  47%  | ✅ [Votes: A=19 | B=53 | 12] LayersUsed(72)
+                              | ⏱️  Tempo calcolo SVD: 22.46s
+FPG-whisper-small-v2 (No V)   | FPG-whisper-small-->whisper-small-ftl.   |  50%  | ✅ [Votes: A=12 | B=36 | 7] LayersUsed(48)
+                              | ⏱️  Tempo calcolo SVD: 16.40s
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+DETR-RESNET
+==================================================================================================================================
+🔍 ANALISI COPPIA: detr-resnet-50.safetensors (Padre reale) vs detr-resnet-50_fine_tuned_loc-2023.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: detr-resnet-50.safetensors
+Modello B: detr-resnet-50_fine_tuned_loc-2023.safetensors
+Direzione Calcolata : detr-resnet-50.safetensors -> detr-resnet-50_fine_tuned_loc-2023.safetensors
+Ground Truth Reale  : detr-resnet-50.safetensors -> detr-resnet-50_fine_tuned_loc-2023.safetensors
+Esito Test          : ✅ CORRETTO
+Confidenza          : 92.68%
+Statistiche         : [Votes: A=79 | B=3 | Ties=0] LayersUsed(93)
+Tempo calcolo SVD   : 6.81s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: detr-resnet-50.safetensors (Padre reale) vs detr-resnet-50_finetuned_wi.bin (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: detr-resnet-50.safetensors
+Modello B: detr-resnet-50_finetuned_wi.bin
+Direzione Calcolata : detr-resnet-50_finetuned_wi.bin -> detr-resnet-50.safetensors
+Ground Truth Reale  : detr-resnet-50.safetensors -> detr-resnet-50_finetuned_wi.bin
+Esito Test          : ❌ ERRATO
+Confidenza          : 66.67%
+Statistiche         : [Votes: A=4 | B=20 | Ties=1] LayersUsed(93)
+Tempo calcolo SVD   : 1.32s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: detr-resnet-50.safetensors (Padre reale) vs detr-resnet-50_finetuned-weed-detection.bin (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: detr-resnet-50.safetensors
+Modello B: detr-resnet-50_finetuned-weed-detection.bin
+Direzione Calcolata : detr-resnet-50.safetensors -> detr-resnet-50_finetuned-weed-detection.bin
+Ground Truth Reale  : detr-resnet-50.safetensors -> detr-resnet-50_finetuned-weed-detection.bin
+Esito Test          : ✅ CORRETTO
+Confidenza          : 9.76%
+Statistiche         : [Votes: A=45 | B=37 | Ties=4] LayersUsed(93)
+Tempo calcolo SVD   : 7.07s
+==================================================================================================================================
+
+
+
+PYTHIA
+==================================================================================================================================
+🔍 ANALISI COPPIA: pythia-1.4b.safetensors (Padre reale) vs pythia-1.4b-AGnews-roya (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: pythia-1.4b.safetensors
+Modello B: pythia-1.4b-AGnews-roya
+Direzione Calcolata : pythia-1.4b.safetensors -> pythia-1.4b-AGnews-roya
+Ground Truth Reale  : pythia-1.4b.safetensors -> pythia-1.4b-AGnews-roya
+Esito Test          : ✅ CORRETTO
+Confidenza          : 97.22%
+Statistiche         : [Votes: A=71 | B=1 | Ties=2] LayersUsed(72)
+Tempo calcolo SVD   : 374.58s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: pythia-1.4b.safetensors (Padre reale) vs statichh-pythia-1.4b-sft-bf16 (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: pythia-1.4b.safetensors
+Modello B: statichh-pythia-1.4b-sft-bf16
+Direzione Calcolata : pythia-1.4b.safetensors -> statichh-pythia-1.4b-sft-bf16
+Ground Truth Reale  : pythia-1.4b.safetensors -> statichh-pythia-1.4b-sft-bf16
+Esito Test          : ✅ CORRETTO
+Confidenza          : 13.89%
+Statistiche         : [Votes: A=41 | B=31 | Ties=65] LayersUsed(72)
+Tempo calcolo SVD   : 358.88s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: statichh-pythia-1.4b-sft-bf16 (Padre reale) vs batchga-bias-pure_ekfac-100-statichh-pythia-1.4b-sft-bf16 (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: statichh-pythia-1.4b-sft-bf16
+Modello B: batchga-bias-pure_ekfac-100-statichh-pythia-1.4b-sft-bf16
+Direzione Calcolata : statichh-pythia-1.4b-sft-bf16 -> batchga-bias-pure_ekfac-100-statichh-pythia-1.4b-sft-bf16
+Ground Truth Reale  : statichh-pythia-1.4b-sft-bf16 -> batchga-bias-pure_ekfac-100-statichh-pythia-1.4b-sft-bf16
+Esito Test          : ✅ CORRETTO
+Confidenza          : 99.90%
+Statistiche         : [Votes: A=3 | B=0 | Ties=3] LayersUsed(72)
+Tempo calcolo SVD   : 361.42s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: statichh-pythia-1.4b-sft-bf16 (Padre reale) vs statichh-pythia-1.4b-dpo-bf16 (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: statichh-pythia-1.4b-sft-bf16
+Modello B: statichh-pythia-1.4b-dpo-bf16
+Direzione Calcolata : statichh-pythia-1.4b-sft-bf16 -> statichh-pythia-1.4b-dpo-bf16
+Ground Truth Reale  : statichh-pythia-1.4b-sft-bf16 -> statichh-pythia-1.4b-dpo-bf16
+Esito Test          : ✅ CORRETTO
+Confidenza          : 16.67%
+Statistiche         : [Votes: A=42 | B=30 | Ties=59] LayersUsed(72)
+Tempo calcolo SVD   : 373.34s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: statichh-pythia-1.4b-sft-bf16 (Padre reale) vs truthDPO-statichh-pythia-1.4b-dpo-bf16 (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: statichh-pythia-1.4b-sft-bf16
+Modello B: truthDPO-statichh-pythia-1.4b-dpo-bf16
+Direzione Calcolata : truthDPO-statichh-pythia-1.4b-dpo-bf16 -> statichh-pythia-1.4b-sft-bf16
+Ground Truth Reale  : statichh-pythia-1.4b-sft-bf16 -> truthDPO-statichh-pythia-1.4b-dpo-bf16
+Esito Test          : ❌ ERRATO
+Confidenza          : 16.67%
+Statistiche         : [Votes: A=30 | B=42 | Ties=70] LayersUsed(72)
+Tempo calcolo SVD   : 366.83s
+==================================================================================================================================
+
+
+
+QWEN2.5-3B 
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: Qwen2.5-3B (Padre reale) vs Qwen2.5-3B-instruct (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: Qwen2.5-3B
+Modello B: Qwen2.5-3B-instruct
+Direzione Calcolata : Qwen2.5-3B-instruct -> Qwen2.5-3B
+Ground Truth Reale  : Qwen2.5-3B -> Qwen2.5-3B-instruct
+Esito Test          : ❌ ERRATO
+Confidenza          : 54.44%
+Statistiche         : [Votes: A=41 | B=139 | Ties=149] LayersUsed(180)
+Tempo calcolo SVD   : 887.42s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: Qwen2.5-3B-instruct (Padre reale) vs SmallThinker-3B-Preview (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: Qwen2.5-3B-instruct
+Modello B: SmallThinker-3B-Preview
+Direzione Calcolata : Qwen2.5-3B-instruct -> SmallThinker-3B-Preview
+Ground Truth Reale  : Qwen2.5-3B-instruct -> SmallThinker-3B-Preview
+Esito Test          : ✅ CORRETTO
+Confidenza          : 96.67%
+Statistiche         : [Votes: A=177 | B=3 | Ties=27] LayersUsed(180)
+Tempo calcolo SVD   : 874.12s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: SmallThinker-3B-Preview (Padre reale) vs smartmind-cyberone-20250401-test (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: SmallThinker-3B-Preview
+Modello B: smartmind-cyberone-20250401-test
+Direzione Calcolata : SmallThinker-3B-Preview -> smartmind-cyberone-20250401-test
+Ground Truth Reale  : SmallThinker-3B-Preview -> smartmind-cyberone-20250401-test
+Esito Test          : ✅ CORRETTO
+Confidenza          : 35.56%
+Statistiche         : [Votes: A=122 | B=58 | Ties=146] LayersUsed(180)
+Tempo calcolo SVD   : 849.05s
+==================================================================================================================================
+
+
+
+
+------
+STABLELM
+------
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: stablelm-2-1_6b.safetensors (Padre reale) vs bengali-cuisine-helper-stablelm-1.6b.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: stablelm-2-1_6b.safetensors
+Modello B: bengali-cuisine-helper-stablelm-1.6b.safetensors
+Direzione Calcolata : stablelm-2-1_6b.safetensors -> bengali-cuisine-helper-stablelm-1.6b.safetensors
+Ground Truth Reale  : stablelm-2-1_6b.safetensors -> bengali-cuisine-helper-stablelm-1.6b.safetensors
+Esito Test          : ✅ CORRETTO
+Confidenza          : 15.00%
+Statistiche         : [Votes: A=69 | B=51 | Ties=111] LayersUsed(121)
+Tempo calcolo SVD   : 381.13s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: stablelm-2-1_6b.safetensors (Padre reale) vs stablelm-2-1_6b-orpo-full-v1.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: stablelm-2-1_6b.safetensors
+Modello B: stablelm-2-1_6b-orpo-full-v1.safetensors
+Direzione Calcolata : stablelm-2-1_6b.safetensors -> stablelm-2-1_6b-orpo-full-v1.safetensors
+Ground Truth Reale  : stablelm-2-1_6b.safetensors -> stablelm-2-1_6b-orpo-full-v1.safetensors
+Esito Test          : ✅ CORRETTO
+Confidenza          : 22.31%
+Statistiche         : [Votes: A=74 | B=47 | Ties=120] LayersUsed(121)
+Tempo calcolo SVD   : 378.80s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: stablelm-2-1_6b.safetensors (Padre reale) vs stablelm-2-1_6b-orpo-full-v2.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: stablelm-2-1_6b.safetensors
+Modello B: stablelm-2-1_6b-orpo-full-v2.safetensors
+Direzione Calcolata : stablelm-2-1_6b.safetensors -> stablelm-2-1_6b-orpo-full-v2.safetensors
+Ground Truth Reale  : stablelm-2-1_6b.safetensors -> stablelm-2-1_6b-orpo-full-v2.safetensors
+Esito Test          : ✅ CORRETTO
+Confidenza          : 28.93%
+Statistiche         : [Votes: A=78 | B=43 | Ties=117] LayersUsed(121)
+Tempo calcolo SVD   : 382.01s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: stablelm-2-1_6b.safetensors (Padre reale) vs stablelm-2-1_6b-orpo-full-v3.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: stablelm-2-1_6b.safetensors
+Modello B: stablelm-2-1_6b-orpo-full-v3.safetensors
+Direzione Calcolata : stablelm-2-1_6b.safetensors -> stablelm-2-1_6b-orpo-full-v3.safetensors
+Ground Truth Reale  : stablelm-2-1_6b.safetensors -> stablelm-2-1_6b-orpo-full-v3.safetensors
+Esito Test          : ✅ CORRETTO
+Confidenza          : 28.93%
+Statistiche         : [Votes: A=78 | B=43 | Ties=118] LayersUsed(121)
+Tempo calcolo SVD   : 384.22s
+==================================================================================================================================
+
+
+------
+GEMMA
+------
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: gemma-3-1b-pt.safetensors (Padre reale) vs gemma-3-1b-it.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: gemma-3-1b-pt.safetensors
+Modello B: gemma-3-1b-it.safetensors
+Direzione Calcolata : gemma-3-1b-pt.safetensors -> gemma-3-1b-it.safetensors
+Ground Truth Reale  : gemma-3-1b-pt.safetensors -> gemma-3-1b-it.safetensors
+Esito Test          : ✅ CORRETTO
+Confidenza          : 13.85%
+Statistiche         : [Votes: A=74 | B=56 | Ties=1] LayersUsed(130)
+Tempo calcolo SVD   : 131.00s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: gemma-3-1b-it.safetensors (Padre reale) vs gemma-3-1b-it-qat-int4-unquantized.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: gemma-3-1b-it.safetensors
+Modello B: gemma-3-1b-it-qat-int4-unquantized.safetensors
+Direzione Calcolata : gemma-3-1b-it-qat-int4-unquantized.safetensors -> gemma-3-1b-it.safetensors
+Ground Truth Reale  : gemma-3-1b-it.safetensors -> gemma-3-1b-it-qat-int4-unquantized.safetensors
+Esito Test          : ❌ ERRATO
+Confidenza          : 99.90%
+Statistiche         : [Votes: A=0 | B=130 | Ties=6] LayersUsed(130)
+Tempo calcolo SVD   : 122.76s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: gemma-3-1b-it.safetensors (Padre reale) vs gemma-molit-finetuned.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: gemma-3-1b-it.safetensors
+Modello B: gemma-molit-finetuned.safetensors
+Direzione Calcolata : gemma-3-1b-it.safetensors -> gemma-molit-finetuned.safetensors
+Ground Truth Reale  : gemma-3-1b-it.safetensors -> gemma-molit-finetuned.safetensors
+Esito Test          : ✅ CORRETTO
+Confidenza          : 58.46%
+Statistiche         : [Votes: A=103 | B=27 | Ties=101] LayersUsed(130)
+Tempo calcolo SVD   : 125.70s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: gemma-3-1b-it.safetensors (Padre reale) vs gemma-3b-chat-support.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: gemma-3-1b-it.safetensors
+Modello B: gemma-3b-chat-support.safetensors
+Direzione Calcolata : gemma-3-1b-it.safetensors -> gemma-3b-chat-support.safetensors
+Ground Truth Reale  : gemma-3-1b-it.safetensors -> gemma-3b-chat-support.safetensors
+Esito Test          : ✅ CORRETTO
+Confidenza          : 99.90%
+Statistiche         : [Votes: A=130 | B=0 | Ties=0] LayersUsed(130)
+Tempo calcolo SVD   : 124.60s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: gemma-3-1b-it.safetensors (Padre reale) vs gemma-3-1b-it-DPO.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: gemma-3-1b-it.safetensors
+Modello B: gemma-3-1b-it-DPO.safetensors
+Direzione Calcolata : gemma-3-1b-it.safetensors -> gemma-3-1b-it-DPO.safetensors
+Ground Truth Reale  : gemma-3-1b-it.safetensors -> gemma-3-1b-it-DPO.safetensors
+Esito Test          : ✅ CORRETTO
+Confidenza          : -0.00%
+Statistiche         : [Votes: A=60 | B=60 | Ties=130] LayersUsed(130)
+Tempo calcolo SVD   : 123.61s
+==================================================================================================================================
+
+
+------
+TINY-LLAMA
+------
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: TinyLlama-1.1B-intermediate-step-1431k-3T_d0.safetensors (Padre reale) vs TinyLlama-1.1B-Chat-v1.0_d1.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: TinyLlama-1.1B-intermediate-step-1431k-3T_d0.safetensors
+Modello B: TinyLlama-1.1B-Chat-v1.0_d1.safetensors
+Direzione Calcolata : TinyLlama-1.1B-intermediate-step-1431k-3T_d0.safetensors -> TinyLlama-1.1B-Chat-v1.0_d1.safetensors
+Ground Truth Reale  : TinyLlama-1.1B-intermediate-step-1431k-3T_d0.safetensors -> TinyLlama-1.1B-Chat-v1.0_d1.safetensors
+Esito Test          : ✅ CORRETTO
+Confidenza          : 85.59%
+Statistiche         : [Votes: A=103 | B=8 | Ties=58] LayersUsed(111)
+Tempo calcolo SVD   : 315.77s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: TinyLlama-1.1B-Chat-v1.0_d1.safetensors (Padre reale) vs Finetuned_TinyLlama_d2.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: TinyLlama-1.1B-Chat-v1.0_d1.safetensors
+Modello B: Finetuned_TinyLlama_d2.safetensors
+Direzione Calcolata : Finetuned_TinyLlama_d2.safetensors -> TinyLlama-1.1B-Chat-v1.0_d1.safetensors
+Ground Truth Reale  : TinyLlama-1.1B-Chat-v1.0_d1.safetensors -> Finetuned_TinyLlama_d2.safetensors
+Esito Test          : ❌ ERRATO
+Confidenza          : 8.26%
+Statistiche         : [Votes: A=50 | B=59 | Ties=111] LayersUsed(111)
+Tempo calcolo SVD   : 307.56s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: TinyLlama-1.1B-Chat-v1.0_d1.safetensors (Padre reale) vs TinyLlama-1.1B-Chat-v1.0-reasoning-v2_d2.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: TinyLlama-1.1B-Chat-v1.0_d1.safetensors
+Modello B: TinyLlama-1.1B-Chat-v1.0-reasoning-v2_d2.safetensors
+Direzione Calcolata : TinyLlama-1.1B-Chat-v1.0_d1.safetensors -> TinyLlama-1.1B-Chat-v1.0-reasoning-v2_d2.safetensors
+Ground Truth Reale  : TinyLlama-1.1B-Chat-v1.0_d1.safetensors -> TinyLlama-1.1B-Chat-v1.0-reasoning-v2_d2.safetensors
+Esito Test          : ✅ CORRETTO
+Confidenza          : 71.17%
+Statistiche         : [Votes: A=95 | B=16 | Ties=98] LayersUsed(111)
+Tempo calcolo SVD   : 302.61s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: TinyLlama-1.1B-Chat-v1.0_d1.safetensors (Padre reale) vs Tukan-1.1B-Chat-reasoning-sft-COLA_d2.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: TinyLlama-1.1B-Chat-v1.0_d1.safetensors
+Modello B: Tukan-1.1B-Chat-reasoning-sft-COLA_d2.safetensors
+Direzione Calcolata : TinyLlama-1.1B-Chat-v1.0_d1.safetensors -> Tukan-1.1B-Chat-reasoning-sft-COLA_d2.safetensors
+Ground Truth Reale  : TinyLlama-1.1B-Chat-v1.0_d1.safetensors -> Tukan-1.1B-Chat-reasoning-sft-COLA_d2.safetensors
+Esito Test          : ✅ CORRETTO
+Confidenza          : 76.58%
+Statistiche         : [Votes: A=98 | B=13 | Ties=31] LayersUsed(111)
+Tempo calcolo SVD   : 308.89s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: TinyLlama-1.1B-Chat-v1.0-reasoning-v2_d2.safetensors (Padre reale) vs TinyLlama-1.1B-Chat-v1.0-reasoning-v2-dpo_d3.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: TinyLlama-1.1B-Chat-v1.0-reasoning-v2_d2.safetensors
+Modello B: TinyLlama-1.1B-Chat-v1.0-reasoning-v2-dpo_d3.safetensors
+Direzione Calcolata : TinyLlama-1.1B-Chat-v1.0-reasoning-v2_d2.safetensors -> TinyLlama-1.1B-Chat-v1.0-reasoning-v2-dpo_d3.safetensors
+Ground Truth Reale  : TinyLlama-1.1B-Chat-v1.0-reasoning-v2_d2.safetensors -> TinyLlama-1.1B-Chat-v1.0-reasoning-v2-dpo_d3.safetensors
+Esito Test          : ✅ CORRETTO
+Confidenza          : 13.51%
+Statistiche         : [Votes: A=63 | B=48 | Ties=111] LayersUsed(111)
+Tempo calcolo SVD   : 302.34s
+==================================================================================================================================
+
+
+------
+QWEN VL
+------
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: Qwen2-VL-2B (Padre reale) vs Qwen2-VL-2B-Instruct (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: Qwen2-VL-2B
+Modello B: Qwen2-VL-2B-Instruct
+Direzione Calcolata : Qwen2-VL-2B-Instruct -> Qwen2-VL-2B
+Ground Truth Reale  : Qwen2-VL-2B -> Qwen2-VL-2B-Instruct
+Esito Test          : ❌ ERRATO
+Confidenza          : 8.57%
+Statistiche         : [Votes: A=64 | B=76 | Ties=117] LayersUsed(268)
+Tempo calcolo SVD   : 310.09s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: Qwen2-VL-2B-Instruct (Padre reale) vs qwen2-vl-2b-catmus-40000.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: Qwen2-VL-2B-Instruct
+Modello B: qwen2-vl-2b-catmus-40000.safetensors
+Direzione Calcolata : Qwen2-VL-2B-Instruct -> qwen2-vl-2b-catmus-40000.safetensors
+Ground Truth Reale  : Qwen2-VL-2B-Instruct -> qwen2-vl-2b-catmus-40000.safetensors
+Esito Test          : ✅ CORRETTO
+Confidenza          : 16.42%
+Statistiche         : [Votes: A=156 | B=112 | Ties=261] LayersUsed(268)
+Tempo calcolo SVD   : 462.24s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: Qwen2-VL-2B-Instruct (Padre reale) vs Qwen2-VL-2B-Instruct-abliterated.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: Qwen2-VL-2B-Instruct
+Modello B: Qwen2-VL-2B-Instruct-abliterated.safetensors
+Direzione Calcolata : Qwen2-VL-2B-Instruct-abliterated.safetensors -> Qwen2-VL-2B-Instruct
+Ground Truth Reale  : Qwen2-VL-2B-Instruct -> Qwen2-VL-2B-Instruct-abliterated.safetensors
+Esito Test          : ❌ ERRATO
+Confidenza          : 99.90%
+Statistiche         : [Votes: A=0 | B=56 | Ties=0] LayersUsed(268)
+Tempo calcolo SVD   : 202.47s
+==================================================================================================================================
+
+
+==================================================================================================================================
+🔍 ANALISI COPPIA: Qwen2-VL-2B-Instruct (Padre reale) vs Vikhr-2-VL-2b-Instruct-experimental.safetensors (Figlio reale)
+==================================================================================================================================
+----------------------------------------------------------------------------------------------------------------------------------
+
+🏆 RISULTATO DELLA PREDIZIONE
+Modello A: Qwen2-VL-2B-Instruct
+Modello B: Vikhr-2-VL-2b-Instruct-experimental.safetensors
+Direzione Calcolata : Qwen2-VL-2B-Instruct -> Vikhr-2-VL-2b-Instruct-experimental.safetensors
+Ground Truth Reale  : Qwen2-VL-2B-Instruct -> Vikhr-2-VL-2b-Instruct-experimental.safetensors
+Esito Test          : ✅ CORRETTO
+Confidenza          : 17.53%
+Statistiche         : [Votes: A=57 | B=40 | Ties=90] LayersUsed(268)
+Tempo calcolo SVD   : 295.38s
+==================================================================================================================================
+

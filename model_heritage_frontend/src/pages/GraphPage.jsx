@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AlertCircle, Loader2, RefreshCw, Database, Network } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = 'http://localhost:5002/api';
 
 export default function GraphPage() {
   const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
@@ -245,7 +245,7 @@ export default function GraphPage() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">MANGROVE Graph</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Model Heritage Graph</h1>
         <p className="text-gray-600">
           Visualize model relationships and family structures using Neo4j graph database.
         </p>

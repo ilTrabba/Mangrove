@@ -24,7 +24,8 @@ from src.mother_algorithm.mother_utils import (
     fallback_directed_mst,
     calculate_confidence_scores,
     normalize_parent_child_orientation,
-    update_family_statistics
+    update_family_statistics,
+    find_max_root_distance
 )
 
 logger = logging.getLogger(__name__)
@@ -46,7 +47,6 @@ class MoTHerTreeBuilder:
     """
     
     def __init__(self,
-                 lambda_param: float = 0.3, # parametro c, non lambda, da rinominare ovunque
                  method: TreeBuildingMethod = TreeBuildingMethod.MOTHER,
                  distance_matrix: NDArray[np.float64] = None,
                  distance_calculator: ModelDistanceCalculator = ModelDistanceCalculator()):
@@ -58,16 +58,15 @@ class MoTHerTreeBuilder:
             lambda_param: Balance between kurtosis and distance (0=distance only, 1=kurtosis only)
             method: Tree building method to use
         """
-        self.lambda_param = lambda_param
         self.method = method
         self.distance_matrix = distance_matrix
         self.distance_calculator = distance_calculator
 
-        logger.info(f"Initialized MoTHerTreeBuilder with method: {method}, lambda: {lambda_param}")
+        logger.info(f"Initialized MoTHerTreeBuilder with method: {method}")
     
     def build_family_tree(self, 
                          family_id: str,
-                         models: Optional[List[Model]] = None) -> Tuple[nx.DiGraph, Dict[str, float]]:
+                         models: Optional[List[Model]] = None) -> Tuple[nx.DiGraph, Dict[str, float], float]:
         """
         Build a genealogical tree for all models in a family.
         
@@ -94,7 +93,7 @@ class MoTHerTreeBuilder:
 
             if len(models) < 2:
                 logHandler.warning_handler(f"Family {family_id} has insufficient models for tree building", "build_family_tree")
-                return nx.DiGraph(), {}
+                return nx.DiGraph(), {}, 0.0
             
             logger.info(f"Building tree for family {family_id} with {len(models)} models")
             
@@ -112,14 +111,14 @@ class MoTHerTreeBuilder:
             
             if len(valid_models) < 2:
                 logHandler.warning_handler(f"Insufficient valid models for tree building in family {family_id}", "build_family_tree")
-                return nx.DiGraph(), {}
+                return nx.DiGraph(), {}, 0.0
 
             # Deterministic ordering also for valid-only set
             valid_models.sort(key=lambda m: m.id)
             
             # Build tree using selected method
             if self.method == TreeBuildingMethod.MOTHER:
-                tree, confidence_scores = self.build_mother_tree(family_id, valid_models, model_weights)
+                tree, confidence_scores, max_distance_root_nodes = self.build_mother_tree(family_id, valid_models, model_weights)
             else:
                 raise Exception(f"Unknown tree building method: {self.method}")
             
@@ -129,16 +128,16 @@ class MoTHerTreeBuilder:
             # Normalize orientation to parent -> child for end-to-end consistency
             tree_with_ids = normalize_parent_child_orientation(tree_with_ids)
         
-            return tree_with_ids, confidence_with_ids
+            return tree_with_ids, confidence_with_ids, max_distance_root_nodes
             
         except Exception as e:
             logHandler.error_handler(f"Error building family tree for {family_id}: {e}", "build_family_tree")
-            return nx.DiGraph(), [], {}
+            return nx.DiGraph(), [], 0.0
     
     def build_mother_tree(self, 
                           family_id: str,
                           models: List[Model], 
-                          model_weights: Dict[str, Any]) -> Tuple[nx.DiGraph, Dict[int, float]]:
+                          model_weights: Dict[str, Any]) -> Tuple[nx.DiGraph, Dict[int, float], float]:
         """
         Build tree using full MoTHer algorithm (kurtosis + distance).
         """
@@ -178,10 +177,9 @@ class MoTHerTreeBuilder:
             self.distance_matrix = distance_matrix
                         
             # Apply MoTHer algorithm using existing implementation
-            tree, confidence_scores = self.build_tree(
+            tree, confidence_scores, max_distance_root_nodes = self.build_tree(
                 ku_values=kurtosis_values,
-                distance_matrix=distance_matrix,
-                lambda_param=self.lambda_param
+                distance_matrix=distance_matrix
             )
             
             logger.info(f"✅ MoTHer tree built with {tree.number_of_nodes()} nodes")
@@ -189,15 +187,57 @@ class MoTHerTreeBuilder:
             # Update statistics
             update_family_statistics(family_id, distance_matrix, tree.edges())
 
-            return tree, confidence_scores
+            return tree, confidence_scores, max_distance_root_nodes
             
         except Exception as e:
             logHandler.error_handler(e, "build_mother_tree")
-            return nx.DiGraph(), {}
-    
+            return nx.DiGraph(), {}, 0.0
+
+
+    def save_debug_graph(self,G, spanning_tree):
+        # Nome file fisso
+        filename = "DEBUG_GRAFO_LOOKMAN.txt"
+        
+        # Percorso assoluto basato su dove sta girando lo script ORA
+        cwd = os.getcwd()
+        full_path = os.path.join(cwd, filename)
+
+        print(f"\n{'='*50}", flush=True)
+        print(f" >>> TENTO SALVATAGGIO SU: {full_path}", flush=True)
+
+        try:
+            with open(full_path, "w", encoding="utf-8") as f:
+                # HEADER
+                f.write("DEBUG GRAFO E SPANNING TREE\n")
+                f.write("===========================\n\n")
+
+                # 1. GRAFO G
+                if G:
+                    f.write(f"--- GRAFO G ({G.number_of_nodes()} nodi) ---\n")
+                    for u, v, data in G.edges(data=True):
+                        f.write(f"{u} -> {v} : {data}\n")
+                else:
+                    f.write("IL GRAFO G È NONE o VUOTO!\n")
+
+                f.write("\n" + "-"*30 + "\n\n")
+
+                # 2. ALBERO
+                if spanning_tree:
+                    f.write(f"--- SPANNING TREE ({spanning_tree.number_of_nodes()} nodi) ---\n")
+                    for u, v, data in spanning_tree.edges(data=True):
+                        f.write(f"{u} -> {v} : {data}\n")
+                else:
+                    f.write("SPANNING TREE È NONE (FALLITO)\n")
+
+            print(f" ✅ FILE CREATO CON SUCCESSO!", flush=True)
+            print(f" {'='*50}\n", flush=True)
+
+        except Exception as e:
+            print(f" ❌ ERRORE SCRITTURA FILE: {e}", flush=True)
+            print(f" {'='*50}\n", flush=True)
+
     def build_tree(self, ku_values: List[float], 
-               distance_matrix: np.ndarray, 
-               lambda_param: float) -> Tuple[nx.DiGraph, Dict[int, float]]:
+               distance_matrix: np.ndarray) -> Tuple[nx.DiGraph, Dict[int, float], float]:
         """
         Build directed tree using MoTHer algorithm with Chu-Liu-Edmonds MDST
         """
@@ -223,11 +263,9 @@ class MoTHerTreeBuilder:
             edge_weight = true_lambda * kurtosis_cost + (1 - true_lambda) * distance_cost
             tree = nx.DiGraph()
             tree.add_edge(parent, child, weight=edge_weight, distance=distance_cost)
-            return tree, {parent: 0.8, child: 0.7}
+            return tree, {parent: 0.8, child: 0.7}, distance_cost
         
         logger.debug(f"Building tree with {n} models using Chu-Liu-Edmonds algorithm")
-
-        #true_lambda = compute_lambda(distance_matrix)
         
         # Create weighted directed graph
         G = nx.DiGraph()
@@ -266,16 +304,23 @@ class MoTHerTreeBuilder:
         try:
             spanning_tree = nx.minimum_spanning_arborescence(G, attr='weight', preserve_attrs=True)
             #spanning_tree = mdst.chu_liu_edmonds(G,root=root)
+
             logger.debug(f"Chu-Liu-Edmonds completed: {spanning_tree.number_of_nodes()} nodes, {spanning_tree.number_of_edges()} edges")
+
+            max_root_nodes_distance = find_max_root_distance(spanning_tree,distance_matrix)
         except Exception as e:
             logger.warning(f"Chu-Liu-Edmonds failed ({e}), using fallback")
             spanning_tree = fallback_directed_mst(G)
+            max_root_nodes_distance = 0.0
 
-        
+        try:
+            self.save_debug_graph(G,spanning_tree)
+        except Exception as e:
+            logger.warning(f"non funziona la funzione che fa il file lookman")
         # Calculate confidence scores
         confidence_scores = calculate_confidence_scores(spanning_tree, G, ku_values)
         
-        return spanning_tree, confidence_scores
+        return spanning_tree, confidence_scores, max_root_nodes_distance
 
     # Helper function to get id from either dict or object
     def get_model_id(self, model):

@@ -58,104 +58,104 @@ def load_model_weights(file_path: str) -> Optional[Dict[str, Any]]:
 
 def calc_ku(weights: Dict[str, Any]) -> float:
     """
-    Calculate kurtosis of model weights (only 2D square 'dense' tensors), adapted to match
-    MoTHer FullFT behavior while preserving the original checks/logging.
-
-    Behavior enforced:
-    - Only considers layers whose name contains the substring 'output.dense' (case-insensitive),
-      matching MoTHer FullFT usage.
-    - Only includes 2D square tensors (ndim == 2 and shape[0] == shape[1]).
-    - Calculates kurtosis per-layer (scipy.stats.kurtosis, Fisher/excess kurtosis) and SUMS
-      the per-layer kurtoses to produce the model-level value (same aggregation used in MoTHer).
-    - Preserves existing checks/logging patterns (assumes `logger` and `FilteringPatterns.BACKBONE_ONLY`
-      are available in the caller's scope).
-    - Returns 0.0 if no valid layers are found or if an error occurs.
+    Calculate kurtosis of model weights using a fallback strategy:
+    1. First, try to find 2D SQUARE matrices (legacy behavior, best for Llama/BERT).
+    2. If NO square matrices are found, fallback to RECTANGULAR matrices (essential for Gemma).
     """
-    try:
-        # Layer kind required for Full Fine-Tuning mode in MoTHer
-        LAYER_KINDS = [
-            'output.dense',  # BERT style
-            'o_proj',        # Llama style
-            'out_proj',      # GPT-Neo/J style
-            'c_proj',        # GPT-2 style
-            'wo',            # T5 style
-            'self_attn.out']
+    
+    # Lista estesa dei layer supportati
+    LAYER_KINDS = [
+        'output.dense',  # BERT style
+        'o_proj',        # Llama Attention Output
+        'out_proj',      # GPT-Neo/J style
+        'c_proj',        # GPT-2 style
+        'wo',            # T5 style
+        'dense.weight',  # pythia style 
+        'self_attn.out',
+        'down_proj',     # Gemma/Llama MLP Output (Spesso rettangolare)
+        'gate_proj',     # Gemma/Llama MLP Gate (Spesso rettangolare)
+        'up_proj'        # Gemma/Llama MLP Up (Spesso rettangolare)
+    ]
 
-        excluded_count = 0
-        shape_filtered_count = 0
-        layer_kind_filtered_count = 0
-        valid_layer_count = 0
-        nan_inf_layer_count = 0
-        total_weights_from_valid_layers = 0
+    def _compute_kurtosis_internal(allow_rectangular: bool) -> tuple[float, int, str]:
+        """Funzione interna per evitare duplicazione di codice."""
         model_ku = 0.0
+        valid_count = 0
+        stats_log = {"excluded": 0, "kind_filtered": 0, "shape_filtered": 0, "nan": 0}
 
         for param_name, param_tensor in weights.items():
-            # Normalize name for case-insensitive checks
             param_lower = param_name.lower()
 
-            # Exclude normalization, embedding, and head layers (your existing filter)
+            # 1. Filtro Esclusioni (Backbone only, etc.)
+            # Assumo che FilteringPatterns sia disponibile nel contesto globale
             if any(pattern in param_lower for pattern in FilteringPatterns.BACKBONE_ONLY):
-                excluded_count += 1
+                stats_log["excluded"] += 1
                 continue
 
-            # Require the FullFT-specific layer kind substring
-            
+            # 2. Filtro Nome Layer
             if not any(kind in param_lower for kind in LAYER_KINDS):
-                layer_kind_filtered_count += 1
+                stats_log["kind_filtered"] += 1
                 continue
 
-            # Verify it's a torch tensor
+            # 3. Verifica Tipo
             if not isinstance(param_tensor, torch.Tensor):
                 continue
 
-            # Only include 2D square matrices
-            if not (param_tensor.ndim == 2 and param_tensor.shape[0] == param_tensor.shape[1]):
-                shape_filtered_count += 1
+            # 4. Filtro Forma (Shape)
+            is_2d = param_tensor.ndim == 2
+            if not is_2d:
+                stats_log["shape_filtered"] += 1
                 continue
             
-            # Convert to float if the type is bfloat16
-            param_tensor_cpu = param_tensor.detach().cpu()
-            if param_tensor_cpu.dtype == torch.bfloat16:
-                param_tensor_cpu = param_tensor_cpu.float()
+            # LOGICA CORE: Quadrato vs Rettangolare
+            is_square = (param_tensor.shape[0] == param_tensor.shape[1])
+            
+            if not allow_rectangular and not is_square:
+                # Se siamo in modalità Strict, scartiamo i rettangolari
+                stats_log["shape_filtered"] += 1
+                continue
+            
+            # Se siamo qui, il layer è valido per la modalità corrente
 
-            # Flatten to numpy array for kurtosis calculation
-            param_weights = param_tensor_cpu.numpy().ravel()
-            total_weights_from_valid_layers += param_weights.size
+            # Conversione bfloat16 -> float32
+            tensor_cpu = param_tensor.detach().cpu()
+            if tensor_cpu.dtype == torch.bfloat16:
+                tensor_cpu = tensor_cpu.float()
 
-            # Calculate kurtosis per-layer (Fisher definition)
-            ku = stats.kurtosis(param_weights.flatten()) #ku = stats.kurtosis(param_weights, fisher=True)
+            param_weights = tensor_cpu.numpy().ravel()
+            
+            # Calcolo Kurtosis
+            ku = stats.kurtosis(param_weights) # Fisher=True di default in scipy
 
-            # Handle NaN/Inf for this layer: skip and count, but don't let it poison the sum
             if np.isnan(ku) or np.isinf(ku):
-                nan_inf_layer_count += 1
+                stats_log["nan"] += 1
                 continue
 
-            # Aggregate by summing per-layer kurtoses (matching MoTHer)
             model_ku += float(ku)
-            valid_layer_count += 1
+            valid_count += 1
+        
+        return model_ku, valid_count, str(stats_log)
 
-        # If no valid layers (after all filters), keep the same warning behavior as before
-        if valid_layer_count == 0:
-            logger.warning(
-                f"No valid weights found for kurtosis calculation. "
-                f"Excluded: {excluded_count}, Layer-kind filtered: {layer_kind_filtered_count}, "
-                f"Shape filtered: {shape_filtered_count}, NaN/Inf layers: {nan_inf_layer_count}"
-            )
-            return 0.0
+    try:
+        # --- PASSAGGIO 1: Cerca solo matrici QUADRATE (Comportamento Classico) ---
+        ku_val, count, log_details = _compute_kurtosis_internal(allow_rectangular=False)
 
-        # Final sanity check on aggregated kurtosis
-        if np.isnan(model_ku) or np.isinf(model_ku):
-            logger.warning("Aggregated kurtosis calculation resulted in NaN or Inf")
-            return 0.0
+        if count > 0:
+            logger.debug(f"Kurtosis (Square Mode): {ku_val:.4f} from {count} layers. Stats: {log_details}")
+            return ku_val
+        
+        # --- PASSAGGIO 2: FALLBACK (Se 0 quadrati, cerca Rettangolari) ---
+        logger.info("⚠️ Nessun layer quadrato trovato. Attivazione fallback su layer rettangolari (Gemma Mode)...")
+        
+        ku_val, count, log_details = _compute_kurtosis_internal(allow_rectangular=True)
+        
+        if count > 0:
+            logger.info(f"✅ Kurtosis (Rectangular Fallback): {ku_val:.4f} from {count} layers. Stats: {log_details}")
+            return ku_val
 
-        logger.debug(
-            f"Kurtosis (summed per-layer, FullFT 'output.dense') calculated: {model_ku:.6f} "
-            f"({valid_layer_count} layers used, {total_weights_from_valid_layers} total weights, "
-            f"{excluded_count} layers excluded, {layer_kind_filtered_count} filtered by layer kind, "
-            f"{shape_filtered_count} shape filtered, {nan_inf_layer_count} layers had NaN/Inf kurtosis)"
-        )
-
-        return float(model_ku)
+        # Se ancora 0, non c'è niente da fare
+        logger.warning(f"Kurtosis calculation failed even after fallback. Stats: {log_details}")
+        return 0.0
 
     except Exception as e:
         logger.error(f"Error calculating kurtosis: {e}", exc_info=True)
@@ -167,7 +167,7 @@ def compute_lambda(distance_matrix: np.ndarray, c: float = 0.3) -> float:
     
         λ = c * (1/n^2) * Σ_{i,j} D_ij
     
-    Parameters 
+    Parameters
     ----------
     distance_matrix : np.ndarray
         Matrix of pairwise distances between models (n x n).
@@ -307,3 +307,26 @@ def calculate_confidence_scores(tree: nx.DiGraph, original_graph: nx.DiGraph,
                 confidence_scores[node] = 0.4  # Default for orphaned nodes
     
     return confidence_scores
+
+
+def find_max_root_distance(spanning_tree: nx.DiGraph, distance_matrix: np.ndarray) -> float:
+    """
+    Trova la radice dello spanning tree ed estrae la distanza massima
+    tra la radice e tutti gli altri nodi usando la matrice delle distanze.
+    """
+    if spanning_tree.number_of_nodes() == 0:
+        return 0.0
+
+    # 1. Trova la radice in modo ottimizzato (si ferma al primo match)
+    # Se il generatore si svuota senza trovare nulla, restituisce None
+    root = next((n for n, d in spanning_tree.in_degree() if d == 0), None)
+
+    # Caso limite: grafo senza radice valida (es. un ciclo puro, impossibile in un'arborescenza ma sicuro controllare)
+    if root is None:
+        return 0.0
+
+    # 2. Estrae la distanza massima
+    # distance_matrix[root, :] prende l'intera riga della radice (distanze verso TUTTI i nodi)
+    max_distance = np.max(distance_matrix[root, :])
+    
+    return float(max_distance)

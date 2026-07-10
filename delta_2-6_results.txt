@@ -1,0 +1,189 @@
+DELTA VERSION 2.6
+
+[⚔️] GEOMETRIC LINEAGE V2.6: GEMMA
+
+--- Tree 5 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+gemma-3-1b-pt.safete (With V) | gemma-3-1b-pt.safe->gemma-3-1b-it.safe   | 18%  | ✅ AdditiveLayers(120) SubtractiveLayers(10) LayersUsed(130)
+gemma-3-1b-pt.safete (No V)   | gemma-3-1b-pt.safe->gemma-3-1b-it.safe   | 19%  | ✅ AdditiveLayers(97) SubtractiveLayers(7) LayersUsed(104)
+----------------------------------------------------------------------------------------------------------------------------------
+gemma-3-1b-it.safete (With V) | gemma-3-1b-it-qat-->gemma-3-1b-it.safe   | 8%  | ❌ AdditiveLayers(22) SubtractiveLayers(108) LayersUsed(130)
+gemma-3-1b-it.safete (No V)   | gemma-3-1b-it.safe->gemma-3-1b-it-qat-   | 6%  | ✅ AdditiveLayers(20) SubtractiveLayers(84) LayersUsed(104)
+----------------------------------------------------------------------------------------------------------------------------------
+gemma-3-1b-it.safete (With V) | gemma-3-1b-it.safe->gemma-molit-finetu   | 9%  | ✅ AdditiveLayers(19) SubtractiveLayers(111) LayersUsed(130)
+gemma-3-1b-it.safete (No V)   | gemma-3-1b-it.safe->gemma-molit-finetu   | 15%  | ✅ AdditiveLayers(19) SubtractiveLayers(85) LayersUsed(104)
+----------------------------------------------------------------------------------------------------------------------------------
+gemma-3-1b-it.safete (With V) | gemma-3-1b-it.safe->gemma-3b-chat-supp   | 100%  | ✅ AdditiveLayers(130) SubtractiveLayers(0) LayersUsed(130)
+gemma-3-1b-it.safete (No V)   | gemma-3-1b-it.safe->gemma-3b-chat-supp   | 100%  | ✅ AdditiveLayers(104) SubtractiveLayers(0) LayersUsed(104)
+----------------------------------------------------------------------------------------------------------------------------------
+gemma-3-1b-it.safete (With V) | gemma-3-1b-it.safe->gemma-3-1b-it-DPO.   | 18%  | ✅ AdditiveLayers(0) SubtractiveLayers(130) LayersUsed(130)
+gemma-3-1b-it.safete (No V)   | gemma-3-1b-it.safe->gemma-3-1b-it-DPO.   | 19%  | ✅ AdditiveLayers(0) SubtractiveLayers(104) LayersUsed(104)
+----------------------------------------------------------------------------------------------------------------------------------
+
+
+[⚔️] GEOMETRIC LINEAGE V2.6: WAV2VEC2
+
+--- Tree 2 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+wav2vec2-base-960h_d (With V) | wav2vec2-base-960h->wav2vec2-base-960h   | 63%  | ✅ AdditiveLayers(38) SubtractiveLayers(11) LayersUsed(49)
+wav2vec2-base-960h_d (No V)   | wav2vec2-base-960h->wav2vec2-base-960h   | 57%  | ✅ AdditiveLayers(28) SubtractiveLayers(9) LayersUsed(37)
+----------------------------------------------------------------------------------------------------------------------------------
+wav2vec2-base-960h_d (With V) | wav2vec2-base-960h->Musical-Instrument   | 39%  | ✅ AdditiveLayers(31) SubtractiveLayers(18) LayersUsed(49)
+wav2vec2-base-960h_d (No V)   | wav2vec2-base-960h->Musical-Instrument   | 30%  | ✅ AdditiveLayers(22) SubtractiveLayers(15) LayersUsed(37)
+----------------------------------------------------------------------------------------------------------------------------------
+wav2vec2-base-960h_d (With V) | wav2vec2-base-960h->wav2vec2-base-960h   | 76%  | ✅ AdditiveLayers(42) SubtractiveLayers(7) LayersUsed(49)
+wav2vec2-base-960h_d (No V)   | wav2vec2-base-960h->wav2vec2-base-960h   | 73%  | ✅ AdditiveLayers(32) SubtractiveLayers(5) LayersUsed(37)
+----------------------------------------------------------------------------------------------------------------------------------
+wav2vec2-base-960h_d (With V) | wav2vec2-base-960h->wav2vec2-base-960h   | 59%  | ✅ AdditiveLayers(38) SubtractiveLayers(11) LayersUsed(49)
+wav2vec2-base-960h_d (No V)   | wav2vec2-base-960h->wav2vec2-base-960h   | 51%  | ✅ AdditiveLayers(28) SubtractiveLayers(9) LayersUsed(37)
+----------------------------------------------------------------------------------------------------------------------------------
+wav2vec2-base-960h_d (With V) | wav2vec2-base-960h->wav2vec2-base-960h   | 67%  | ✅ AdditiveLayers(38) SubtractiveLayers(11) LayersUsed(49)
+wav2vec2-base-960h_d (No V)   | wav2vec2-base-960h->wav2vec2-base-960h   | 62%  | ✅ AdditiveLayers(27) SubtractiveLayers(10) LayersUsed(37)
+----------------------------------------------------------------------------------------------------------------------------------
+
+[⚔️] GEOMETRIC LINEAGE V2.6: roBERTa
+
+--- Tree 0 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+roberta-base.safeten (With V) | roberta-base.safet->nli-roberta-base.s   | 17%  | ✅ AdditiveLayers(40) SubtractiveLayers(8) LayersUsed(48)
+roberta-base.safeten (No V)   | roberta-base.safet->nli-roberta-base.s   | 17%  | ✅ AdditiveLayers(29) SubtractiveLayers(7) LayersUsed(36)
+----------------------------------------------------------------------------------------------------------------------------------
+roberta-base.safeten (With V) | roberta-base.safet->twitter-roberta-ba   | 27%  | ✅ AdditiveLayers(36) SubtractiveLayers(13) LayersUsed(49)
+roberta-base.safeten (No V)   | roberta-base.safet->twitter-roberta-ba   | 62%  | ✅ AdditiveLayers(30) SubtractiveLayers(7) LayersUsed(37)
+----------------------------------------------------------------------------------------------------------------------------------
+nli-roberta-base.saf (With V) | nli-roberta-base.s->stsb-roberta-base.   | 10%  | ✅ AdditiveLayers(24) SubtractiveLayers(25) LayersUsed(49)
+nli-roberta-base.saf (No V)   | nli-roberta-base.s->stsb-roberta-base.   | 14%  | ✅ AdditiveLayers(18) SubtractiveLayers(19) LayersUsed(37)
+----------------------------------------------------------------------------------------------------------------------------------
+twitter-roberta-base (With V) | twitter-roberta-ba->twitter-roberta-ba   | 21%  | ✅ AdditiveLayers(22) SubtractiveLayers(26) LayersUsed(48)
+twitter-roberta-base (No V)   | twitter-roberta-ba->twitter-roberta-ba   | 22%  | ✅ AdditiveLayers(16) SubtractiveLayers(20) LayersUsed(36)
+----------------------------------------------------------------------------------------------------------------------------------
+twitter-roberta-base (With V) | twitter-roberta-ba->twitter-roberta-ba   | 29%  | ✅ AdditiveLayers(30) SubtractiveLayers(18) LayersUsed(48)
+twitter-roberta-base (No V)   | twitter-roberta-ba->twitter-roberta-ba   | 17%  | ✅ AdditiveLayers(22) SubtractiveLayers(14) LayersUsed(36)
+----------------------------------------------------------------------------------------------------------------------------------
+twitter-roberta-base (With V) | twitter-roberta-ba->twitter-roberta-ba   | 21%  | ✅ AdditiveLayers(27) SubtractiveLayers(21) LayersUsed(48)
+twitter-roberta-base (No V)   | twitter-roberta-ba->twitter-roberta-ba   | 17%  | ✅ AdditiveLayers(20) SubtractiveLayers(16) LayersUsed(36)
+----------------------------------------------------------------------------------------------------------------------------------
+twitter-roberta-base (With V) | twitter-roberta-ba->tw-roberta-base-se   | 0%  | ✅ AdditiveLayers(42) SubtractiveLayers(8) LayersUsed(50)
+twitter-roberta-base (No V)   | twitter-roberta-ba->tw-roberta-base-se   | 5%  | ✅ AdditiveLayers(31) SubtractiveLayers(7) LayersUsed(38)
+----------------------------------------------------------------------------------------------------------------------------------
+twitter-roberta-base (With V) | twitter-roberta-ba->ft-roberta-toxicit   | 59%  | ✅ AdditiveLayers(36) SubtractiveLayers(13) LayersUsed(49)
+twitter-roberta-base (No V)   | twitter-roberta-ba->ft-roberta-toxicit   | 57%  | ✅ AdditiveLayers(27) SubtractiveLayers(10) LayersUsed(37)
+----------------------------------------------------------------------------------------------------------------------------------
+twitter-roberta-base (With V) | twitter-roberta-ba->tw-roberta-base-se   | 8%  | ✅ AdditiveLayers(24) SubtractiveLayers(26) LayersUsed(50)
+twitter-roberta-base (No V)   | twitter-roberta-ba->tw-roberta-base-se   | 11%  | ✅ AdditiveLayers(17) SubtractiveLayers(21) LayersUsed(38)
+----------------------------------------------------------------------------------------------------------------------------------
+
+[⚔️] GEOMETRIC LINEAGE V2.6: QWEN
+
+--- Tree 1 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+Qwen2-VL-2B          (With V) | Qwen2-VL-2B-Instru->Qwen2-VL-2B          | 8%  | ❌ AdditiveLayers(48) SubtractiveLayers(94) LayersUsed(270)
+Qwen2-VL-2B          (No V)   | Qwen2-VL-2B-Instru->Qwen2-VL-2B          | 11%  | ❌ AdditiveLayers(43) SubtractiveLayers(71) LayersUsed(242)
+----------------------------------------------------------------------------------------------------------------------------------
+Qwen2-VL-2B-Instruct (With V) | qwen2-vl-2b-catmus->Qwen2-VL-2B-Instru   | 28%  | ❌ AdditiveLayers(6) SubtractiveLayers(264) LayersUsed(270)
+Qwen2-VL-2B-Instruct (No V)   | qwen2-vl-2b-catmus->Qwen2-VL-2B-Instru   | 33%  | ❌ AdditiveLayers(6) SubtractiveLayers(236) LayersUsed(242)
+----------------------------------------------------------------------------------------------------------------------------------
+Qwen2-VL-2B-Instruct (With V) | Qwen2-VL-2B-Instru->Qwen2-VL-2B-Instru   | 100%  | ❌ AdditiveLayers(56) SubtractiveLayers(0) LayersUsed(270)
+Qwen2-VL-2B-Instruct (No V)   | Qwen2-VL-2B-Instru->Qwen2-VL-2B-Instru   | 100%  | ❌ AdditiveLayers(56) SubtractiveLayers(0) LayersUsed(242)
+----------------------------------------------------------------------------------------------------------------------------------
+Qwen2-VL-2B-Instruct (With V) | Qwen2-VL-2B-Instru->Vikhr-2-VL-2b-Inst   | 43%  | ✅ AdditiveLayers(28) SubtractiveLayers(91) LayersUsed(270)
+Qwen2-VL-2B-Instruct (No V)   | Qwen2-VL-2B-Instru->Vikhr-2-VL-2b-Inst   | 25%  | ✅ AdditiveLayers(0) SubtractiveLayers(91) LayersUsed(242)
+----------------------------------------------------------------------------------------------------------------------------------
+
+[⚔️] GEOMETRIC LINEAGE V2.6: TINY-LLAMA
+
+--- Tree 4 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+TinyLlama-1.1B-inter (With V) | TinyLlama-1.1B-int->TinyLlama-1.1B-Cha   | 35%  | ✅ AdditiveLayers(58) SubtractiveLayers(53) LayersUsed(111)
+TinyLlama-1.1B-inter (No V)   | TinyLlama-1.1B-int->TinyLlama-1.1B-Cha   | 42%  | ✅ AdditiveLayers(50) SubtractiveLayers(39) LayersUsed(89)
+----------------------------------------------------------------------------------------------------------------------------------
+TinyLlama-1.1B-Chat- (With V) | TinyLlama-1.1B-Cha->Finetuned_TinyLlam   | 26%  | ✅ AdditiveLayers(0) SubtractiveLayers(111) LayersUsed(111)
+TinyLlama-1.1B-Chat- (No V)   | TinyLlama-1.1B-Cha->Finetuned_TinyLlam   | 33%  | ✅ AdditiveLayers(0) SubtractiveLayers(89) LayersUsed(89)
+----------------------------------------------------------------------------------------------------------------------------------
+TinyLlama-1.1B-Chat- (With V) | TinyLlama-1.1B-Cha->TinyLlama-1.1B-Cha   | 62%  | ❌ AdditiveLayers(9) SubtractiveLayers(102) LayersUsed(111)
+TinyLlama-1.1B-Chat- (No V)   | TinyLlama-1.1B-Cha->TinyLlama-1.1B-Cha   | 69%  | ❌ AdditiveLayers(6) SubtractiveLayers(83) LayersUsed(89)
+----------------------------------------------------------------------------------------------------------------------------------
+TinyLlama-1.1B-Chat- (With V) | TinyLlama-1.1B-Cha->Tukan-1.1B-Chat-re   | 48%  | ✅ AdditiveLayers(76) SubtractiveLayers(35) LayersUsed(111)
+TinyLlama-1.1B-Chat- (No V)   | TinyLlama-1.1B-Cha->Tukan-1.1B-Chat-re   | 44%  | ✅ AdditiveLayers(57) SubtractiveLayers(32) LayersUsed(89)
+----------------------------------------------------------------------------------------------------------------------------------
+TinyLlama-1.1B-Chat- (With V) | TinyLlama-1.1B-Cha->TinyLlama-1.1B-Cha   | 5%  | ✅ AdditiveLayers(0) SubtractiveLayers(111) LayersUsed(111)
+TinyLlama-1.1B-Chat- (No V)   | TinyLlama-1.1B-Cha->TinyLlama-1.1B-Cha   | 6%  | ✅ AdditiveLayers(0) SubtractiveLayers(89) LayersUsed(89)
+----------------------------------------------------------------------------------------------------------------------------------
+
+[⚔️] GEOMETRIC LINEAGE V2.6: DETR-RESNET
+
+--- Tree 10 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+detr-resnet-50.safet (With V) | detr-resnet-50.saf->detr-resnet-50_fin   | 80%  | ✅ AdditiveLayers(70) SubtractiveLayers(12) LayersUsed(93)
+detr-resnet-50.safet (No V)   | detr-resnet-50.saf->detr-resnet-50_fin   | 77%  | ✅ AdditiveLayers(58) SubtractiveLayers(12) LayersUsed(81)
+----------------------------------------------------------------------------------------------------------------------------------
+detr-resnet-50.safet (With V) | detr-resnet-50_fin->detr-resnet-50.saf   | 58%  | ❌ AdditiveLayers(23) SubtractiveLayers(1) LayersUsed(93)
+detr-resnet-50.safet (No V)   | detr-resnet-50_fin->detr-resnet-50.saf   | 44%  | ❌ AdditiveLayers(17) SubtractiveLayers(1) LayersUsed(81)
+----------------------------------------------------------------------------------------------------------------------------------
+detr-resnet-50.safet (With V) | detr-resnet-50.saf->detr-resnet-50_fin   | 7%  | ✅ AdditiveLayers(51) SubtractiveLayers(31) LayersUsed(93)
+detr-resnet-50.safet (No V)   | detr-resnet-50.saf->detr-resnet-50_fin   | 11%  | ✅ AdditiveLayers(42) SubtractiveLayers(28) LayersUsed(81)
+----------------------------------------------------------------------------------------------------------------------------------
+
+[⚔️] GEOMETRIC LINEAGE V2.6: WHISPER-SMALL
+
+--- Tree 11 ---
+
+PADRE (GT)           | PRED: P -> F                             | CONF  | LOGIC MODE
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small.safe->fa-ir-stt-whisper-   | 64%  | ✅ AdditiveLayers(51) SubtractiveLayers(21) LayersUsed(72)
+whisper-small.safete (No V)   | whisper-small.safe->fa-ir-stt-whisper-   | 75%  | ✅ AdditiveLayers(35) SubtractiveLayers(13) LayersUsed(48)
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small.safe->FPG-whisper-small.   | 61%  | ✅ AdditiveLayers(47) SubtractiveLayers(25) LayersUsed(72)
+whisper-small.safete (No V)   | whisper-small.safe->FPG-whisper-small.   | 63%  | ✅ AdditiveLayers(33) SubtractiveLayers(15) LayersUsed(48)
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small.safe->open-ai-small-1.sa   | 50%  | ✅ AdditiveLayers(35) SubtractiveLayers(37) LayersUsed(72)
+whisper-small.safete (No V)   | whisper-small.safe->open-ai-small-1.sa   | 67%  | ✅ AdditiveLayers(26) SubtractiveLayers(22) LayersUsed(48)
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | special2.bin->whisper-small.safe         | 31%  | ❌ AdditiveLayers(69) SubtractiveLayers(3) LayersUsed(72)
+whisper-small.safete (No V)   | special2.bin->whisper-small.safe         | 37%  | ❌ AdditiveLayers(48) SubtractiveLayers(0) LayersUsed(48)
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small.safe->whisper-small-bela   | 97%  | ✅ AdditiveLayers(71) SubtractiveLayers(1) LayersUsed(72)
+whisper-small.safete (No V)   | whisper-small.safe->whisper-small-bela   | 100%  | ✅ AdditiveLayers(48) SubtractiveLayers(0) LayersUsed(48)
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small.safe->whisper-small-cant   | 100%  | ✅ AdditiveLayers(72) SubtractiveLayers(0) LayersUsed(72)
+whisper-small.safete (No V)   | whisper-small.safe->whisper-small-cant   | 100%  | ✅ AdditiveLayers(48) SubtractiveLayers(0) LayersUsed(48)
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small-cs-c->whisper-small.safe   | 44%  | ❌ AdditiveLayers(63) SubtractiveLayers(9) LayersUsed(72)
+whisper-small.safete (No V)   | whisper-small-cs-c->whisper-small.safe   | 46%  | ❌ AdditiveLayers(45) SubtractiveLayers(3) LayersUsed(48)
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small.safe->whisper-small-fina   | 47%  | ✅ AdditiveLayers(47) SubtractiveLayers(25) LayersUsed(72)
+whisper-small.safete (No V)   | whisper-small.safe->whisper-small-fina   | 58%  | ✅ AdditiveLayers(30) SubtractiveLayers(18) LayersUsed(48)
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | ERROR | 0 Layers Analizzati
+whisper-small.safete (No V)   | ERROR | 0 Layers Analizzati
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small.safe->whisper-small-nepa   | 31%  | ✅ AdditiveLayers(34) SubtractiveLayers(38) LayersUsed(72)
+whisper-small.safete (No V)   | whisper-small.safe->whisper-small-nepa   | 42%  | ✅ AdditiveLayers(26) SubtractiveLayers(22) LayersUsed(48)
+----------------------------------------------------------------------------------------------------------------------------------
+whisper-small.safete (With V) | whisper-small.safe->Whisper-small-sr-y   | 61%  | ✅ AdditiveLayers(41) SubtractiveLayers(31) LayersUsed(72)
+whisper-small.safete (No V)   | whisper-small.safe->Whisper-small-sr-y   | 63%  | ✅ AdditiveLayers(28) SubtractiveLayers(20) LayersUsed(48)
+----------------------------------------------------------------------------------------------------------------------------------
+FPG-whisper-small.sa (With V) | FPG-whisper-small.->FPG-whisper-small-   | 56%  | ✅ AdditiveLayers(52) SubtractiveLayers(20) LayersUsed(72)
+FPG-whisper-small.sa (No V)   | FPG-whisper-small.->FPG-whisper-small-   | 75%  | ✅ AdditiveLayers(38) SubtractiveLayers(10) LayersUsed(48)
+----------------------------------------------------------------------------------------------------------------------------------
+open-ai-small-1.safe (With V) | open-ai-small-1.sa->open-ai-small-2.sa   | 6%  | ✅ AdditiveLayers(22) SubtractiveLayers(50) LayersUsed(72)
+open-ai-small-1.safe (No V)   | open-ai-small-1.sa->open-ai-small-2.sa   | 21%  | ✅ AdditiveLayers(18) SubtractiveLayers(30) LayersUsed(48)
+----------------------------------------------------------------------------------------------------------------------------------
+open-ai-small-2.safe (With V) | open-ai-small-3.sa->open-ai-small-2.sa   | 14%  | ❌ AdditiveLayers(10) SubtractiveLayers(62) LayersUsed(72)
+open-ai-small-2.safe (No V)   | open-ai-small-3.sa->open-ai-small-2.sa   | 8%  | ❌ AdditiveLayers(9) SubtractiveLayers(39) LayersUsed(48)
+----------------------------------------------------------------------------------------------------------------------------------
+FPG-whisper-small-v2 (With V) | FPG-whisper-small-->whisper-small-ftl.   | 19%  | ✅ AdditiveLayers(39) SubtractiveLayers(33) LayersUsed(72)
+FPG-whisper-small-v2 (No V)   | FPG-whisper-small-->whisper-small-ftl.   | 29%  | ✅ AdditiveLayers(32) SubtractiveLayers(16) LayersUsed(48)
+----------------------------------------------------------------------------------------------------------------------------------

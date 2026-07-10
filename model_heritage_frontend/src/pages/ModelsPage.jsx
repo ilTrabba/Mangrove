@@ -33,7 +33,7 @@ export default function ModelsPage() {
 
   const fetchModels = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/models');
+      const response = await fetch('http://localhost:5002/api/models');
       if (!response.ok) throw new Error('Failed to fetch models');
       const data = await response.json();
       setModels(data.models || []);

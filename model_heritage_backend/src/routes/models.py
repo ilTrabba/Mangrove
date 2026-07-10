@@ -13,7 +13,7 @@ import torch
 
 from pathlib import Path  
 from safetensors import safe_open
-from datetime import datetime, time, timezone
+from datetime import datetime, timezone
 from src.log_handler import logHandler
 from collections import Counter
 from src.services.neo4j_service import neo4j_service
@@ -41,6 +41,35 @@ ALLOWED_EXTENSIONS = Config.ALLOWED_EXTENSIONS
 ALLOWED_README_EXTENSIONS = {'md', 'txt'}
 MAX_README_SIZE = 5 * 1024 * 1024  # 5MB
 
+# In src/routes/models.py
+
+@models_bp.route('/vm-files', methods=['GET'])
+def list_vm_files():
+    """Elenca i file .safetensors/.bin presenti in una cartella specifica della VM"""
+    try:
+        # Configura qui il percorso dove tieni i dataset nella VM
+        VM_DATASET_ROOT = os.path.expanduser("~/projects/dataset") 
+        
+        if not os.path.exists(VM_DATASET_ROOT):
+             return jsonify({'error': f'Path non trovato: {VM_DATASET_ROOT}'}), 404
+
+        files_found = []
+        for root, _, filenames in os.walk(VM_DATASET_ROOT):
+            for filename in filenames:
+                if filename.endswith(('.safetensors', '.bin', '.pt')):
+                    full_path = os.path.join(root, filename)
+                    # Restituisci path relativo o assoluto
+                    files_found.append({
+                        "name": filename,
+                        "path": full_path,
+                        "size": os.path.getsize(full_path),
+                        "folder": os.path.basename(root)
+                    })
+        
+        return jsonify({'files': files_found})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -67,60 +96,53 @@ def calculate_file_checksum(file_path):
 
 def extract_weight_signature(file_path: str, num_layers: int) -> dict:
     """
-    Estrae la signature strutturale di un modello safetensors basandosi su: 
-    
-      - hidden_size:  derivato dalle shapes (dimensione più comune in matrici quadrate ≥128)
-      - num_layers: fornito come parametro
-      - structural_hash: MD5 troncato basato su (num_layers + hidden_size)
-      - total_parameters: somma di tutti i parametri
-    
-    OTTIMIZZATO:  
-      - Usa metadata delle shapes senza caricare i tensori in RAM
-      - Memoria O(1) rispetto alla dimensione del modello
-    
-    Args:
-        file_path:  Percorso al file . safetensors
-        num_layers: Numero di layer del modello
-        
-    Returns:
-        Dict con num_layers, hidden_size, structural_hash, total_parameters
-        
-    Raises:
-        RuntimeError: Se impossibile dedurre hidden_size
+    Estrae la signature strutturale. Versione ROBUSTA.
     """
     total_parameters = 0
-    square_dims = Counter()  # Conta direttamente le dimensioni delle matrici quadrate
+    square_dims = Counter()
+    norm_dims = Counter()  # <--- NUOVO: Conta le dimensioni delle norm
     
     with safe_open(file_path, framework="pt") as f:
         for key in f.keys():
-            # ✅ Legge SOLO i metadati, NON carica il tensore in RAM
             shape = f.get_slice(key).get_shape()
             
-            # Calcola parametri usando math.prod (più leggibile)
+            # Calcolo parametri
             num_params = 1
-            for dim in shape: 
-                num_params *= dim
+            for dim in shape: num_params *= dim
             total_parameters += num_params
             
-            # Cerca matrici quadrate significative (≥128)
+            # 1. Cerca Matrici Quadrate (Strategia Classica)
             if len(shape) == 2 and shape[0] == shape[1] and shape[0] >= 128:
                 square_dims[shape[0]] += 1
+            
+            # 2. Cerca Normalizzazioni (Strategia Gemma/Fallback)
+            # Deve essere 1D, >= 128 e avere "norm" nel nome
+            if len(shape) == 1 and shape[0] >= 128:
+                k_lower = key.lower()
+                if "weight" in k_lower and ("norm" in k_lower or "ln" in k_lower):
+                    norm_dims[shape[0]] += 1
     
-    # Deduzione hidden_size
-    if not square_dims:
+    # LOGICA DI DEDUZIONE
+    hidden_size = 0
+    
+    if square_dims:
+        # Se ci sono matrici quadrate, usiamo quelle (più sicuro per modelli standard)
+        hidden_size = square_dims.most_common(1)[0][0]
+    elif norm_dims:
+        # Se non ci sono matrici quadrate (Gemma), usiamo le norm
+        hidden_size = norm_dims.most_common(1)[0][0]
+    else:
         raise RuntimeError(
-            "Impossibile dedurre hidden_size dal file "
-            "(nessuna matrice quadrata ≥128 trovata)."
+            f"Impossibile dedurre hidden_size dal file {os.path.basename(file_path)} "
+            "(nessuna matrice quadrata o layer norm riconoscibile)."
         )
     
-    hidden_size = square_dims.most_common(1)[0][0]
-    
-    # Hash strutturale (parametri:  num_layers + hidden_size)
+    # Hash strutturale
     base_string = f"{num_layers}_{hidden_size}"
     structural_hash = hashlib.md5(base_string.encode()).hexdigest()[:16]
     
     return {
-        "num_layers":  num_layers,
+        "num_layers": num_layers,
         "hidden_size": hidden_size,
         "structural_hash": structural_hash,
         "total_parameters": total_parameters
@@ -305,17 +327,15 @@ def upload_model():
     Upload and process model files (single or multiple sharded files).
     
     Supports:
-    - Single .safetensors file
-    - Multiple sharded .safetensors files
-    - Single .bin/.pt/.pth/.ckpt file
-    - .zip archives containing model files
-    - Files without extensions (validated as PyTorch binaries)
+    - MODE A (Server-Side): Select local file on VM via JSON {'local_vm_path': '/path/to/file'}
+    - MODE B (Upload): Multipart upload of files via browser/client
     
     Returns:
         JSON response with model data and processing status
     """
-    # Track resources for cleanup
     t_start_clustering_preprocessing = datetime.now()
+
+    # Track resources for cleanup
     tmp_path = None
     extract_tmp_dir = None
     file_path = None
@@ -323,55 +343,87 @@ def upload_model():
     model_id = None
     
     try:
-        # ========================================================================
-        # 1. INPUT CHECK
-        # ========================================================================
-        if 'file' not in request.files:
-            return jsonify({'error': 'No file provided'}), 400
+        # Variabili di stato per il metodo di input
+        is_server_side = False
+        server_side_path = None
+        data_source = None
+        files_list = []
 
-        files_list = request.files.getlist('file')
-        
-        if not files_list or files_list[0].filename == '':
-            return jsonify({'error': 'No file selected'}), 400
-
-        first_file = files_list[0]
-        
         # ========================================================================
-        # 2. METADATA EXTRACTION FROM THE FORM
+        # 1. INPUT CHECK (MODIFICATO PER SUPPORTO VM LOCALE)
+        # ========================================================================
+        
+        # CASO A: Richiesta Server-Side (JSON con path locale)
+        if request.is_json and 'local_vm_path' in request.json:
+            is_server_side = True
+            data_source = request.json
+            server_side_path = data_source['local_vm_path']
+            
+            if not os.path.exists(server_side_path):
+                return jsonify({'error': f'File non trovato sulla VM: {server_side_path}'}), 404
+                
+        # CASO B: Upload Classico (Multipart Form)
+        elif 'file' in request.files:
+            data_source = request.form
+            files_list = request.files.getlist('file')
+            
+            if not files_list or files_list[0].filename == '':
+                return jsonify({'error': 'No file selected'}), 400
+        
+        else:
+            return jsonify({'error': 'No file provided (upload) or invalid JSON path (server-side)'}), 400
+
+        # ========================================================================
+        # 2. METADATA EXTRACTION 
         # ========================================================================
         model_id = str(uuid.uuid4())
-        name = request.form.get('name', first_file.filename)
-        description = request.form.get('description', '')
-        license_value = request.form.get('license', '')
-        task_value = request.form.get('task', '')
-        dataset_url = request. form.get('dataset_url', '')
-        is_foundation_model = request.form.get('is_foundation_model', 'false').lower() == 'true'
+        
+        # Determina il nome default
+        if is_server_side:
+            default_name = os.path.basename(server_side_path)
+        else:
+            default_name = files_list[0].filename
+
+        name = data_source.get('name', default_name)
+        description = data_source.get('description', '')
+        license_value = data_source.get('license', '')
+        task_value = data_source.get('task', '')
+        dataset_url = data_source.get('dataset_url', '')
+        
+        # Gestione robusta del booleano (che arriva come stringa nel form o bool nel json)
+        is_foundation_val = data_source.get('is_foundation_model', False)
+        if isinstance(is_foundation_val, str):
+            is_foundation_model = is_foundation_val.lower() == 'true'
+        else:
+            is_foundation_model = bool(is_foundation_val)
         
         if dataset_url and not validate_url(dataset_url):
             return jsonify({'error': 'Invalid dataset URL format'}), 400
 
         # ========================================================================
-        # 3. README FILE HANDLING 
+        # 3. README FILE HANDLING (Solo per Upload Classico per ora)
         # ========================================================================
         readme_uri = None
-        readme_file = request.files.get('readme_file')
-        
-        if readme_file and readme_file.filename:
-            if not allowed_readme_file(readme_file.filename):
-                return jsonify({'error': 'README must be . md or .txt file'}), 400
+        # Nella modalità server-side saltiamo il readme upload per semplicità
+        if not is_server_side:
+            readme_file = request.files.get('readme_file')
             
-            readme_file. seek(0, os.SEEK_END)
-            readme_size = readme_file.tell()
-            readme_file.seek(0)
-            
-            if readme_size > MAX_README_SIZE:
-                return jsonify({'error': f'README file too large (max {MAX_README_SIZE // (1024*1024)}MB)'}), 400
-            
-            os.makedirs(README_FOLDER, exist_ok=True)
-            readme_filename = secure_filename(f"{model_id}_readme.md")
-            readme_path = os.path.join(README_FOLDER, readme_filename)
-            readme_file.save(readme_path)
-            readme_uri = f"readmes/{readme_filename}"
+            if readme_file and readme_file.filename:
+                if not allowed_readme_file(readme_file.filename):
+                    return jsonify({'error': 'README must be . md or .txt file'}), 400
+                
+                readme_file.seek(0, os.SEEK_END)
+                readme_size = readme_file.tell()
+                readme_file.seek(0)
+                
+                if readme_size > MAX_README_SIZE:
+                    return jsonify({'error': f'README file too large (max {MAX_README_SIZE // (1024*1024)}MB)'}), 400
+                
+                os.makedirs(README_FOLDER, exist_ok=True)
+                readme_filename = secure_filename(f"{model_id}_readme.md")
+                readme_path = os.path.join(README_FOLDER, readme_filename)
+                readme_file.save(readme_path)
+                readme_uri = f"readmes/{readme_filename}"
 
         # ========================================================================
         # 4. TEMPORARY PATHS SETUP
@@ -384,9 +436,36 @@ def upload_model():
         metadata = {}
         
         # ========================================================================
-        # 5. CASE A - UPLOAD OF MULTIPLE FILES
+        # 5. FILE ACQUISITION LOGIC
         # ========================================================================
-        if len(files_list) > 1:
+
+        # --- CASO A: SERVER SIDE (VM LOCALE) ---
+        if is_server_side:
+            logger.info(f"[UPLOAD] Server-Side Mode: Processing {server_side_path}")
+            filename = os.path.basename(server_side_path)
+            ext = os.path.splitext(filename)[1].lower()
+
+            # Copia sicura per non modificare il file originale durante l'elaborazione
+            # Se è .safetensors, lo mettiamo direttamente in tmp_path per la normalizzazione
+            if ext == '.safetensors':
+                shutil.copy2(server_side_path, tmp_path)
+                # Estraiamo i metadati
+                with safe_open(tmp_path, framework="pt", device="cpu") as f:
+                    metadata = f.metadata() or {}
+            
+            # Se è un binario PyTorch, lo copiamo nella dir di estrazione e lo carichiamo
+            elif ext in {'.bin', '.pt', '.pth', '.ckpt'}:
+                dest_bin = os.path.join(extract_tmp_dir, filename)
+                shutil.copy2(server_side_path, dest_bin)
+                # Chiamiamo l'helper passando None come file object, dato che il file è già su disco
+                loaded_object = _process_binary_file(
+                    None, filename, extract_tmp_dir, tmp_path
+                )
+            else:
+                return jsonify({'error': f'Formato file VM non supportato: {ext}'}), 400
+
+        # --- CASO B: MULTIPART UPLOAD MULTIPLO (SHARDED) ---
+        elif len(files_list) > 1:
             logger.info(f"[UPLOAD] Detected multiple file upload: {len(files_list)} files")
             
             if sharded_file_error.is_likely_sharded_upload(files_list):
@@ -418,9 +497,7 @@ def upload_model():
                 logger. error(f"❌ [UPLOAD] Merge failed: {e}")
                 return jsonify({'error': f'Failed to merge files: {str(e)}'}), 500
 
-        # ========================================================================
-        # 6. CASE B - SINGLE FILE UPLOAD
-        # ========================================================================
+        # --- CASO C: MULTIPART UPLOAD SINGOLO ---
         else:
             file = files_list[0]
             filename = secure_filename(file.filename)
@@ -453,7 +530,7 @@ def upload_model():
                 }), 400
 
         # ========================================================================
-        # 7. BINARY -> SAFETENSORS CONVERSION 
+        # 6. BINARY -> SAFETENSORS CONVERSION 
         # ========================================================================
         if loaded_object is not None:
             _convert_to_safetensors(loaded_object, tmp_path)
@@ -461,7 +538,7 @@ def upload_model():
             gc.collect()
 
         # ========================================================================
-        # 8. UPLOAD AND NORMALIZATION
+        # 7. UPLOAD AND NORMALIZATION
         # ========================================================================
         logger.info("[UPLOAD] Loading safetensors for normalization...")
         tensors_dict = load_safetensors(tmp_path)
@@ -475,19 +552,23 @@ def upload_model():
         logger.info(f"[UPLOAD] Normalization completed: {len(tensors_dict)} layers")
 
         # ========================================================================
-        # 9. SAVING FINGERPRINT
+        # 8. SAVING FINGERPRINT
         # ========================================================================
+        # Usa il nome originale salvato prima (dal path VM o dal file upload)
+        original_filename = os.path.basename(server_side_path) if is_server_side else files_list[0].filename
+        
         num_layers = save_layer_mapping_json(
             mapping_dict, 
             model_id, 
-            first_file.filename
+            original_filename
         )
         logger.info(f"[UPLOAD] Fingerprint saved: {num_layers} structural layers")
-        
+
         t_end_clustering_preprocessing = datetime.now()
         t_start_mother_preprocessing = datetime.now()
+
         # ========================================================================
-        # 10. CALCULATING KURTOSIS 
+        # 9. CALCULATING KURTOSIS 
         # ========================================================================
         logger.info("[UPLOAD] Calculating kurtosis...")
         kurtosis = calc_ku(tensors_dict)
@@ -495,8 +576,9 @@ def upload_model():
 
         t_end_mother_preprocessing = datetime.now()
         t_start_clustering = datetime.now()
+
         # ========================================================================
-        # 11. SAVING FINAL NORMALIZED SAFETENSORS FILE
+        # 10. SAVING FINAL NORMALIZED SAFETENSORS FILE
         # ========================================================================
         os.makedirs(MODEL_FOLDER, exist_ok=True)
         
@@ -511,7 +593,7 @@ def upload_model():
         gc.collect()
 
         # ========================================================================
-        # 12. POST-PROCESSING:  Checksum, Signature, Neo4j
+        # 11. POST-PROCESSING:  Checksum, Signature, Neo4j
         # ========================================================================
         checksum = calculate_file_checksum(file_path)
         
@@ -555,11 +637,11 @@ def upload_model():
             raise Exception("Failed to save model to Neo4j")
         
         logger.info(f"[UPLOAD] Model saved to Neo4j: {model_id}")
-        
+
         delta_clustering_preprocessing = t_end_clustering_preprocessing - t_start_clustering_preprocessing
         delta_mother_preprocessing = t_end_mother_preprocessing - t_start_mother_preprocessing
-        result = mgmt_system.process_new_model(model_data, t_start_clustering, delta_clustering_preprocessing, delta_mother_preprocessing)
-
+        
+        result = mgmt_system.process_new_model(model_data,t_start_clustering ,delta_clustering_preprocessing, delta_mother_preprocessing) 
         if result.get('status') != 'success':
             raise Exception(f"ModelManagementSystem failed: {result.get('error', 'Unknown error')}")
         
@@ -593,7 +675,6 @@ def upload_model():
         # FINAL CLEANUP
         # ========================================================================
         _cleanup_resources(tmp_path, extract_tmp_dir, file_path, readme_path)
-
 # =============================================================================
 # HELPER FUNCTIONS FOR UPLOAD MODEL
 # =============================================================================
@@ -630,120 +711,66 @@ def _process_zip_file(file, extract_tmp_dir:  str, tmp_path: str) -> tuple:
     
     return loaded_object, metadata
 
-import torch
-import numpy as np
-
 def _process_binary_file(file, filename: str, extract_tmp_dir: str, tmp_path: str):
+    """Processa un file binario (. bin, .pt, etc.)."""
     logger.info(f"[UPLOAD] Processing binary file: {filename}")
     bin_path = os.path.join(extract_tmp_dir, filename)
-    file.save(bin_path)
     
-    loaded_object = None
-
-    # TENTATIVO 1: Caricamento standard (weights_only=True)
-    try:
-        loaded_object = torch.load(bin_path, map_location="cpu", weights_only=True)
-        return loaded_object
-    except Exception:
-        pass # Se fallisce, passiamo al piano B (Whitelist)
-
-    # PIANO B: Whitelist Aggressiva
-    logger.warning(f"⚠️ [UPLOAD] Standard load failed for {filename}. Retrying with Extended Whitelist.")
+    # MODIFICA QUI: Salva solo se il file object esiste (Upload classico)
+    # Se file è None, assumiamo che bin_path esista già (modalità VM locale)
+    if file is not None:
+        file.save(bin_path)
     
-    safe_list = []
+    success, loaded_object = sharded_file_error.smart_load_bin(bin_path, extract_tmp_dir)
     
-    # 1. Aggiungiamo NumPy Scalar (Cruciale per il tuo errore)
-    # TRUCCO: Recuperiamo il riferimento esatto usato internamente
-    try:
-        safe_list.append(np.core.multiarray.scalar)
-    except AttributeError:
-        # Per NumPy 2.0+ o altre versioni dove il percorso è cambiato
-        try:
-            safe_list.append(np.scalar) 
-        except:
-            pass
-
-    # Aggiungiamo anche i tipi base di numpy che spesso causano problemi
-    safe_list.append(np.dtype)
+    if not success:
+        raise ValueError(f'Unable to load {filename}:  not a valid PyTorch binary')
     
-    # 2. Aggiungiamo Lightning (Cruciale per .ckpt)
-    try:
-        from pytorch_lightning.callbacks.model_checkpoint import ModelCheckpoint
-        safe_list.append(ModelCheckpoint)
-    except ImportError:
-        pass
-
-    # 3. Altri colpevoli comuni nei .ckpt vecchi
-    try:
-        import collections
-        safe_list.append(collections.OrderedDict)
-    except:
-        pass
-
-    try:
-        with torch.serialization.safe_globals(safe_list):
-            loaded_object = torch.load(bin_path, map_location="cpu", weights_only=True)
-        logger.info("✅ [UPLOAD] Loaded safely with Extended Whitelist.")
-        return loaded_object
-
-    except Exception as e:
-        # PIANO C: Ultima spiaggia (SOLO se ti fidi dei file e vuoi sbloccare la situazione)
-        # Se sei in un ambiente controllato, puoi decommentare queste righe per forzare il caricamento.
-        # Altrimenti, rilancia l'errore.
+    if loaded_object is None:
+        # File was extracted as archive
+        found_models = sharded_file_error.scan_for_model_files(extract_tmp_dir, include_no_extension=True)
         
-        logger.error(f"❌ [UPLOAD] Whitelist failed: {e}")
+        if not found_models: 
+            raise FileNotFoundError('No valid model files found in binary archive')
         
-        # SCOMMENTA QUI SOTTO SOLO SE VUOI FORZARE IL CARICAMENTO (RISCHIO SICUREZZA)
-        logger.warning("⚠️⚠️ [UPLOAD] FALLBACK: Loading with weights_only=False (UNSAFE MODE)")
-        loaded_object = torch.load(bin_path, map_location="cpu", weights_only=False)
-        return loaded_object
-        
-        raise ValueError(f"Unable to load safe checkpoint: {str(e)}")
-
-
-
+        if len(found_models) > 1:
+            merge_and_convert_shards(extract_tmp_dir, tmp_path)
+            return None
+        else:
+            loaded_object = torch.load(found_models[0], map_location="cpu", weights_only=True)
+    
+    return loaded_object
 
 def _convert_to_safetensors(loaded_object, tmp_path: str):
-    """
-    Converte un oggetto PyTorch in safetensors.
-    Gestisce la priorità EMA e il disaccoppiamento della memoria (clone).
-    """
+    """Converte un oggetto PyTorch in safetensors."""
     logger.info("[UPLOAD] Converting PyTorch object to safetensors...")
     
-    state_dict = None
-
-    # 1. Logica di estrazione (Priorità EMA senza creare oggetti nuovi)
-    if isinstance(loaded_object, dict):
-        if "state_dict_ema" in loaded_object:
-            logger.info("ℹ️ [CONVERT] Using EMA weights.")
-            state_dict = loaded_object["state_dict_ema"]
-        elif "state_dict" in loaded_object:
+    if isinstance(loaded_object, torch.nn.Module):
+        state_dict = loaded_object.state_dict()
+    elif isinstance(loaded_object, dict):
+        if "state_dict" in loaded_object:
             state_dict = loaded_object["state_dict"]
         elif "model" in loaded_object:
             state_dict = loaded_object["model"]
         else:
             state_dict = loaded_object
-            
-    elif isinstance(loaded_object, torch.nn.Module):
-        state_dict = loaded_object.state_dict()
     else:
         raise ValueError(f'Unexpected model format: {type(loaded_object)}')
     
-    # 2. Pulizia: usiamo dict comprehension per evitare loop complessi
-    # .detach().clone() è essenziale per evitare errori di shared memory
-    clean_state_dict = {
-        k: v.detach().clone().contiguous() 
-        for k, v in state_dict.items() 
-        if isinstance(v, torch.Tensor)
-    }
+    # ✅ FIX: Usiamo .clone() per rompere la condivisione della memoria (Shared Tensors)
+    # Safetensors non accetta che due chiavi puntino allo stesso indirizzo di memoria.
+    # .contiguous() assicura che il layout di memoria sia compatibile.
+    clean_state_dict = {}
+    for k, v in state_dict.items():
+        if isinstance(v, torch.Tensor):
+            # detach() -> toglie dal grafo
+            # clone() -> crea NUOVA memoria (risolve l'errore "shared memory")
+            # contiguous() -> riordina i byte in memoria per safetensors
+            clean_state_dict[k] = v.detach().clone().contiguous()
     
-    if not clean_state_dict:
-        raise ValueError("No valid tensors found to convert.")
-
-    # 3. Salvataggio diretto
-    save_file(clean_state_dict, tmp_path, metadata={"format": "pt"})
+    save_file(clean_state_dict, tmp_path)
     logger.info(f"✅ [UPLOAD] Conversion completed: {len(clean_state_dict)} tensors")
-    
+
 def _cleanup_resources(tmp_path, extract_tmp_dir, file_path, readme_path):
     """Pulisce tutte le risorse temporanee."""
     # File temporaneo safetensors

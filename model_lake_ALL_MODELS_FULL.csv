@@ -1,0 +1,130 @@
+model_name;family;parent_model;is_foundation_model;lineage_depth;architecture;parameter_count;parameter_mb/Gb;parameter_format;macro_task;primary_task;fine_tuning_method;publisher;license;quantized;description;fonte
+mistralai/Mistral-7B-v0.1;Mistral;;VERO;0;Transformer;7B;14.5 GB;safetensors;NLP;Text-Generation;Pretraining;Mistral AI;Apache-2.0;FALSO;"Foundation Mistral model.
+Pretrained on large-scale data.";https://huggingface.co/mistralai/Mistral-7B-v0.1
+mistralai/Mistral-7B-Instruct-v0.2;Mistral;mistralai/Mistral-7B-v0.1;FALSO;1;Transformer;7B;14.5 GB;safetensors;NLP;Text-Generation;SFT;Mistral AI;Apache-2.0;FALSO;"Fine-tuned Mistral model.
+Specialized for instruction following.";https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2
+Open-Orca/Mistral-7B-OpenOrca;Mistral;mistralai/Mistral-7B-v0.1;FALSO;1;Transformer;7B;14.5 GB;bin;NLP;Text-Generation;SFT;Open-Orca;Apache-2.0;FALSO;"Fine-tuned Mistral model.
+Specialized for chat/reasoning.";https://huggingface.co/Open-Orca/Mistral-7B-OpenOrca
+Intel/neural-chat-7b-v3-1;Mistral;mistralai/Mistral-7B-v0.1;FALSO;1;Transformer;7B;14.5 GB;safetensors;NLP;Text-Generation;DPO/RLHF;Intel;Apache-2.0;FALSO;"Fine-tuned Mistral model.
+Specialized for aligned chat.";https://huggingface.co/Intel/neural-chat-7b-v3-1
+TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T;TinyLlama;;VERO;0;Transformer;1.1B;4.4 GB;safetensors;NLP;Text-Generation;Pretraining;TinyLlama;Apache-2.0;FALSO;Foundation TinyLlama model.;https://huggingface.co/TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T
+TinyLlama/TinyLlama-1.1B-Chat-v1.0;TinyLlama;TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T;FALSO;1;Transformer;1.1B;2.2 GB;safetensors;NLP;Text-Generation;Pretraining;TinyLlama;Apache-2.0;FALSO;Pretrained on large-scale data.;https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0
+alexredna/TinyLlama-1.1B-Chat-v1.0-reasoning-v2;TinyLlama;TinyLlama/TinyLlama-1.1B-Chat-v1.0;FALSO;2;Transformer;1.1B;2.2 GB;safetensors;NLP;Logical Reasoning/Text-Generation;SFT;alexredna;Apache-2.0;FALSO;"Fine-tuned TinyLlama model.
+Specialized for logical reasoning.";https://huggingface.co/alexredna/TinyLlama-1.1B-Chat-v1.0-reasoning-v2
+alexredna/TinyLlama-1.1B-Chat-v1.0-reasoning-v2-dpo;TinyLlama;alexredna/TinyLlama-1.1B-Chat-v1.0-reasoning-v2;FALSO;3;Transformer;1.1B;2.2 GB;safetensors;NLP;Aligned Reasoning/Text-Generation;DPO;alexredna;Apache-2.0;FALSO;"Fine-tuned TinyLlama model.
+Specialized for aligned reasoning.";https://huggingface.co/alexredna/TinyLlama-1.1B-Chat-v1.0-reasoning-v2-dpo
+alexredna/Tukan-1.1B-Chat-reasoning-sft-COLA;TinyLlama;TinyLlama/TinyLlama-1.1B-Chat-v1.0;FALSO;2;Transformer;1.1B;4.4 GB;safetensors;NLP;Linguistic Acceptability/Text-Generation;SFT;alexredna;Apache-2.0;FALSO;"Fine-tuned TinyLlama model.
+Specialized for linguistic acceptability.";https://huggingface.co/alexredna/Tukan-1.1B-Chat-reasoning-sft-COLA
+not-lain/Finetuned_TinyLlama;TinyLlama;TinyLlama/TinyLlama-1.1B-Chat-v1.0;FALSO;2;Transformer;1.1B;4.4 GB;safetensors;NLP;Chat Assistant/Text-Generation;SFT;not-lain;Apache-2.0;FALSO;"Fine-tuned TinyLlama model.
+Specialized for chat assistant.";https://huggingface.co/not-lain/Finetuned_TinyLlama
+roberta-base;RoBERTa;;VERO;0;Transformer (Encoder);125M;1.12 GB;safetensors;NLP;Masked Language Modeling/Fill-Mask;Pretraining;FacebookAI;MIT;FALSO;"Foundation RoBERTa model.
+Pretrained on large-scale data.";https://huggingface.co/roberta-base
+cardiffnlp/twitter-roberta-base;RoBERTa;roberta-base;FALSO;1;Transformer (Encoder);125M;0.5 GB;safetensors;NLP;Social Media Analysis/Fill-Mask;Domain Adaptation;CardiffNLP;;FALSO;"Fine-tuned RoBERTa model.
+Specialized for social media analysis.";https://huggingface.co/cardiffnlp/twitter-roberta-base
+cross-encoder/nli-roberta-base;RoBERTa;roberta-base;FALSO;1;Transformer (Encoder);125M;0.5 GB;safetensors;NLP;Natural Language Inference/Zero-Shot Classification;SFT;cross-encoder;Apache-2.0;FALSO;"Fine-tuned RoBERTa model.
+Specialized for natural language inference.";https://huggingface.co/cross-encoder/nli-roberta-base
+cross-encoder/stsb-roberta-base;RoBERTa;cross-encoder/nli-roberta-base;FALSO;1;Transformer (Encoder);125M;0.5 GB;safetensors;NLP;Semantic Textual Similarity/Text-Ranking/Text-Classification;SFT;cross-encoder;Apache-2.0;FALSO;"Fine-tuned RoBERTa model.
+Specialized for semantic textual similarity.";https://huggingface.co/cross-encoder/stsb-roberta-base
+Qwen/Qwen2-VL-2B;Qwen2-VL;;VERO;0;Transformer (Vision-Language);2B;4 GB;safetensors;Multimodal;Vision-Language Modeling/Image-text-To-Text;Pretraining;Qwen;Apache-2.0;FALSO;"Foundation Qwen2-VL model.
+Pretrained on large-scale data.";https://huggingface.co/Qwen/Qwen2-VL-2B
+Qwen/Qwen2-VL-2B-Instruct;Qwen2-VL;Qwen/Qwen2-VL-2B;FALSO;1;Transformer (Vision-Language);2B;4 GB;safetensors;Multimodal;Instruction Following/Image-Text-To-Text;SFT;Qwen;Apache-2.0;FALSO;"Fine-tuned Qwen2-VL model.
+Specialized for instruction following.";https://huggingface.co/Qwen/Qwen2-VL-2B-Instruct
+medieval-data/qwen2-vl-2b-catmus-40000;Qwen2-VL;Qwen/Qwen2-VL-2B-Instruct;FALSO;2;Transformer (Vision-Language);2B;4 GB;safetensors;Multimodal;Domain-Specific VQA;Full Fine-tuning;medieval-data;Apache-2.0;FALSO;"Fine-tuned Qwen2-VL model.
+Specialized for domain-specific vqa.";https://huggingface.co/medieval-data/qwen2-vl-2b-catmus-40000
+huihui-ai/Qwen2-VL-2B-Instruct-abliterated;Qwen2-VL;Qwen/Qwen2-VL-2B-Instruct;FALSO;2;Transformer (Vision-Language);2B;4 GB;safetensors;Multimodal;Unaligned Chat/Image-Text-To-Text;Full Fine-tuning;huihui-ai;Apache-2.0;FALSO;"Fine-tuned Qwen2-VL model.
+Specialized for unaligned chat.";https://huggingface.co/huihui-ai/Qwen2-VL-2B-Instruct-abliterated
+Vikhrmodels/Vikhr-2-VL-2b-Instruct-experimental;Qwen2-VL;Qwen/Qwen2-VL-2B-Instruct;FALSO;2;Transformer (Vision-Language);2B;4 GB;safetensors;Multimodal;Image-To-Text;SFT;Vikhrmodels;Apache-2.0;FALSO;"Fine-tuned Qwen2-VL model.
+Specialized for experimental chat.";https://huggingface.co/Vikhrmodels/Vikhr-2-VL-2b-Instruct-experimental
+EleutherAI/pythia-1.4b;Pythia;;VERO;0;Transformer;1.4B;2.8 GB;safetensors;NLP;Text-Generation;Pretraining;EleutherAI;Apache-2.0;FALSO;"Foundation Pythia model.
+Pretrained on large-scale data.";https://huggingface.co/EleutherAI/pythia-1.4b
+mia-llm/pythia-1.4b-AGnews-roya;Pythia;EleutherAI/pythia-1.4b;FALSO;1;Transformer;1.4B;5 GB;safetensors;NLP;Text-Generation;Full Fine-tuning;mia-llm;Apache-2.0;FALSO;"Fine-tuned Pythia model.
+Specialized for text classification.";https://huggingface.co/mia-llm/pythia-1.4b-AGnews-roya
+ncgc/statichh-pythia-1.4b-sft-bf16;Pythia;EleutherAI/pythia-1.4b;FALSO;1;Transformer;1.4B;5 GB;safetensors;NLP;Text-Generation;SFT;ncgc;Apache-2.0;FALSO;"Fine-tuned Pythia model.
+Specialized for helpful-harmless chat.";https://huggingface.co/ncgc/statichh-pythia-1.4b-sft-bf16
+sevendaystoglory/batchga-bias-pure_ekfac-100-statichh-pythia-1.4b-sft-bf16;Pythia;ncgc/statichh-pythia-1.4b-sft-bf16;FALSO;2;Transformer;1.4B;5 GB;safetensors;NLP;Text-Generation;Alignment;sevendaystoglory;Apache-2.0;FALSO;"Fine-tuned Pythia model.
+Specialized for bias mitigation.";https://huggingface.co/sevendaystoglory/batchga-bias-pure_ekfac-100-statichh-pythia-1.4b-sft-bf16
+sevendaystoglory/truthDPO-statichh-pythia-1.4b-dpo-bf16;Pythia;ncgc/statichh-pythia-1.4b-sft-bf16;FALSO;2;Transformer;1.4B;5 GB;safetensors;NLP;Text-Generation;DPO;sevendaystoglory;Apache-2.0;FALSO;"Fine-tuned Pythia model.
+Specialized for truthful chat.";https://huggingface.co/sevendaystoglory/truthDPO-statichh-pythia-1.4b-dpo-bf16
+sevendaystoglory/statichh-pythia-1.4b-dpo-bf16;Pythia;ncgc/statichh-pythia-1.4b-sft-bf16;FALSO;2;Transformer;1.4B;5 GB;safetensors;NLP;Text-Generation;DPO;sevendaystoglory;Apache-2.0;FALSO;"Fine-tuned Pythia model.
+Specialized for aligned chat.";https://huggingface.co/sevendaystoglory/statichh-pythia-1.4b-dpo-bf16
+stabilityai/stablelm-2-1_6b;StableLM;;VERO;0;Transformer;1.6B;3.2 GB;safetensors;NLP;Text-Generation;Pretraining;stabilityai;Apache-2.0;FALSO;"Foundation StableLM model.
+Pretrained on large-scale data.";https://huggingface.co/stabilityai/stablelm-2-1_6b
+vain05/stablelm-2-1_6b-orpo-full-v1;StableLM;stabilityai/stablelm-2-1_6b;FALSO;1;Transformer;1.6B;3.2 GB;safetensors;NLP;Text-Generation/Aligned Chat;ORPO;vain05;other;FALSO;"Fine-tuned StableLM model.
+Specialized for aligned chat.";https://huggingface.co/vain05/stablelm-2-1_6b-orpo-full-v1
+vain05/stablelm-2-1_6b-orpo-full-v2;StableLM;stabilityai/stablelm-2-1_6b;FALSO;1;Transformer;1.6B;3.2 GB;safetensors;NLP;Text-Generation/Aligned Chat;ORPO;vain05;other;FALSO;"Fine-tuned StableLM model.
+Specialized for aligned chat.";https://huggingface.co/vain05/stablelm-2-1_6b-orpo-full-v2
+vain05/stablelm-2-1_6b-orpo-full-v3;StableLM;stabilityai/stablelm-2-1_6b;FALSO;1;Transformer;1.6B;3.2 GB;safetensors;NLP;Text-Generation/Aligned Chat;ORPO;vain05;other;FALSO;"Fine-tuned StableLM model.
+Specialized for aligned chat.";https://huggingface.co/vain05/stablelm-2-1_6b-orpo-full-v3
+Nexus-DNS/bengali-cuisine-helper-stablelm-1.6b;StableLM;stabilityai/stablelm-2-1_6b;FALSO;1;Transformer;1.6B;3.2 GB;safetensors;NLP;Text-Generation;Full Fine-tuning;Nexus-DNS;Apache-2.0;FALSO;"Fine-tuned StableLM model.
+Specialized for domain assistant.";https://huggingface.co/Nexus-DNS/bengali-cuisine-helper-stablelm-1.6b
+google/gemma-3-1b-it;Gemma;;VERO;0;Transformer;1B;2 GB;safetensors;NLP;Text-Generation;Pretraining;google;Gemma License;FALSO;"Foundation Gemma model.
+Pretrained on large-scale data.";https://huggingface.co/google/gemma-3-1b-it
+google/gemma-3-1b-it-qat-int4-unquantized;Gemma;google/gemma-3-1b-it;FALSO;1;Transformer;1B;2 GB;safetensors;NLP;Text-Generation;QAT;google;Gemma License;VERO;"Fine-tuned Gemma model.
+Specialized for quantization-aware model.";https://huggingface.co/google/gemma-3-1b-it-qat-int4-unquantized
+chohi/gemma-molit-finetuned;Gemma;google/gemma-3-1b-it;FALSO;1;Transformer;1B;2 GB;safetensors;NLP;Text-Generation;SFT;chohi;Gemma License;FALSO;"Fine-tuned Gemma model.
+Specialized for domain chat.";https://huggingface.co/chohi/gemma-molit-finetuned
+iprajwaal/gemma-3b-chat-support;Gemma;google/gemma-3-1b-it;FALSO;1;Transformer;3B;4 GB;safetensors;NLP;Chat Support;SFT;iprajwaal;MIT;FALSO;"Fine-tuned Gemma model.
+Specialized for chat support.";https://huggingface.co/iprajwaal/gemma-3b-chat-support
+Eshita-ds/gemma-3-1b-it-DPO;Gemma;google/gemma-3-1b-it;FALSO;1;Transformer;1B;2 GB;safetensors;NLP;Aligned Chat;DPO;Eshita-ds;;FALSO;"Fine-tuned Gemma model.
+Specialized for aligned chat.";https://huggingface.co/Eshita-ds/gemma-3-1b-it-DPO
+microsoft/resnet-50;ResNet;;VERO;0;ResNet-50 CNN;25M;0.1 GB;safetensors;Vision;Image Classification;Pretraining;microsoft;Apache-2.0;FALSO;"Foundation ResNet model.
+Pretrained on large-scale data.";https://huggingface.co/microsoft/resnet-50
+fxmarty/resnet-50-finetuned-cifar10 (non esiste);ResNet;microsoft/resnet-50;FALSO;1;ResNet-50 CNN;25M;0.1 GB;safetensors;Vision;Image Classification;Full Fine-tuning;fxmarty;MIT;FALSO;"Fine-tuned ResNet model.
+Specialized for image classification.";https://huggingface.co/fxmarty/resnet-50-finetuned-cifar10
+fxmarty/resnet-50-finetuned-cifar10-v2 (non esiste);ResNet;fxmarty/resnet-50-finetuned-cifar10;FALSO;2;ResNet-50 CNN;25M;0.1 GB;safetensors;Vision;Image Classification;Full Fine-tuning;fxmarty;MIT;FALSO;"Fine-tuned ResNet model.
+Specialized for image classification.";https://huggingface.co/fxmarty/resnet-50-finetuned-cifar10-v2
+nvidia/segformer-b0-finetuned-ade-512-512;SegFormer;;VERO;0;Transformer (SegFormer);3.7M;0.15 GB;safetensors;Vision;Semantic Segmentation;Pretraining;nvidia;Apache-2.0;FALSO;"Foundation SegFormer model.
+Pretrained on large-scale data.";https://huggingface.co/nvidia/segformer-b0-finetuned-ade-512-512
+nvidia/segformer-b0-finetuned-cityscapes-1024-1024;SegFormer;nvidia/segformer-b0-finetuned-ade-512-512;FALSO;1;Transformer (SegFormer);3.7M;0.15 GB;bin;Vision;Semantic Segmentation;Full Fine-tuning;nvidia;Apache-2.0;FALSO;"Fine-tuned SegFormer model.
+Specialized for semantic segmentation.";https://huggingface.co/nvidia/segformer-b0-finetuned-cityscapes-1024-1024
+nvidia/segformer-b0-finetuned-cityscapes-512-1024;SegFormer;nvidia/segformer-b0-finetuned-ade-512-512;FALSO;1;Transformer (SegFormer);3.7M;0.15 GB;bin;Vision;Semantic Segmentation;Full Fine-tuning;nvidia;Apache-2.0;FALSO;"Fine-tuned SegFormer model.
+Specialized for semantic segmentation.";https://huggingface.co/nvidia/segformer-b0-finetuned-cityscapes-512-1024
+facebook/detr-resnet-50;DETR;;VERO;0;DETR (ResNet-50);41M;0.15 GB;safetensors;Vision;Object Detection;Pretraining;facebook;Apache-2.0;FALSO;"Foundation DETR model.
+Pretrained on large-scale data.";https://huggingface.co/facebook/detr-resnet-50
+biglam/detr-resnet-50_fine_tuned_loc-2023;DETR;facebook/detr-resnet-50;FALSO;1;DETR (ResNet-50);41M;0.15 GB;safetensors;Vision;Object Detection;Full Fine-tuning;biglam;Apache-2.0;FALSO;"Fine-tuned DETR model.
+Specialized for object detection.";https://huggingface.co/biglam/detr-resnet-50_fine_tuned_loc-2023
+shubhamWi91/detr-resnet-50_finetuned_wi;DETR;facebook/detr-resnet-50;FALSO;1;DETR (ResNet-50);41M;0.15 GB;bin;Vision;Object Detection;Full Fine-tuning;shubhamWi91;Apache-2.0;FALSO;"Fine-tuned DETR model.
+Specialized for object detection.";https://huggingface.co/shubhamWi91/detr-resnet-50_finetuned_wi
+IT20429546/detr-resnet-50_finetuned-weed-detection;DETR;facebook/detr-resnet-50;FALSO;1;DETR (ResNet-50);41M;0.15 GB;bin;Vision;Object Detection;Full Fine-tuning;IT20429546;Apache-2.0;FALSO;"Fine-tuned DETR model.
+Specialized for object detection.";https://huggingface.co/IT20429546/detr-resnet-50_finetuned-weed-detection
+facebook/wav2vec2-base-960h;wav2vec2;;VERO;0;wav2vec2 Transformer;95M;0.36 GB;safetensors;Audio;Speech Representation Learning;Pretraining;facebook;Apache-2.0;FALSO;"Foundation wav2vec2 model.
+Pretrained on large-scale data.";https://huggingface.co/facebook/wav2vec2-base-960h
+argish/wav2vec2-base-960h-speech-emotion-classification-E02_SER;wav2vec2;facebook/wav2vec2-base-960h;FALSO;1;wav2vec2 Transformer;95M;0.36 GB;safetensors;Audio;Speech Emotion Recognition;Full Fine-tuning;argish;Apache-2.0;FALSO;"Fine-tuned wav2vec2 model.
+Specialized for speech emotion recognition.";https://huggingface.co/argish/wav2vec2-base-960h-speech-emotion-classification-E02_SER
+Bhaveen/Musical-Instrument-Classification;wav2vec2;facebook/wav2vec2-base-960h;FALSO;1;wav2vec2 Transformer;95M;0.36 GB;safetensors;Audio;Music Classification;Full Fine-tuning;Bhaveen;Apache-2.0;FALSO;"Fine-tuned wav2vec2 model.
+Specialized for music classification.";https://huggingface.co/Bhaveen/Musical-Instrument-Classification
+Bhaveen/Musical-Instrument-Classification-v2;wav2vec2;Bhaveen/Musical-Instrument-Classification;FALSO;2;wav2vec2 Transformer;95M;0.36 GB;safetensors;Audio;Music Classification;Full Fine-tuning;Bhaveen;Apache-2.0;FALSO;"Fine-tuned wav2vec2 model.
+Specialized for music classification.";https://huggingface.co/Bhaveen/Musical-Instrument-Classification-v2
+faizandigi009/wav2vec2-base-960h-finetuned-ks;wav2vec2;facebook/wav2vec2-base-960h;FALSO;1;wav2vec2 Transformer;95M;0.36 GB;safetensors;Audio;Keyword Spotting;Full Fine-tuning;faizandigi009;Apache-2.0;FALSO;"Fine-tuned wav2vec2 model.
+Specialized for keyword spotting.";https://huggingface.co/faizandigi009/wav2vec2-base-960h-finetuned-ks
+faizandigi009/wav2vec2-base-960h-finetuned-ks-v2;wav2vec2;faizandigi009/wav2vec2-base-960h-finetuned-ks;FALSO;2;wav2vec2 Transformer;95M;0.36 GB;safetensors;Audio;Keyword Spotting;Full Fine-tuning;faizandigi009;Apache-2.0;FALSO;"Fine-tuned wav2vec2 model.
+Specialized for keyword spotting.";https://huggingface.co/faizandigi009/wav2vec2-base-960h-finetuned-ks-v2
+SiMenz/wav2vec2-base-960h-finetuned-gtzan;wav2vec2;facebook/wav2vec2-base-960h;FALSO;1;wav2vec2 Transformer;95M;0.36 GB;safetensors;Audio;Music Genre Classification;Full Fine-tuning;SiMenz;Apache-2.0;FALSO;"Fine-tuned wav2vec2 model.
+Specialized for music genre classification.";https://huggingface.co/SiMenz/wav2vec2-base-960h-finetuned-gtzan
+SiMenz/wav2vec2-base-960h-finetuned-gtzan2;wav2vec2;SiMenz/wav2vec2-base-960h-finetuned-gtzan;FALSO;2;wav2vec2 Transformer;95M;0.36 GB;safetensors;Audio;Music Genre Classification;Full Fine-tuning;SiMenz;Apache-2.0;FALSO;"Fine-tuned wav2vec2 model.
+Specialized for music genre classification.";https://huggingface.co/SiMenz/wav2vec2-base-960h-finetuned-gtzan2
+openai/whisper-small;Whisper;;VERO;0;Transformer;244M;0.5 GB;safetensors;Audio;Automatic Speech Recognition;Pretraining;openai;MIT;FALSO;"Foundation Whisper model.
+Pretrained on large-scale data.";https://huggingface.co/openai/whisper-small
+Dragneel/whisper-small-nepali;Whisper;openai/whisper-small;FALSO;1;Transformer;244M;0.5 GB;safetensors;Audio;ASR;Full Fine-tuning;Dragneel;MIT;FALSO;"Fine-tuned Whisper model.
+Specialized for asr.";https://huggingface.co/Dragneel/whisper-small-nepali
+alvanlii/whisper-small-cantonese;Whisper;openai/whisper-small;FALSO;1;Transformer;244M;0.5 GB;safetensors;Audio;ASR;Full Fine-tuning;alvanlii;MIT;FALSO;"Fine-tuned Whisper model.
+Specialized for asr.";https://huggingface.co/alvanlii/whisper-small-cantonese
+kiarashQ/fa-ir-stt-whisper-small-v1;Whisper;openai/whisper-small;FALSO;1;Transformer;244M;0.5 GB;safetensors;Audio;ASR;Full Fine-tuning;kiarashQ;MIT;FALSO;"Fine-tuned Whisper model.
+Specialized for asr.";https://huggingface.co/kiarashQ/fa-ir-stt-whisper-small-v1
+TheRains/special2;Whisper;openai/whisper-small;FALSO;1;Transformer;244M;0.5 GB;safetensors;Audio;ASR;Full Fine-tuning;TheRains;MIT;FALSO;"Fine-tuned Whisper model.
+Specialized for asr.";https://huggingface.co/TheRains/special2
+FlandersMakeAGV/whisper-small-keyword-spotting;Whisper;openai/whisper-small;FALSO;1;Transformer;244M;0.5 GB;safetensors;Audio;Keyword Spotting;Full Fine-tuning;FlandersMakeAGV;MIT;FALSO;"Fine-tuned Whisper model.
+Specialized for keyword spotting.";https://huggingface.co/FlandersMakeAGV/whisper-small-keyword-spotting
+ales/whisper-small-belarusian;Whisper;openai/whisper-small;FALSO;1;Transformer;244M;0.5 GB;safetensors;Audio;ASR;Full Fine-tuning;ales;MIT;FALSO;"Fine-tuned Whisper model.
+Specialized for asr.";https://huggingface.co/ales/whisper-small-belarusian
+openai/whisper-medium;Whisper;;VERO;0;Transformer;769M;1.5 GB;safetensors;Audio;Automatic Speech Recognition;Pretraining;openai;MIT;FALSO;"Foundation Whisper model.
+Pretrained on large-scale data.";https://huggingface.co/openai/whisper-medium
+smolLM3-3B-base;SmolLM3;;VERO;0;Transformer;3B;6 GB;safetensors;NLP;Language Modeling;Pretraining;SmolAI;Apache-2.0;FALSO;"Foundation SmolLM3 model.
+Pretrained on large-scale data.";https://huggingface.co/smolLM3-3B-base
+smolLM3-3B;SmolLM3;smolLM3-3B-base;FALSO;1;Transformer;3B;6 GB;safetensors;NLP;Chat;SFT;SmolAI;Apache-2.0;FALSO;"Fine-tuned SmolLM3 model.
+Specialized for chat.";https://huggingface.co/smolLM3-3B
+smolLM3-EMC2;SmolLM3;smolLM3-3B;FALSO;2;Transformer;3B;6 GB;safetensors;NLP;Emotion Modeling;SFT;SmolAI;Apache-2.0;FALSO;"Fine-tuned SmolLM3 model.
+Specialized for emotion modeling.";https://huggingface.co/smolLM3-EMC2
+Emotron-3B;SmolLM3;smolLM3-EMC2;FALSO;3;Transformer;3B;6 GB;safetensors;NLP;Emotion-Aware Chat;Alignment;Emotron;Apache-2.0;FALSO;"Fine-tuned SmolLM3 model.
+Specialized for emotion-aware chat.";https://huggingface.co/Emotron-3B
+;;;;;;;;;;;;;;;;

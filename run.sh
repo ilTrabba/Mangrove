@@ -33,6 +33,33 @@ print_info() {
     echo -e "${CYAN}ℹ️  [$(date +'%H:%M:%S')]${NC} $1"
 }
 
+# Function to kill background processes on exit
+cleanup() {
+    echo ""
+    print_status "Shutting down services..."
+    
+    if [ ! -z "$BACKEND_PID" ] && kill -0 $BACKEND_PID 2>/dev/null; then
+        print_status "Stopping backend (PID: $BACKEND_PID)..."
+        kill $BACKEND_PID 2>/dev/null
+        print_success "Backend stopped"
+    fi
+    
+    if [ ! -z "$FRONTEND_PID" ] && kill -0 $FRONTEND_PID 2>/dev/null; then
+        print_status "Stopping frontend (PID: $FRONTEND_PID)..."
+        kill $FRONTEND_PID 2>/dev/null
+        print_success "Frontend stopped"
+    fi
+    
+    echo ""
+    print_success "All services stopped successfully"
+    echo ""
+    echo -e "${PURPLE}Thanks for using Model Heritage Project!${NC}"
+    exit 0
+}
+
+# Trap Ctrl+C and call cleanup function
+trap cleanup SIGINT
+
 # Header
 echo -e "${PURPLE}"
 cat << 'EOF'
@@ -58,9 +85,19 @@ if [ ! -d "$GLOBAL_VENV_NAME" ]; then
 fi
 
 print_success "Virtual environment '$GLOBAL_VENV_NAME' found"
+
+# --- ATTIVAZIONE E FIX COMPATIBILITÀ ---
 source "$GLOBAL_VENV_NAME"/bin/activate
 print_success "Activated virtual environment for backend"
 
+# Rimuove il blocco che impedisce a NVM/NPM di funzionare dentro il venv
+unset npm_config_prefix
+unset NPM_CONFIG_PREFIX
+
+# Carica NVM se non è già nel path della sessione corrente
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+nvm use --lts > /dev/null
 
 # --- Run Backend in background ---
 print_status "Starting backend server..."
@@ -72,8 +109,7 @@ if [ ! -f "run_server.py" ]; then
     exit 1
 fi
 
-# Versione che Mostra solo i tuoi debug
-python run_server.py 2>&1 | grep "🔍\|\[DEBUG\]" &
+python run_server.py 2>&1  &
 BACKEND_PID=$!
 cd ..
 
@@ -95,16 +131,17 @@ if [ ! -f "package.json" ]; then
     exit 1
 fi
 
+# Usa pnpm run dev
 pnpm run dev --host > /dev/null 2>&1 &
 FRONTEND_PID=$!
 cd ..
 
-sleep 2 # Give frontend time to start
+sleep 2 
 
 if kill -0 $FRONTEND_PID 2>/dev/null; then
     print_success "Frontend started successfully (PID: $FRONTEND_PID)"
 else
-    print_error "Failed to start frontend"
+    print_error "Failed to start frontend (Assicurati di aver installato pnpm con: npm install -g pnpm)"
     cleanup
     exit 1
 fi
@@ -114,43 +151,12 @@ echo ""
 echo -e "${GREEN}=================================${NC}"
 echo -e "${GREEN}    🚀 PROJECT IS RUNNING!${NC}"
 echo -e "${GREEN}=================================${NC}"
-echo -e "${CYAN}📡 Backend:${NC}  http://localhost:5001"
-echo -e "${CYAN}🌐 Frontend:${NC} http://localhost:5173"
-echo -e "${CYAN}🌍 Network:${NC}  http://$(hostname -I | awk '{print $1}'):5173"
+echo -e "${CYAN}📡 Backend:${NC}  http://localhost:5002"
+echo -e "${CYAN}🌐 Frontend:${NC} http://localhost:5176"
+echo -e "${CYAN}🌍 Network:${NC}  http://$(hostname -I | awk '{print $1}'):5176"
 echo ""
 print_warning "Press Ctrl+C to stop both processes"
 echo ""
-
-# Function to kill background processes on exit
-cleanup() {
-    echo ""
-    print_status "Shutting down services..."
-    
-    if kill -0 $BACKEND_PID 2>/dev/null; then
-        print_status "Stopping backend (PID: $BACKEND_PID)..."
-        kill $BACKEND_PID 2>/dev/null
-        print_success "Backend stopped"
-    else
-        print_success "Backend already stopped"
-    fi
-    
-    if kill -0 $FRONTEND_PID 2>/dev/null; then
-        print_status "Stopping frontend (PID: $FRONTEND_PID)..."
-        kill $FRONTEND_PID 2>/dev/null
-        print_success "Frontend stopped"
-    else
-        print_info "Frontend already stopped"
-    fi
-    
-    echo ""
-    print_success "All services stopped successfully"
-    echo ""
-    echo -e "${PURPLE}Thanks for using MANGROVE! 🌿${NC}"
-    exit 0
-}
-
-# Trap Ctrl+C and call cleanup function
-trap cleanup SIGINT
 
 # Keep the script running until interrupted
 wait $BACKEND_PID
