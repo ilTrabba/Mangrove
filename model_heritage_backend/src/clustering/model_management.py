@@ -233,8 +233,9 @@ class ModelManagementSystem:
                     'statistics': {}
                 }
             
-            # Build current tree
-            tree, confidence_scores = self.tree_builder.build_family_tree(family_id, family_models)
+            # Build current tree (build_family_tree returns 3 values:
+            # tree, confidence_scores, max_distance_root_nodes)
+            tree, confidence_scores, _ = self.tree_builder.build_family_tree(family_id, family_models)
             
             # Convert tree to serializable format
             tree_data = {
