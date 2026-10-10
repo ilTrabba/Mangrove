@@ -3,6 +3,10 @@ TreeBuilder
 
 This module builds genealogical relationships within model families using algorithm approaches (MoTHer).
 It leverages the existing MoTHer implementation to create heritage trees within families.
+
+Two methods are available:
+- MOTHER: full MoTHer (kurtosis + L2 distance)
+- MOTHER_WITH_DELTA_V01: delta-only variant (weight difference + SVD), no kurtosis.
 """
 
 import logging
@@ -18,6 +22,7 @@ from src.log_handler import logHandler
 from src.clustering.distance_calculator import ModelDistanceCalculator
 from src.db_entities.entity import Model
 from src.mother_algorithm.mdst import MDST
+from src.mother_algorithm.delta_lineage import process_lineage_graph
 from src.mother_algorithm.mother_utils import (
     load_model_weights,
     compute_lambda,
@@ -31,9 +36,14 @@ from src.mother_algorithm.mother_utils import (
 logger = logging.getLogger(__name__)
 mdst = MDST()
 
+# Defaults for the delta-only variant
+DELTA_PENALTY = 0.5
+DELTA_EXCLUDE_VALUE = False
+
 class TreeBuildingMethod(Enum):
     """Available tree building methods"""
     MOTHER = "mother"          # Full MoTHer algorithm with kurtosis
+    MOTHER_WITH_DELTA_V01 = "mother-with-delta-v01"  # Delta-only (no kurtosis)
     
 class MoTHerTreeBuilder:
     """
@@ -41,7 +51,7 @@ class MoTHerTreeBuilder:
     
     Features:
     - Calculate distance matrices between family models
-    - Use kurtosis-based direction determination
+    - Use kurtosis-based direction determination (MOTHER) or delta/SVD (MOTHER_WITH_DELTA_V01)
     - Apply Edmonds' algorithm for minimum directed spanning tree
     - Leverage existing MoTHer algorithm implementation
     """
@@ -49,18 +59,24 @@ class MoTHerTreeBuilder:
     def __init__(self,
                  method: TreeBuildingMethod = TreeBuildingMethod.MOTHER,
                  distance_matrix: NDArray[np.float64] = None,
-                 distance_calculator: ModelDistanceCalculator = ModelDistanceCalculator()):
+                 distance_calculator: ModelDistanceCalculator = ModelDistanceCalculator(),
+                 delta_penalty: float = DELTA_PENALTY,
+                 exclude_value: bool = DELTA_EXCLUDE_VALUE):
         """
         Initialize the tree builder.
         
         Args:
             distance_calculator: Calculator for model distances
-            lambda_param: Balance between kurtosis and distance (0=distance only, 1=kurtosis only)
             method: Tree building method to use
+            delta_penalty: weight penalty added to child->parent edges (delta variant)
+            exclude_value: exclude V-projection layers from the delta test
         """
         self.method = method
         self.distance_matrix = distance_matrix
         self.distance_calculator = distance_calculator
+        self.delta_penalty = delta_penalty
+        self.exclude_value = exclude_value
+        self.last_delta_stats: Dict[str, Any] = {}
 
         logger.info(f"Initialized MoTHerTreeBuilder with method: {method}")
     
@@ -75,7 +91,7 @@ class MoTHerTreeBuilder:
             models: Optional list of models (will query if None)
             
         Returns:
-            Tuple of (directed_tree, confidence_scores)
+            Tuple of (directed_tree, confidence_scores, max_distance_root_nodes)
             - directed_tree: NetworkX DiGraph with model IDs as nodes (parent -> child)
             - confidence_scores: Dictionary mapping model_id -> confidence score
         """
@@ -94,6 +110,10 @@ class MoTHerTreeBuilder:
             if len(models) < 2:
                 logHandler.warning_handler(f"Family {family_id} has insufficient models for tree building", "build_family_tree")
                 return nx.DiGraph(), {}, 0.0
+
+            # Delta-only variant: weights are loaded lazily inside process_lineage_graph
+            if self.method == TreeBuildingMethod.MOTHER_WITH_DELTA_V01:
+                return self.build_delta_tree(family_id, models)
             
             logger.info(f"Building tree for family {family_id} with {len(models)} models")
             
@@ -133,6 +153,54 @@ class MoTHerTreeBuilder:
         except Exception as e:
             logHandler.error_handler(f"Error building family tree for {family_id}: {e}", "build_family_tree")
             return nx.DiGraph(), [], 0.0
+
+    def build_delta_tree(self,
+                         family_id: str,
+                         models: List[Any]) -> Tuple[nx.DiGraph, Dict[str, float], float]:
+        """
+        Build the family tree with the delta-only variant (mother-with-delta-v01).
+
+        1. process_lineage_graph tests every model pair and inserts both directed edges
+           (parent->child: weight=base_confidence; child->parent: weight=base_confidence+penalty).
+        2. A minimum spanning arborescence selects the final tree (reverse edges are penalised).
+
+        No kurtosis is computed. max_distance_root_nodes is 0.0 (no L2 distance matrix here).
+        """
+        try:
+            g = nx.DiGraph()
+            for m in models:
+                path = m['file_path'] if isinstance(m, dict) else m.file_path
+                g.add_node(self.get_model_id(m), path=path)
+
+            graph, stats = process_lineage_graph(g, self.delta_penalty, self.exclude_value)
+            self.last_delta_stats = stats
+
+            if graph.number_of_edges() == 0:
+                logHandler.warning_handler(f"Delta variant produced no edges for family {family_id}", "build_delta_tree")
+                return nx.DiGraph(), {}, 0.0
+
+            try:
+                tree = nx.minimum_spanning_arborescence(graph, attr='weight', preserve_attrs=True)
+            except Exception as e:
+                logger.warning(f"Arborescence failed ({e}), using greedy fallback")
+                tree = fallback_directed_mst(graph)
+
+            confidence: Dict[str, float] = {}
+            for node in tree.nodes():
+                preds = list(tree.predecessors(node))
+                if not preds:
+                    confidence[node] = 0.85
+                else:
+                    conf = tree[preds[0]][node].get('confidence', 0.0) / 100.0
+                    confidence[node] = max(0.1, min(0.95, conf))
+
+            logger.info(f"Delta tree built for family {family_id}: "
+                        f"{tree.number_of_nodes()} nodes, {tree.number_of_edges()} edges")
+            return tree, confidence, 0.0
+
+        except Exception as e:
+            logHandler.error_handler(e, "build_delta_tree")
+            return nx.DiGraph(), {}, 0.0
     
     def build_mother_tree(self, 
                           family_id: str,
@@ -245,7 +313,7 @@ class MoTHerTreeBuilder:
         
         if n < 2:
             logger.warning("Cannot build tree with fewer than 2 models")
-            return nx.DiGraph(), {}
+            return nx.DiGraph(), {}, 0.0
         
         true_lambda = compute_lambda(distance_matrix)
         

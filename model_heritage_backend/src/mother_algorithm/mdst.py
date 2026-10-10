@@ -86,7 +86,7 @@ class MDST:
             raise ValueError(f"Impossibile formare un'arborescenza completa. Nodi irraggiungibili dalla radice {root}: {unreachable}")
 
         # --- FASE 2: Rilevamento Cicli ---
-        cycle = self.find_cycle(min_in_edges, nodes)
+        cycle = self._find_cycle(min_in_edges, nodes)
         
         # CASO BASE: Nessun ciclo
         if not cycle:
@@ -229,3 +229,6 @@ class MDST:
                 cycle = visit(n)
                 if cycle: return cycle
         return None
+
+    # Backward-compatible alias (the original call site used the non-underscored name)
+    find_cycle = _find_cycle
